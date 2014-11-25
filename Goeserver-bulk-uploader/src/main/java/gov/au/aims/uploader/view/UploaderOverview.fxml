@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="750.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gov.au.aims.uploader.view.UploaderOverviewController">
+   <children>
+      <Label fx:id="selectedDirectory" layoutX="32.0" layoutY="161.0" maxWidth="200.0" text="No File Selected..." AnchorPane.leftAnchor="32.0" />
+      <Label fx:id="fileList" layoutX="300.0" layoutY="161.0" maxWidth="500.0" text="No other files..." AnchorPane.leftAnchor="300.0" />
+      <Button fx:id="selectDirButton" layoutX="25.0" layoutY="195.0" mnemonicParsing="false" onAction="#handleFileSelection" text="Browse..." AnchorPane.leftAnchor="25.0" />
+      <Label layoutX="300.0" layoutY="124.0" text="Other CSV files in directory" AnchorPane.leftAnchor="300.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="264.0" layoutY="14.0" text="Geoserver Bulk Uploader (WIP)" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="15.0">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Label layoutX="20.0" layoutY="113.0" text="Root Folder Selection" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="120.0">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Button fx:id="generateCSV" layoutX="25.0" layoutY="323.0" mnemonicParsing="false" onAction="#handleSave" text="Generate and save CSV file" />
+      <Label fx:id="generatedFileLabel" layoutX="25.0" layoutY="294.0" text="No file generated..." />
+   </children>
+</AnchorPane>
