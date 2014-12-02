@@ -16,23 +16,36 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
-
 /**
  * Handles the writing and parsing of shape files to and from .csv.
  *
  */
-public class CsvHandler {
 
-	
+public class CsvHandler {
+	// Attributes
+	public Logger logger;
+
+	// Constructor
+	public CsvHandler() {
+		BasicConfigurator.configure();
+		logger = Logger.getLogger(CsvHandler.class);
+
+	}
+
 	/**
-	 * Access a .csv and parse each row into a java bean. Using HeadingColumnNameTranslateMappingStrategy.
+	 * Access a .csv and parse each row into a java bean. Using
+	 * HeadingColumnNameTranslateMappingStrategy.
 	 *
-	 * @param The absolute path of the desired shapeFile .csv to parse.
+	 * @param The
+	 *            absolute path of the desired shapeFile .csv to parse.
 	 * @return Returns a a list of files parsed to a java bean.
 	 */
 	public List<ShapeFile> parseShapeFileCSVToBeanList(String filename)
@@ -63,33 +76,46 @@ public class CsvHandler {
 		CSVReader reader = new CSVReader(new FileReader(filename));
 
 		List<ShapeFile> shapeFile = csvToBean.parse(beanStrategy, reader);
-//		System.out.println(shapeFile);
+		// System.out.println(shapeFile);
 		reader.close();
 		return shapeFile;
 	}
 
 	/**
-	 * Write a list of files to a specified .csv. Takes a list of files which are converted to a
-	 * List of String Arrays before being written the .csv.
+	 * Write a list of files to a specified .csv. Takes a list of files which
+	 * are converted to a List of String Arrays before being written the .csv.
 	 *
-	 * @param The list of files to be written to a .csv
-	 * @param The absolute path of the desired output location of the written .csv.
+	 * @param The
+	 *            list of files to be written to a .csv
+	 * @param The
+	 *            absolute path of the desired output location of the written
+	 *            .csv.
 	 */
 	public void writeShapeFilesToCSVFromList(List<File> fileList,
 			String fileName) throws IOException {
-		FileWriter fileWriter = new FileWriter(fileName);
-		CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
-		List<String[]> data = toStringArray(fileList);
-		csvWriter.writeAll(data);
 
-		csvWriter.close();
-		fileWriter.close();
+		try {
+
+			FileWriter fileWriter = new FileWriter(fileName);
+			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
+			List<String[]> data = toStringArray(fileList);
+			csvWriter.writeAll(data);
+
+			csvWriter.close();
+			fileWriter.close();
+
+		} catch (Exception e) {
+			logger.debug(e.getStackTrace() + "An error has occured when writing to a .csv");
+
+		}
+
 	}
 
 	/**
 	 * Convert a list of File objects to a List of String Arrays.
 	 *
-	 * @param The list of files to be written to be converted.
+	 * @param The
+	 *            list of files to be written to be converted.
 	 * 
 	 * @return a List of String Arrays.
 	 */
@@ -100,15 +126,24 @@ public class CsvHandler {
 				"layerName", "workspace", "storeType", "title", "abstract",
 				"metadataXmlHref", "keywords", "wmsPath", "styles",
 				"uploadData", "uploadMetadata" });
-		
-		//Add new record per object in list with defaults entries to the csv.
+
+		// Add new record per object in list with defaults entries to the csv.
 		Iterator<File> it = fileList.iterator();
 		while (it.hasNext()) {
-			File file = it.next();
-			records.add(new String[] { "./" + file.getName(),
-					file.getName().substring(0, file.getName().length() - 11),
-					"", "", "", "", "Shapefile", "", "something.xml",
-					"e.g. Maritime Boundary", "", "", "FALSE", "TRUE" });
+			try {
+				File file = it.next();
+				records.add(new String[] { "./" + file.getName(),
+						file.getName().substring(0, file.getName().length() - 11),
+						"", "", "", "", "Shapefile", "", "something.xml",
+						"e.g. Maritime Boundary", "", "", "FALSE", "TRUE" });
+			
+			} catch (IndexOutOfBoundsException e) {
+				logger.debug(e.getStackTrace() + "An error occured when writing object to .csv, likely caused by too many defaults or not enough to match number of columns");
+			} catch (Exception e) {
+				logger.debug(e.getStackTrace() + "Some other error has occured whilst trying to write an obkect to a .csv");
+			}
+		
+			
 		}
 		return records;
 	}

@@ -15,6 +15,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 /**
  * Handles the zipping of shape files.
@@ -24,7 +26,15 @@ public class FileZipper {
 
 	//Attributes
 	public List<String> fileToZip;
+	public Logger logger;
 
+	/**
+	 * Handles the zipping of sorted shape files
+	 */
+	public FileZipper(){
+		BasicConfigurator.configure();
+		logger = Logger.getLogger(FileFinder.class);
+	}
 	
 	/**
 	 * Takes a List of File object lists and zips each list to a desired output location. 
@@ -69,8 +79,12 @@ public class FileZipper {
 			}
 
 //			System.out.println("Done");
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		} catch (IOException e){
+			logger.debug(e.getStackTrace() + "An error has occured whilst attempting to open a directory.");
+		} catch (IndexOutOfBoundsException e){
+			logger.debug(e.getStackTrace() + "An error has occured whilst attempting to iterate through a list of files, most likely referenced an index that does not exist.");
+		} catch (Exception e){
+			logger.debug(e.getStackTrace() + "ERROR - Some other unspecified error has occured whilst iterating through a list of files.");
 		}
 	}
 

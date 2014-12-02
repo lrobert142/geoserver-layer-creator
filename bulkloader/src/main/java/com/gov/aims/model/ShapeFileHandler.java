@@ -45,6 +45,8 @@ public class ShapeFileHandler {
 		sameShapeFiles = new ArrayList<File>();
 		sortedShapeFiles = new ArrayList<List<File>>();
 		
+		try {
+		
 		//Handles the sorting.
 		for (int i = 0; i < shapeFiles.size(); i++) {
 			
@@ -74,6 +76,13 @@ public class ShapeFileHandler {
 		}
 		//Catches the last list which doesn't trigger the original add to list.
 		sortedShapeFiles.add(new ArrayList<File>(sameShapeFiles));
+		
+		} catch (IndexOutOfBoundsException e) {
+			logger.debug(e.getStackTrace() + "An error has occured whilst sorting shape files 'i' has referenced something unknown");
+		} catch (Exception e){
+			logger.debug(e.getStackTrace() + "An error has occured whilst sorting shape files, most likely a file does not exist.");
+		}
+		
 		return sortedShapeFiles;
 			
 		}

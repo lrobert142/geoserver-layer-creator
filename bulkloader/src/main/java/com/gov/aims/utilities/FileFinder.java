@@ -7,14 +7,13 @@
 package com.gov.aims.utilities;
 
 import java.io.File;
+import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-
-import com.gov.aims.model.ShapeFileHandler;
 
 public class FileFinder {
 
@@ -25,12 +24,12 @@ public class FileFinder {
 	// Attributes
 	private ArrayList<File> shapeFiles;
 	private ArrayList<File> allFiles;
-	private Logger logger;
+	public Logger logger;
 
 	// Constructor
 	public FileFinder() {
 		BasicConfigurator.configure();
-		logger = Logger.getLogger(ShapeFileHandler.class);
+		logger = Logger.getLogger(FileFinder.class);
 	}
 
 	/**
@@ -84,8 +83,12 @@ public class FileFinder {
 					}
 				}
 			}
-		} catch (Exception e) {
-			logger.debug(e + "error");
+		} catch (NullPointerException e) {
+			logger.debug(e.getStackTrace() + "An error has occurred whilst iterating through a list of file objects.");
+		} catch (FileSystemNotFoundException e){
+			logger.debug(e.getStackTrace() + "An error has occured when attempting to open a directory.");
+		} catch (Exception e){
+			logger.debug(e.getStackTrace() + "ERROR - Some unspecified error has occured whilst attempting to open a directory.");
 		}
 		return shapeFiles;
 	}
@@ -115,8 +118,12 @@ public class FileFinder {
 				}
 
 			}
-		} catch (Exception e) {
-			logger.debug(e + "error");
+		} catch (NullPointerException e) {
+			logger.debug(e.getStackTrace() + "An error has occurred whilst iterating through a list of file objects.");
+		} catch (FileSystemNotFoundException e){
+			logger.debug(e.getStackTrace() + "An error has occured when attempting to open a directory.");
+		} catch (Exception e){
+			logger.debug(e.getStackTrace() + "ERROR - Some unspecified error has occured whilst attempting to open a directory.");
 		}
 		return shapeFiles;
 	}
