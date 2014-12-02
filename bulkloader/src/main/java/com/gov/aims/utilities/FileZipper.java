@@ -16,10 +16,22 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
 
+/**
+ * Handles the zipping of shape files.
+ *
+ */
 public class FileZipper {
 
-	private List<String> fileToZip;
+	//Attributes
+	public List<String> fileToZip;
 
+	
+	/**
+	 * Takes a List of File object lists and zips each list to a desired output location. 
+	 *
+	 * @param The sorted List of File object Lists to be zipped.
+	 * @param The absolute path to the desired output location for the zips.
+	 */
 	public void zipSortedShapeFiles(List<List<File>> sortedShapeFiles,
 			String outputFileLocation) {
 
@@ -56,56 +68,10 @@ public class FileZipper {
 				zos.close();
 			}
 
-			
-
 //			System.out.println("Done");
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-	}
-
-	public void zipListOfFiles(List<File> filesToZip, String outputFileLocation) {
-
-		byte[] buffer = new byte[1024];
-
-		try {
-
-			FileOutputStream fos = new FileOutputStream(outputFileLocation);
-			ZipOutputStream zos = new ZipOutputStream(fos);
-
-//			System.out.println("Output to Zip : " + outputFileLocation);
-
-			for (File file : filesToZip) {
-
-//				System.out.println("File Added : " + file);
-				ZipEntry ze = new ZipEntry(file.getName());
-				zos.putNextEntry(ze);
-
-				FileInputStream in = new FileInputStream(file);
-
-				int len;
-				while ((len = in.read(buffer)) > 0) {
-					zos.write(buffer, 0, len);
-				}
-
-				in.close();
-			}
-
-			zos.closeEntry();
-			zos.close();
-
-//			System.out.println("Done");
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	public List<String> getFileToZip() {
-		return fileToZip;
-	}
-
-	public void setFileToZip(List<String> fileToZip) {
-		this.fileToZip = fileToZip;
 	}
 
 }

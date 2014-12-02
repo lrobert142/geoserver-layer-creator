@@ -5,8 +5,14 @@
 */
 package com.gov.aims.model;
 
+/**
+ * The Shapefile object, attributes relate to what needs to be stored
+ * in the .csv for uploading to the geoserver.
+ *
+ */
 public class ShapeFile {
 	
+	//Attributes
 	private String storePath;
 	private String baseName;
 	private String storeName;
@@ -22,6 +28,7 @@ public class ShapeFile {
 	private String uploadData;
 	private String uploadMetadata;
 	
+	//Getters + Setters.
 	public String getStoreName() {
 		return storeName;
 	}
@@ -95,7 +102,7 @@ public class ShapeFile {
 		this.uploadMetadata = uploadMetadata;
 	}
 	
-		public String getStorePath() {
+	public String getStorePath() {
 		return storePath;
 	}
 	public void setStorePath(String storePath) {

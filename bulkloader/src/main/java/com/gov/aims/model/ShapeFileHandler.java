@@ -13,28 +13,39 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+/**
+ * Handles the sorting of shape files into like groups.
+ *
+ */
 public class ShapeFileHandler {
 	
+	//Attributes
 	public Logger logger;
 	private ArrayList<File> sameShapeFiles;
 	private ArrayList<List<File>> sortedShapeFiles;
 	
 
-
+	//Constructor
 	public ShapeFileHandler(){
 		BasicConfigurator.configure();
 		logger = Logger.getLogger(ShapeFileHandler.class);
 	}
 		
 
-	
+	/**
+	 * Handles the sorting of a list of shape files into groups using the files
+	 * short name less extensions.
+	 *
+	 * @param A list of File objects to be sorted.
+	 * @return Returns an ArrayList of Lists of File objects that have been sorted.
+	 */
 	public ArrayList<List<File>> sortShapeFiles(List<File> shapeFiles){
 		String targetFilename="";
 		String currentFilename="";
 		sameShapeFiles = new ArrayList<File>();
 		sortedShapeFiles = new ArrayList<List<File>>();
 		
-		
+		//Handles the sorting.
 		for (int i = 0; i < shapeFiles.size(); i++) {
 			
 			currentFilename = FilenameUtils.removeExtension(shapeFiles.get(i).getName());
@@ -61,6 +72,7 @@ public class ShapeFileHandler {
 			}
 			
 		}
+		//Catches the last list which doesn't trigger the original add to list.
 		sortedShapeFiles.add(new ArrayList<File>(sameShapeFiles));
 		return sortedShapeFiles;
 			

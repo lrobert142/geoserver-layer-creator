@@ -21,8 +21,20 @@ import au.com.bytecode.opencsv.CSVWriter;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
+
+/**
+ * Handles the writing and parsing of shape files to and from .csv.
+ *
+ */
 public class CsvHandler {
 
+	
+	/**
+	 * Access a .csv and parse each row into a java bean. Using HeadingColumnNameTranslateMappingStrategy.
+	 *
+	 * @param The absolute path of the desired shapeFile .csv to parse.
+	 * @return Returns a a list of files parsed to a java bean.
+	 */
 	public List<ShapeFile> parseShapeFileCSVToBeanList(String filename)
 			throws IOException {
 
@@ -56,6 +68,13 @@ public class CsvHandler {
 		return shapeFile;
 	}
 
+	/**
+	 * Write a list of files to a specified .csv. Takes a list of files which are converted to a
+	 * List of String Arrays before being written the .csv.
+	 *
+	 * @param The list of files to be written to a .csv
+	 * @param The absolute path of the desired output location of the written .csv.
+	 */
 	public void writeShapeFilesToCSVFromList(List<File> fileList,
 			String fileName) throws IOException {
 		FileWriter fileWriter = new FileWriter(fileName);
@@ -67,6 +86,13 @@ public class CsvHandler {
 		fileWriter.close();
 	}
 
+	/**
+	 * Convert a list of File objects to a List of String Arrays.
+	 *
+	 * @param The list of files to be written to be converted.
+	 * 
+	 * @return a List of String Arrays.
+	 */
 	public List<String[]> toStringArray(List<File> fileList) {
 		List<String[]> records = new ArrayList<String[]>();
 		// add header record to the csv.

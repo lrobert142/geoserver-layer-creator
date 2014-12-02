@@ -18,7 +18,7 @@ import com.gov.aims.model.ShapeFileHandler;
 
 public class FileFinder {
 
-	// Constants
+	// Constants for the shape file extensions.
 	public final ArrayList<String> SHAPEFILE_EXTENSIONS = new ArrayList<String>(
 			Arrays.asList(".dbf", ".prj", ".shp", ".shx"));
 
@@ -65,9 +65,8 @@ public class FileFinder {
 	 * @param directory
 	 *            - this is the desired file path to the directory you want.
 	 * @param EXTENSIONS
-	 *            - a list of the extension types desired. e.g. .csv as type
-	 *            string.
-	 * @return Returns a list of files as type File.
+	 *            - a list of the extension types desired. e.g. .csv.
+	 * @return Returns a list of files.
 	 */
 	public ArrayList<File> findFilesByExtension(String directory,
 			List<String> EXTENSIONS) {
@@ -91,6 +90,16 @@ public class FileFinder {
 		return shapeFiles;
 	}
 
+	/**
+	 * Used to find all shape files in the specified directory
+	 * 
+	 *
+	 * @param directory
+	 *            - this is the desired file path to the directory you want.
+	 * @param EXTENSION
+	 *            - a single String of the extension type desired. e.g. .zip.
+	 * @return Returns a list of files..
+	 */
 	public ArrayList<File> findFilesByExtension(String directory,
 			String EXTENSION) {
 		shapeFiles = new ArrayList<File>();
