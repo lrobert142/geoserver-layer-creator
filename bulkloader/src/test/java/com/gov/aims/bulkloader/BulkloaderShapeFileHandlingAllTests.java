@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ ShapeFileCSVParserTest.class, ShapeFileFinderTest.class,
-		ShapeFileZipperTest.class, ShapeFileSorterTest.class })
+		ShapeFileZipperTest.class, ShapeFileSorterTest.class, ShapeFileHandlerWrapperTest.class })
 public class BulkloaderShapeFileHandlingAllTests {
 
 }

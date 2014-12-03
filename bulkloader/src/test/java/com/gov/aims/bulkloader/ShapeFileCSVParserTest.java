@@ -59,7 +59,7 @@ public class ShapeFileCSVParserTest {
 		fileList = sff.findAllBySingleExtension(
 				dir.getAbsolutePath(), ".zip");
 
-		parser.writeShapeFilesToCSVFromList(fileList, writeFile);
+		parser.writeFilesToCsv(fileList, writeFile);
 	}
 
 	
@@ -68,8 +68,8 @@ public class ShapeFileCSVParserTest {
 		fileList = sff.findAllBySingleExtension(
 				dir.getAbsolutePath(), ".zip");
 
-		parser.writeShapeFilesToCSVFromList(fileList, writeFile);
-		assertTrue(parser.parseShapeFileCSVToBeanList(writeFile).size() ==  1);
+		parser.writeFilesToCsv(fileList, writeFile);
+		assertTrue(parser.parseShapeFileToJavaBean(writeFile).size() ==  1);
 		
 	}
 	

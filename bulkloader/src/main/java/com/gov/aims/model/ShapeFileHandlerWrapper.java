@@ -56,18 +56,14 @@ public final class ShapeFileHandlerWrapper {
 		sfz.zipSortedShapeFiles(sortedFiles, targetDirectory);
 		files.addAll(sff.findAllBySingleExtension(targetDirectory, ".zip"));
 		
-		try {
-			parser.writeShapeFilesToCSVFromList(files, targetDirectory + "\\uploadLayers.csv");
-		} catch (IOException e) {
-			logger.debug(e.getStackTrace().toString() + "An error occured whilst trying to write to a .csv");
-		}
+		parser.writeFilesToCsv(files, targetDirectory + "\\uploadLayers.csv");
 		
 	}
 	
 	public List<ShapeFile> parseUploadLayersCsvToBean(String directory){
 		List<ShapeFile> shapeFileBean = new ArrayList<ShapeFile>();
 		try {
-			shapeFileBean = parser.parseShapeFileCSVToBeanList(directory + "\\uploadLayers.csv");
+			shapeFileBean = parser.parseShapeFileToJavaBean(directory + "\\uploadLayers.csv");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
