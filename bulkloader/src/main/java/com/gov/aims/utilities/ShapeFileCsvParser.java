@@ -52,9 +52,9 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 	 *            absolute path of the desired shapeFile .csv to parse.
 	 * @return Returns a a list of files parsed to a java bean.
 	 */
-	public List<ShapeFile> parseShapeFileCSVToBeanList(String filename)
+	@Override
+	public List<ShapeFile> parseShapeFileToJavaBean(String fileNameToParse)
 			throws IOException {
-
 		HeaderColumnNameTranslateMappingStrategy<ShapeFile> beanStrategy = new HeaderColumnNameTranslateMappingStrategy<ShapeFile>();
 		beanStrategy.setType(ShapeFile.class);
 
@@ -77,7 +77,7 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 		beanStrategy.setColumnMapping(columnMapping);
 
 		CsvToBean<ShapeFile> csvToBean = new CsvToBean<ShapeFile>();
-		CSVReader reader = new CSVReader(new FileReader(filename));
+		CSVReader reader = new CSVReader(new FileReader(fileNameToParse));
 
 		List<ShapeFile> shapeFile = csvToBean.parse(beanStrategy, reader);
 		// System.out.println(shapeFile);
@@ -95,26 +95,27 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 	 *            absolute path of the desired output location of the written
 	 *            .csv.
 	 */
-	public void writeShapeFilesToCSVFromList(List<File> fileList,
-			String fileName) throws IOException {
+	@Override
+	public void writeFilesToCsv(List<File> file, String targetFileName) {
 
 		try {
 
-			FileWriter fileWriter = new FileWriter(fileName);
+			FileWriter fileWriter = new FileWriter(targetFileName);
 			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
-			List<String[]> data = toStringArray(fileList);
+			List<String[]> data = toStringArray(file);
 			csvWriter.writeAll(data);
 
 			csvWriter.close();
 			fileWriter.close();
 
 		} catch (Exception e) {
-			logger.debug(e.getStackTrace() + "An error has occured when writing to a .csv");
+			logger.debug(e.getStackTrace()
+					+ "An error has occured when writing to a .csv");
 
 		}
 
 	}
-
+	
 	/**
 	 * Convert a list of File objects to a List of String Arrays.
 	 *
@@ -152,41 +153,4 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 		return records;
 	}
 
-	@Override
-	public List<ShapeFile> parseShapeFileToJavaBean(String fileNameToParse) throws IOException {
-		HeaderColumnNameTranslateMappingStrategy<ShapeFile> beanStrategy = new HeaderColumnNameTranslateMappingStrategy<ShapeFile>();
-		beanStrategy.setType(ShapeFile.class);
-
-		Map<String, String> columnMapping = new HashMap<String, String>();
-		columnMapping.put("storePath", "storePath");
-		columnMapping.put("BASENAME", "baseName");
-		columnMapping.put("storeName", "storeName");
-		columnMapping.put("layerName", "layerName");
-		columnMapping.put("workspace", "workspace");
-		columnMapping.put("storeType", "storeType");
-		columnMapping.put("title", "title");
-		columnMapping.put("abstract", "layerAbstract");
-		columnMapping.put("metadataXmlHref", "metadataXmlHref");
-		columnMapping.put("keywords", "keywords");
-		columnMapping.put("wmsPath", "wmsPath");
-		columnMapping.put("styles", "styles");
-		columnMapping.put("uploadData", "uploadData");
-		columnMapping.put("uploadMetadata", "uploadMetadata");
-
-		beanStrategy.setColumnMapping(columnMapping);
-
-		CsvToBean<ShapeFile> csvToBean = new CsvToBean<ShapeFile>();
-		CSVReader reader = new CSVReader(new FileReader(fileNameToParse));
-
-		List<ShapeFile> shapeFile = csvToBean.parse(beanStrategy, reader);
-		// System.out.println(shapeFile);
-		reader.close();
-		return shapeFile;
-	}
-
-	@Override
-	public void writeFilesToCsv(List<File> file, String targetFileName) {
-		// TODO Auto-generated method stub
-		
-	}
 }
