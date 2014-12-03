@@ -7,10 +7,18 @@
 package com.gov.aims.utilities;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -22,7 +30,6 @@ public class FileFinder {
 			Arrays.asList(".dbf", ".prj", ".shp", ".shx"));
 
 	// Attributes
-	private ArrayList<File> shapeFiles;
 	private ArrayList<File> allFiles;
 	public Logger logger;
 
@@ -39,18 +46,15 @@ public class FileFinder {
 	 * @param this is the desired file path to the directory you want.
 	 * @return Returns a list of files as type File.
 	 */
-	public ArrayList<File> findAllFilesInDir(String directory) {
+	public ArrayList<File> findAllFilesInDir(String targetDirectory) {
 		allFiles = new ArrayList<File>();
 
 		try {
 
-			File[] files = new File(directory).listFiles();
-
-			for (File file : files) {
-				if (file.isFile()) {
-					allFiles.add(file);
-				}
-			}
+			File directory = new File(targetDirectory);
+			allFiles = new ArrayList<File>();
+			
+			allFiles.addAll(listFileTree(directory));
 		} catch (Exception e) {
 			logger.debug(e + "error");
 		}
@@ -67,22 +71,15 @@ public class FileFinder {
 	 *            - a list of the extension types desired. e.g. .csv.
 	 * @return Returns a list of files.
 	 */
-	public ArrayList<File> findFilesByExtension(String directory,
+	public ArrayList<File> findFilesByExtension(String targetDirectory,
 			List<String> EXTENSIONS) {
-		shapeFiles = new ArrayList<File>();
 
 		try {
 
-			File[] files = new File(directory).listFiles();
-
-			for (File file : files) {
-				if (file.isFile()) {
-					for (String s : EXTENSIONS) {
-						if (file.getName().toString().endsWith(s))
-							shapeFiles.add(file);
-					}
-				}
-			}
+			File directory = new File(targetDirectory);
+			allFiles = new ArrayList<File>();
+			
+			allFiles.addAll(listFileTree(directory, EXTENSIONS));
 		} catch (NullPointerException e) {
 			logger.debug(e.getStackTrace() + "An error has occurred whilst iterating through a list of file objects.");
 		} catch (FileSystemNotFoundException e){
@@ -90,7 +87,7 @@ public class FileFinder {
 		} catch (Exception e){
 			logger.debug(e.getStackTrace() + "ERROR - Some unspecified error has occured whilst attempting to open a directory.");
 		}
-		return shapeFiles;
+		return allFiles;
 	}
 
 	/**
@@ -103,21 +100,14 @@ public class FileFinder {
 	 *            - a single String of the extension type desired. e.g. .zip.
 	 * @return Returns a list of files..
 	 */
-	public ArrayList<File> findFilesByExtension(String directory,
+	public ArrayList<File> findFilesByExtension(String targetDirectory,
 			String EXTENSION) {
-		shapeFiles = new ArrayList<File>();
-
 		try {
 
-			File[] files = new File(directory).listFiles();
-
-			for (File file : files) {
-				if (file.isFile()) {
-					if (file.getName().toString().endsWith(EXTENSION))
-						shapeFiles.add(file);
-				}
-
-			}
+			File directory = new File(targetDirectory);
+			allFiles = new ArrayList<File>();
+			
+			allFiles.addAll(listFileTree(directory, EXTENSION));
 		} catch (NullPointerException e) {
 			logger.debug(e.getStackTrace() + "An error has occurred whilst iterating through a list of file objects.");
 		} catch (FileSystemNotFoundException e){
@@ -125,6 +115,52 @@ public class FileFinder {
 		} catch (Exception e){
 			logger.debug(e.getStackTrace() + "ERROR - Some unspecified error has occured whilst attempting to open a directory.");
 		}
-		return shapeFiles;
+		return allFiles;
 	}
+	
+	//These methods handle finding all files in a directory/sub directories based on the input parameters.
+	
+	//List all from list of file extensions 
+	final  Collection<File> listFileTree(File dir, List<String> EXTENSIONS) {
+	    Set<File> fileTree = new HashSet<File>();
+	    for (File entry : dir.listFiles()) {
+	        if (entry.isFile()){
+	        	for (String s : EXTENSIONS) {
+					if (entry.getName().toString().endsWith(s)){
+	        	fileTree.add(entry);
+					}
+	        	}
+	        }
+	        else fileTree.addAll(listFileTree(entry, EXTENSIONS));
+	    }
+	    return fileTree;
+	}
+	
+	//List all with a specified file extension
+	final  Collection<File> listFileTree(File dir, String EXTENSION) {
+	    Set<File> fileTree = new HashSet<File>();
+	    for (File entry : dir.listFiles()) {
+	        if (entry.isFile()){
+					if (entry.getName().toString().endsWith(EXTENSION)){
+	        	fileTree.add(entry);
+					}
+	        }
+	        else fileTree.addAll(listFileTree(entry, EXTENSION));
+	    }
+	    return fileTree;
+	}
+	
+	//List all files in a directory/sub directory
+	final  Collection<File> listFileTree(File dir) {
+	    Set<File> fileTree = new HashSet<File>();
+	    for (File entry : dir.listFiles()) {
+	        if (entry.isFile()){
+	        	fileTree.add(entry);
+	        }
+	        else fileTree.addAll(listFileTree(entry));
+	    }
+	    return fileTree;
+	}
+	
+	
 }
