@@ -7,6 +7,8 @@ package com.gov.aims.utilities;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -46,6 +48,7 @@ public class ShapeFileSorter {
 		sortedShapeFiles = new ArrayList<List<File>>();
 		
 		try {
+			Collections.sort(shapeFiles);
 		
 		//Handles the sorting.
 		for (int i = 0; i < shapeFiles.size(); i++) {
@@ -58,13 +61,11 @@ public class ShapeFileSorter {
 			
 			else if (targetFilename.equals(currentFilename)) {
 				sameShapeFiles.add(shapeFiles.get(i));
-				
 			}
 			
 			else if(!targetFilename.equals(currentFilename)){
 				sortedShapeFiles.add(new ArrayList<File>(sameShapeFiles));
 				sameShapeFiles.clear();
-				
 				targetFilename = currentFilename;
 				sameShapeFiles.add(shapeFiles.get(i));
 				
