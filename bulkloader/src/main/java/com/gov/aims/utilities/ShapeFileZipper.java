@@ -59,18 +59,17 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 				String parentDirectory;
 				currentFilenameForZip = FilenameUtils.removeExtension(sortedShapeFiles.get(i).get(0).getName());
 				
+				outputFileLocation = sortedShapeFiles.get(i).get(0).getParent();
 				
+				FileOutputStream fos = new FileOutputStream(outputFileLocation + "\\" + currentFilenameForZip + outputZipExtension);
+				ZipOutputStream zos = new ZipOutputStream(fos);
 				
 				for (File file : sortedShapeFiles.get(i)) {
 					parentDirectory = file.getParent();
-					System.out.println("parent " +parentDirectory +" " + file.getName());
+//					System.out.println("parent " +parentDirectory +" " + file.getName());
 					outputFileLocation = parentDirectory;
-					System.out.println("output " +outputFileLocation);
+//					System.out.println("output " +outputFileLocation);
 
-					FileOutputStream fos = new FileOutputStream(outputFileLocation + "\\" + currentFilenameForZip + outputZipExtension);
-					System.out.println("FOS " + outputFileLocation);
-					ZipOutputStream zos = new ZipOutputStream(fos);
-					
 //					System.out.println("File Added : " + file);
 					ZipEntry ze = new ZipEntry(file.getName());
 					zos.putNextEntry(ze);
@@ -83,11 +82,9 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 					}
 
 					in.close();
-					
-					zos.closeEntry();
-					zos.close();
 				}
-				
+				zos.closeEntry();
+				zos.close();
 			}
 
 //			System.out.println("Done");
