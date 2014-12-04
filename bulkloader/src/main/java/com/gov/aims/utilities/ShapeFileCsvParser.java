@@ -99,9 +99,10 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 	public void writeFilesToCsv(List<File> file, String targetFileName) {
 
 		try {
-
+			
 			FileWriter fileWriter = new FileWriter(targetFileName);
 			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
+			
 			List<String[]> data = toStringArray(file);
 			csvWriter.writeAll(data);
 
@@ -114,6 +115,25 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 
 		}
 
+	}
+	
+	/**
+	 * Converts absolute file paths containing '\' characters and converts them to '/' characters
+	 *
+	 * @param Absoulte path for a file to be converted.
+	 * 
+	 * @return The converted string.
+	 */
+	public String backslashToForwardslash(String path) {
+		StringBuilder builder = new StringBuilder();
+		char[] pathArray = path.toCharArray();
+		
+		for (int j = 0; j < pathArray.length; j++) {
+			if(pathArray[j] == '\\')
+				pathArray[j] = '/';
+			builder.append(pathArray[j]);
+		}
+		return builder.toString();
 	}
 	
 	/**
@@ -137,7 +157,7 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 		while (it.hasNext()) {
 			try {
 				File file = it.next();
-				records.add(new String[] {file.getAbsolutePath(),
+				records.add(new String[] {backslashToForwardslash(file.getAbsolutePath()),
 						file.getName().substring(0, file.getName().length() - 11),
 						"", "", "", "", "Shapefile", "", "something.xml",
 						"e.g. Maritime Boundary", "", "", "FALSE", "TRUE" });
