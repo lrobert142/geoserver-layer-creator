@@ -29,7 +29,7 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 	//Attributes
 	public List<String> fileToZip;
 	public Logger logger;
-	private final static String outputZipExtension = ".gs.shp.zip";
+	private final static String outputZipExtension = ".zip";
 
 	/**
 	 * Handles the zipping of sorted shape files
@@ -56,14 +56,21 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 //			System.out.println("Output to Zip : " + outputFileLocation);
 
 			for (int i = 0; i < sortedShapeFiles.size(); i++) {
-				
+				String parentDirectory;
 				currentFilenameForZip = FilenameUtils.removeExtension(sortedShapeFiles.get(i).get(0).getName());
 				
-				FileOutputStream fos = new FileOutputStream(outputFileLocation + "\\" + currentFilenameForZip + outputZipExtension);
-				ZipOutputStream zos = new ZipOutputStream(fos);
+				
 				
 				for (File file : sortedShapeFiles.get(i)) {
+					parentDirectory = file.getParent();
+					System.out.println("parent " +parentDirectory +" " + file.getName());
+					outputFileLocation = parentDirectory;
+					System.out.println("output " +outputFileLocation);
 
+					FileOutputStream fos = new FileOutputStream(outputFileLocation + "\\" + currentFilenameForZip + outputZipExtension);
+					System.out.println("FOS " + outputFileLocation);
+					ZipOutputStream zos = new ZipOutputStream(fos);
+					
 //					System.out.println("File Added : " + file);
 					ZipEntry ze = new ZipEntry(file.getName());
 					zos.putNextEntry(ze);
@@ -76,9 +83,11 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 					}
 
 					in.close();
+					
+					zos.closeEntry();
+					zos.close();
 				}
-				zos.closeEntry();
-				zos.close();
+				
 			}
 
 //			System.out.println("Done");
