@@ -21,7 +21,6 @@ import com.gov.aims.utilities.ShapeFileSorter;
 import com.gov.aims.utilities.ShapeFileZipper;
 
 public class ShapeFileZipperTest {
-	
 	static ShapeFileFinder sff;
 	static ShapeFileZipper sfz;
 	static ShapeFileSorter sfh;
@@ -42,14 +41,13 @@ public class ShapeFileZipperTest {
 				try{
 				writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
 						+ sff.SHAPEFILE_EXTENSIONS.get(i));
-				}finally{
+				} finally {
 					writer.flush();
 					writer.close();
 				}
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -72,5 +70,4 @@ public class ShapeFileZipperTest {
 		}
 		dir.delete();
 	}
-
 }

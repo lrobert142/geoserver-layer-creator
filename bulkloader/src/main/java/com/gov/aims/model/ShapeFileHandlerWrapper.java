@@ -19,7 +19,6 @@ import com.gov.aims.utilities.ShapeFileFinder;
  *
  */
 public final class ShapeFileHandlerWrapper {
-	
 	//Attributes
 	private ShapeFileFinder sff;
 	private ShapeFileZipper sfz;
@@ -65,7 +64,6 @@ public final class ShapeFileHandlerWrapper {
 		try {
 			shapeFileBean = parser.parseShapeFileToJavaBean(directory + "\\uploadLayers.csv");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return shapeFileBean;

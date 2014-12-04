@@ -52,9 +52,6 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 		String currentFilenameForZip;
 
 		try {
-
-//			System.out.println("Output to Zip : " + outputFileLocation);
-
 			for (int i = 0; i < sortedShapeFiles.size(); i++) {
 				String parentDirectory;
 				currentFilenameForZip = FilenameUtils.removeExtension(sortedShapeFiles.get(i).get(0).getName());
@@ -66,11 +63,8 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 				
 				for (File file : sortedShapeFiles.get(i)) {
 					parentDirectory = file.getParent();
-//					System.out.println("parent " +parentDirectory +" " + file.getName());
 					outputFileLocation = parentDirectory;
-//					System.out.println("output " +outputFileLocation);
 
-//					System.out.println("File Added : " + file);
 					ZipEntry ze = new ZipEntry(file.getName());
 					zos.putNextEntry(ze);
 
@@ -80,14 +74,12 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 					while ((len = in.read(buffer)) > 0) {
 						zos.write(buffer, 0, len);
 					}
-
 					in.close();
 				}
 				zos.closeEntry();
 				zos.close();
 			}
 
-//			System.out.println("Done");
 		} catch (IOException e){
 			logger.debug(e.getStackTrace() + "An error has occured whilst attempting to open a directory.");
 		} catch (IndexOutOfBoundsException e){
@@ -102,17 +94,10 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 		byte[] buffer = new byte[1024];
 
 		try {
-
-//			System.out.println("Output to Zip : " + outputFileLocation);
-
-				
-				
 				FileOutputStream fos = new FileOutputStream(outputFileLocation + outputZipExtension);
 				ZipOutputStream zos = new ZipOutputStream(fos);
 				
 				for (File file : files) {
-
-//					System.out.println("File Added : " + file);
 					ZipEntry ze = new ZipEntry(file.getName());
 					zos.putNextEntry(ze);
 
@@ -122,13 +107,11 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 					while ((len = in.read(buffer)) > 0) {
 						zos.write(buffer, 0, len);
 					}
-
 					in.close();
 				}
 				zos.closeEntry();
 				zos.close();
 
-//			System.out.println("Done");
 		} catch (IOException e){
 			logger.debug(e.getStackTrace() + "An error has occured whilst attempting to open a directory.");
 		} catch (IndexOutOfBoundsException e){
@@ -136,7 +119,5 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 		} catch (Exception e){
 			logger.debug(e.getStackTrace() + "ERROR - Some other unspecified error has occured whilst iterating through a list of files.");
 		}
-		
 	}
-
 }

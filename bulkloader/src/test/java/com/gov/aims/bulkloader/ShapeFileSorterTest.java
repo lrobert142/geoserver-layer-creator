@@ -22,7 +22,6 @@ import com.gov.aims.utilities.ShapeFileFinder;
 import com.gov.aims.utilities.ShapeFileSorter;
 
 public class ShapeFileSorterTest {
-	
 	static ShapeFileFinder sff;
 	static ShapeFileSorter sfs;
 	static File dir;
@@ -41,18 +40,15 @@ public class ShapeFileSorterTest {
 				try{
 				writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
 						+ sff.SHAPEFILE_EXTENSIONS.get(i));
-				}finally{
+				} finally {
 					writer.flush();
 					writer.close();
 				}
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-	
 	}
 
 	@Test

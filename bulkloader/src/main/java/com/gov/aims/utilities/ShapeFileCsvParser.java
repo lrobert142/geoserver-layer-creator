@@ -41,7 +41,6 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 	public ShapeFileCsvParser() {
 		BasicConfigurator.configure();
 		logger = Logger.getLogger(ShapeFileCsvParser.class);
-
 	}
 
 	/**
@@ -53,8 +52,7 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 	 * @return Returns a a list of files parsed to a java bean.
 	 */
 	@Override
-	public List<ShapeFile> parseShapeFileToJavaBean(String fileNameToParse)
-			throws IOException {
+	public List<ShapeFile> parseShapeFileToJavaBean(String fileNameToParse) throws IOException {
 		HeaderColumnNameTranslateMappingStrategy<ShapeFile> beanStrategy = new HeaderColumnNameTranslateMappingStrategy<ShapeFile>();
 		beanStrategy.setType(ShapeFile.class);
 
@@ -80,7 +78,6 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 		CSVReader reader = new CSVReader(new FileReader(fileNameToParse));
 
 		List<ShapeFile> shapeFile = csvToBean.parse(beanStrategy, reader);
-		// System.out.println(shapeFile);
 		reader.close();
 		return shapeFile;
 	}
@@ -97,9 +94,7 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 	 */
 	@Override
 	public void writeFilesToCsv(List<File> file, String targetFileName) {
-
 		try {
-			
 			FileWriter fileWriter = new FileWriter(targetFileName);
 			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
 			
@@ -108,13 +103,9 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 
 			csvWriter.close();
 			fileWriter.close();
-
 		} catch (Exception e) {
-			logger.debug(e.getStackTrace()
-					+ "An error has occured when writing to a .csv");
-
+			logger.debug(e.getStackTrace() + "An error has occured when writing to a .csv");
 		}
-
 	}
 	
 	/**
@@ -167,10 +158,7 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 			} catch (Exception e) {
 				logger.debug(e.getStackTrace() + "Some other error has occured whilst trying to write an object to a .csv");
 			}
-		
-			
 		}
 		return records;
 	}
-
 }

@@ -44,33 +44,26 @@ public class ShapeFileCSVParserTest {
 		try {
 			writer = new FileWriter(dir.getAbsolutePath() + "\\Test.gs.shp.zip");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 
 		} finally {
 			writer.flush();
 			writer.close();
 		}
-
 	}
 
 	@Test
 	public void writeToCSVTest() throws IOException {
-		fileList = sff.findAllBySingleExtension(
-				dir.getAbsolutePath(), ".zip");
-
+		fileList = sff.findAllBySingleExtension(dir.getAbsolutePath(), ".zip");
 		parser.writeFilesToCsv(fileList, writeFile);
 	}
-
 	
 	@Test
 	public void parseCSVToBeanTest() throws IOException {
-		fileList = sff.findAllBySingleExtension(
-				dir.getAbsolutePath(), ".zip");
+		fileList = sff.findAllBySingleExtension(dir.getAbsolutePath(), ".zip");
 
 		parser.writeFilesToCsv(fileList, writeFile);
 		assertTrue(parser.parseShapeFileToJavaBean(writeFile).size() ==  1);
-		
 	}
 	
 	@AfterClass
@@ -80,5 +73,4 @@ public class ShapeFileCSVParserTest {
 		}
 		dir.delete();
 	}
-	
 }

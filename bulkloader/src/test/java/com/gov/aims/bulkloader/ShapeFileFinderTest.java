@@ -21,7 +21,6 @@ import org.junit.Test;
 import com.gov.aims.utilities.ShapeFileFinder;
 
 public class ShapeFileFinderTest {
-
 	static ShapeFileFinder sff;
 	static Logger logger;
 	static File dir;
@@ -41,17 +40,15 @@ public class ShapeFileFinderTest {
 				try{
 				writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
 						+ sff.SHAPEFILE_EXTENSIONS.get(i));
-				}finally{
+				} finally {
 					writer.flush();
 					writer.close();
 				}
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	@Test
@@ -79,5 +76,4 @@ public class ShapeFileFinderTest {
 		}
 		dir.delete();
 	}
-
 }

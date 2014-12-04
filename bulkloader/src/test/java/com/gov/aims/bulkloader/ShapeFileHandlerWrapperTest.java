@@ -14,7 +14,6 @@ import com.gov.aims.model.ShapeFileHandlerWrapper;
 import com.gov.aims.utilities.ShapeFileFinder;
 
 public class ShapeFileHandlerWrapperTest {
-	
 	static ShapeFileHandlerWrapper handler;
 	static File dir;
 	static FileWriter writer;
@@ -32,12 +31,11 @@ public class ShapeFileHandlerWrapperTest {
 				try{
 				writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
 						+ sff.SHAPEFILE_EXTENSIONS.get(i));
-				}finally{
+				} finally {
 					writer.flush();
 					writer.close();
 				}
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -49,9 +47,9 @@ public class ShapeFileHandlerWrapperTest {
 	}
 	
 	@Test
-	public void parseUploadLayersCsvToBeanTest(){
+	public void parseUploadLayersCsvToBeanTest() {
 		handler.setUpShapeFilesForUpload(dir.getAbsolutePath());
-		assertTrue(handler.parseUploadLayersCsvToBean(dir.getAbsolutePath()).size() ==  1);
+		assertTrue(handler.parseUploadLayersCsvToBean(dir.getAbsolutePath()).size() ==  2);
 	}
 	
 	@AfterClass
@@ -61,5 +59,4 @@ public class ShapeFileHandlerWrapperTest {
 		}
 		dir.delete();
 	}
-
 }

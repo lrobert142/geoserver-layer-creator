@@ -7,7 +7,6 @@ package com.gov.aims.utilities;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +31,6 @@ public class ShapeFileSorter {
 		BasicConfigurator.configure();
 		logger = Logger.getLogger(ShapeFileSorter.class);
 	}
-		
 
 	/**
 	 * Handles the sorting of a list of shape files into groups using the files
@@ -83,9 +81,6 @@ public class ShapeFileSorter {
 		} catch (Exception e){
 			logger.debug(e.getStackTrace() + "An error has occured whilst sorting shape files, most likely a file does not exist.");
 		}
-		
 		return sortedShapeFiles;
-			
-		}
-		
+	}
 }
