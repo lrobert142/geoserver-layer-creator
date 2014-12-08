@@ -10,9 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
-
 import com.gov.aims.utilities.ShapeFileCsvParser;
 import com.gov.aims.utilities.ShapeFileSorter;
 import com.gov.aims.utilities.ShapeFileZipper;
@@ -33,7 +30,6 @@ public final class FileHandlerWrapper {
 	private List<List<File>> sortedFiles;
 	private ShapeFileCsvParser shpParser;
 	private TiffFileCsvParser tifParser;
-	private Logger logger;
 	
 	//Constructor
 	public FileHandlerWrapper(){
@@ -42,8 +38,6 @@ public final class FileHandlerWrapper {
 		sfs = new ShapeFileSorter();
 		shpParser = new ShapeFileCsvParser();
 		tifParser = new TiffFileCsvParser();
-		BasicConfigurator.configure();
-		logger = Logger.getLogger(FileHandlerWrapper.class);
 	}
 
 	/**
@@ -64,7 +58,6 @@ public final class FileHandlerWrapper {
 		files.addAll(sff.findAllBySingleExtension(targetDirectory, ".zip"));
 		
 		shpParser.writeFilesToCsv(files, targetDirectory + "\\uploadLayers.csv");
-		
 	}
 	
 	/**
@@ -77,10 +70,7 @@ public final class FileHandlerWrapper {
 		
 		files.addAll(sff.findAllBySingleExtension(targetDirectory, ".tif"));
 		tifParser.writeFilesToCsv(files, targetDirectory + "\\uploadLayers.csv");
-		
 	}
-	
-	
 	
 	public List<ShapeFile> parseShapeFileUploadLayersCsvToBean(String directory){
 		List<ShapeFile> shapeFileBean = new ArrayList<ShapeFile>();

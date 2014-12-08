@@ -60,8 +60,7 @@ public class TiffFileCsvParser implements TiffFileCsvParserInterface {
 			csvWriter.close();
 			fileWriter.close();
 		} catch (Exception e) {
-			logger.debug(e.getStackTrace()
-					+ "An error has occured when writing to a .csv");
+			logger.debug(e.getStackTrace() + "An error has occured when writing to a .csv");
 		}
 	}
 
@@ -74,10 +73,8 @@ public class TiffFileCsvParser implements TiffFileCsvParserInterface {
 	public List<String[]> toStringArray(List<File> fileList) {
 		List<String[]> records = new ArrayList<String[]>();
 		// add header record to the csv.
-		records.add(new String[] { "storePath", "ORIG_STORE", "REGION", "SUBREGION", "YEAR",
-				"MONTH", "SCENE1", "SCENE2", "storeName", "layerName",
-				"workspace", "storeType", "date", "title", "abstract",
-				"metadataXmlHref", "keywords", "wmsPath", "styles",
+		records.add(new String[] { "storePath", "ORIG_STORE", "REGION", "SUBREGION", "YEAR", "MONTH", "SCENE1", "SCENE2", "storeName", "layerName",
+				"workspace", "storeType", "date", "title", "abstract", "metadataXmlHref", "keywords", "wmsPath", "styles",
 				"uploadData", "uploadMetadata" });
 
 		// Add new record per object in list with defaults entries to the csv.
@@ -87,17 +84,12 @@ public class TiffFileCsvParser implements TiffFileCsvParserInterface {
 				File file = it.next();
 				records.add(new String[] {
 						backslashToForwardslash(file.getAbsolutePath()),
-						file.getName()
-								.substring(0, file.getName().length() - 4), "",
-						"", "", "", "", "", "", "", "", "GeoTIFF", "", "", "", "",
-						"", "", "", "TRUE", "TRUE" });
-
+						file.getName().substring(0, file.getName().length() - 4), "",
+						"", "", "", "", "", "", "", "", "GeoTIFF", "", "", "", "", "", "", "", "TRUE", "TRUE" });
 			} catch (IndexOutOfBoundsException e) {
-				logger.debug(e.getStackTrace()
-						+ "An error occured when writing object to .csv - file open or caused by too many defaults or not enough to match number of columns");
+				logger.debug(e.getStackTrace() + "An error occured when writing object to .csv - file open or caused by too many defaults or not enough to match number of columns");
 			} catch (Exception e) {
-				logger.debug(e.getStackTrace()
-						+ "Some other error has occured whilst trying to write an object to a .csv");
+				logger.debug(e.getStackTrace() + "Some other error has occured whilst trying to write an object to a .csv");
 			}
 		}
 		return records;
@@ -144,7 +136,6 @@ public class TiffFileCsvParser implements TiffFileCsvParserInterface {
 		List<TiffFile> TiffFiles = csvToBean.parse(beanStrategy, reader);
 		reader.close();
 		return TiffFiles;
-
 	}
 
 	/**
@@ -167,5 +158,4 @@ public class TiffFileCsvParser implements TiffFileCsvParserInterface {
 		}
 		return builder.toString();
 	}
-
 }

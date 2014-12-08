@@ -45,8 +45,7 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 	 * @param The sorted List of File object Lists to be zipped.
 	 * @param The absolute path to the desired output location for the zips.
 	 */
-	public void zipSortedShapeFiles(List<List<File>> sortedShapeFiles,
-			String outputFileLocation) {
+	public void zipSortedShapeFiles(List<List<File>> sortedShapeFiles, String outputFileLocation) {
 
 		byte[] buffer = new byte[1024];
 		String currentFilenameForZip;

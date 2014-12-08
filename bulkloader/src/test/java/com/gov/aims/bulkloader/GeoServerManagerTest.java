@@ -10,8 +10,6 @@ import static org.junit.Assert.*;
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -26,7 +24,7 @@ public class GeoServerManagerTest {
 	private String testStoreName = "testStore";
 	
 	@BeforeClass
-	public static void init() throws MalformedURLException {
+	public static void init() {
 		manager = new GeoServerManager("http://localhost:8080/geoserver/", "admin", "geoserver");
 		publisher = new GeoServerRESTPublisher("http://localhost:8080/geoserver/", "admin", "geoserver");
 	}
@@ -39,14 +37,14 @@ public class GeoServerManagerTest {
 		}
 	}
 
-	//@Test
-	public void createWorkspaceTest() throws MalformedURLException {
+	@Test
+	public void createWorkspaceTest() {
 		assertTrue(manager.createWorkspace(testWorkspaceName));
 		assertTrue(manager.checkForWorkspace(testWorkspaceName));
 	}
 	
-	//@Test
-	public void createStoreTest() throws MalformedURLException {
+	@Test
+	public void createDataStoreTest() {
 		assertTrue(manager.createWorkspace(testWorkspaceName));
 		assertTrue(manager.checkForWorkspace(testWorkspaceName));
 		assertTrue(manager.createDataStore(testWorkspaceName, testStoreName));
@@ -54,11 +52,22 @@ public class GeoServerManagerTest {
 	}
 	
 	@Test
-	public void uploadToServerTest() throws IllegalArgumentException, IOException {
+	public void createCoverageStoreTest() {
+		assertTrue(manager.createWorkspace(testWorkspaceName));
+		assertTrue(manager.checkForWorkspace(testWorkspaceName));
+		assertTrue(manager.checkForCoverageStore("sf", "sfdem"));
+	}
+	
+	@Test
+	public void uploadShapeFileTest() {
 		File fileToUpload = new File("C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\AU_GA_Maritime-boundaries\\cs_poly.zip");
 		File prjFile = new File("C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\AU_GA_Maritime-boundaries\\cs_poly.prj");
-		//assertTrue(manager.createWorkspace(testWorkspaceName));
-		//assertTrue(manager.createDataStore(testWorkspaceName, testStoreName));
-		assertTrue(manager.upload(testWorkspaceName, testStoreName, fileToUpload, prjFile, "PNG Fish", "This is the abstract", null, "keyword1,keyword2", "Boundaries/Australian Maritime Boundaries (GA)"));
+		assertTrue(manager.uploadShapeFile(testWorkspaceName, testStoreName, fileToUpload, prjFile, "PNG Fish", "This is the abstract", null, "keyword1,keyword2", "Boundaries/Australian Maritime Boundaries (GA)"));
+	}
+	
+	@Test
+	public void uploadRasterFileTest() {
+		File fileToUpLoad = new File("C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\truecolour-small\\L5\\96_71\\L5096071_07119890917.tif");
+		assertTrue(manager.uploadGeoTIFFFile(testWorkspaceName, testStoreName, fileToUpLoad, "TiffFile", "Abstract", null, "keyword1,keyword2", "Boundaries/Australian Maritime Boundaries (GA)"));
 	}
 }

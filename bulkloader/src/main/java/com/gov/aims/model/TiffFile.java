@@ -211,10 +211,4 @@ public class TiffFile {
 	public void setSUBREGION(String sUBREGION) {
 		SUBREGION = sUBREGION;
 	}
-	
-	
-	
-	
-	
-
 }

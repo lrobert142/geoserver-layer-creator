@@ -71,7 +71,6 @@ public class ShapeFileSorter {
 			else{
 				sameShapeFiles.add(shapeFiles.get(i));
 			}
-			
 		}
 		//Catches the last list which doesn't trigger the original add to list.
 		sortedShapeFiles.add(new ArrayList<File>(sameShapeFiles));
