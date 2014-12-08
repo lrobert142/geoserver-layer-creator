@@ -1,9 +1,8 @@
-/*
-@author	Stuart Garrigan
-@version 1.0
-@since 27-11-2014
- */
-
+/**
+@author Stuart Garrigan
+@version 1.0.0
+@since 8/12/14
+**/
 package com.gov.aims.bulkloader;
 
 import static org.junit.Assert.*;
@@ -20,26 +19,26 @@ import org.junit.Test;
 
 import com.gov.aims.utilities.FileFinder;
 
-public class ShapeFileFinderTest {
-	static FileFinder sff;
+public class TiffFileFinderTest {
+	static FileFinder ff;
 	static Logger logger;
 	static File dir;
 	static FileWriter writer;
 
 	@BeforeClass
 	public static void setUp() {
-		logger = Logger.getLogger(ShapeFileFinderTest.class);
+		logger = Logger.getLogger(TiffFileFinderTest.class);
 		BasicConfigurator.configure();
-		sff = new FileFinder();
+		ff = new FileFinder();
 
 		dir = new File("TestResources");
 		dir.mkdir();
 
 		try {
-			for (int i = 0; i < sff.SHAPEFILE_EXTENSIONS.size(); i++) {
+			for (int i = 0; i < 5; i++) {
 				try{
 				writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
-						+ sff.SHAPEFILE_EXTENSIONS.get(i));
+						+ i + ".tif");
 				} finally {
 					writer.flush();
 					writer.close();
@@ -53,19 +52,13 @@ public class ShapeFileFinderTest {
 
 	@Test
 	public void findAllFilesInDirTest() {
-		assertTrue(sff.findAll(dir.getAbsolutePath()).size() == sff.SHAPEFILE_EXTENSIONS.size());
-	}
-
-	@Test
-	public void findFilesByExtensionListTest() {
-		assertTrue(sff.findAllByExtensionList(dir.getAbsolutePath(),
-				sff.SHAPEFILE_EXTENSIONS).size() == sff.SHAPEFILE_EXTENSIONS.size());
+		assertTrue(ff.findAll(dir.getAbsolutePath()).size() == 5);
 	}
 
 	@Test
 	public void findByExtensionSingleStrTest() {
-		assertTrue(sff.findAllBySingleExtension(dir.getAbsolutePath(),
-				sff.SHAPEFILE_EXTENSIONS.get(0)).size() == 1);
+		assertTrue(ff.findAllBySingleExtension(dir.getAbsolutePath(),
+				".tif").size() == 5);
 	}
 	
 
@@ -76,4 +69,5 @@ public class ShapeFileFinderTest {
 		}
 		dir.delete();
 	}
+
 }

@@ -1,3 +1,8 @@
+/**
+@author Stuart Garrigan
+@version 1.0.0
+@since 8/12/14
+**/
 package com.gov.aims.utilities;
 
 import interfaces.FileFinderInterface;
@@ -7,6 +12,7 @@ import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +20,7 @@ import java.util.Set;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-public class ShapeFileFinder implements FileFinderInterface {
+public class FileFinder implements FileFinderInterface {
 	// Constants for the shape file extensions.
 	public final ArrayList<String> SHAPEFILE_EXTENSIONS = new ArrayList<String>(Arrays.asList(".dbf", ".prj", ".shp", ".shx"));
 
@@ -23,9 +29,9 @@ public class ShapeFileFinder implements FileFinderInterface {
 	public Logger logger;
 	
 	// Constructor
-	public ShapeFileFinder() {
+	public FileFinder() {
 		BasicConfigurator.configure();
-		logger = Logger.getLogger(ShapeFileFinder.class);
+		logger = Logger.getLogger(FileFinder.class);
 	}
 
 	@Override
@@ -40,6 +46,7 @@ public class ShapeFileFinder implements FileFinderInterface {
 		} catch (Exception e) {
 			logger.debug(e + "error");
 		}
+		Collections.sort(allFiles);
 		return allFiles;
 	}
 
@@ -57,6 +64,7 @@ public class ShapeFileFinder implements FileFinderInterface {
 		} catch (Exception e){
 			logger.debug(e.getStackTrace() + "ERROR - Some unspecified error has occured whilst attempting to open a directory.");
 		}
+		Collections.sort(allFiles);
 		return allFiles;
 	}
 
@@ -74,6 +82,7 @@ public class ShapeFileFinder implements FileFinderInterface {
 		} catch (Exception e){
 			logger.debug(e.getStackTrace() + "ERROR - Some unspecified error has occured whilst attempting to open a directory.");
 		}
+		Collections.sort(allFiles);
 		return allFiles;
 	}
 		

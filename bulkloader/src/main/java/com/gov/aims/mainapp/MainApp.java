@@ -9,17 +9,17 @@ import org.apache.log4j.Logger;
 
 import com.gov.aims.model.GeoServerManager;
 import com.gov.aims.model.ShapeFile;
-import com.gov.aims.model.ShapeFileHandlerWrapper;
+import com.gov.aims.model.FileHandlerWrapper;
 
 public class MainApp {
-	private ShapeFileHandlerWrapper shapeFileHandler;
+	private FileHandlerWrapper shapeFileHandler;
 	private GeoServerManager geoServerManager;
 	private Logger logger;
 	
 	public MainApp() {
 		BasicConfigurator.configure();
 		logger = Logger.getLogger(MainApp.class);
-		shapeFileHandler = new ShapeFileHandlerWrapper();
+		shapeFileHandler = new FileHandlerWrapper();
 		try {
 			geoServerManager = new GeoServerManager("http://localhost:8080/geoserver/", "admin", "geoserver");
 		} catch (MalformedURLException e) {
@@ -28,7 +28,7 @@ public class MainApp {
 	}
 	
 	private List<ShapeFile> parseCSVToShapeFileBean(String csvDirectory) {
-		return shapeFileHandler.parseUploadLayersCsvToBean(csvDirectory);
+		return shapeFileHandler.parseShapeFileUploadLayersCsvToBean(csvDirectory);
 	}
 	
 	public void setUp(String csvDirectory) {

@@ -18,18 +18,18 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.gov.aims.utilities.ShapeFileFinder;
+import com.gov.aims.utilities.FileFinder;
 import com.gov.aims.utilities.ShapeFileSorter;
 
 public class ShapeFileSorterTest {
-	static ShapeFileFinder sff;
+	static FileFinder sff;
 	static ShapeFileSorter sfs;
 	static File dir;
 	static FileWriter writer;
 	
 	@BeforeClass
 	public static void setUp(){
-		sff = new ShapeFileFinder();
+		sff = new FileFinder();
 		sfs = new ShapeFileSorter();
 
 		dir = new File("TestResources");

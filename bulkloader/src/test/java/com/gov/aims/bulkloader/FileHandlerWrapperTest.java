@@ -1,3 +1,8 @@
+/**
+@author Stuart Garrigan
+@version 1.0.0
+@since 8/12/14
+**/
 package com.gov.aims.bulkloader;
 
 import static org.junit.Assert.*;
@@ -10,19 +15,19 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.gov.aims.model.ShapeFileHandlerWrapper;
-import com.gov.aims.utilities.ShapeFileFinder;
+import com.gov.aims.model.FileHandlerWrapper;
+import com.gov.aims.utilities.FileFinder;
 
-public class ShapeFileHandlerWrapperTest {
-	static ShapeFileHandlerWrapper handler;
+public class FileHandlerWrapperTest {
+	static FileHandlerWrapper handler;
 	static File dir;
 	static FileWriter writer;
-	static ShapeFileFinder sff;
+	static FileFinder sff;
 	
 	@BeforeClass
 	public static void setUp(){
-		handler = new ShapeFileHandlerWrapper();
-		sff = new ShapeFileFinder();
+		handler = new FileHandlerWrapper();
+		sff = new FileFinder();
 		dir = new File("TestResources");
 		dir.mkdir();
 
@@ -36,21 +41,34 @@ public class ShapeFileHandlerWrapperTest {
 					writer.close();
 				}
 			}
+			for (int i = 0; i < 5; i++) {
+			try {
+				writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + i + ".tif");
+			
+			} finally{
+				writer.flush();
+				writer.close();
+			}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	
 	@Test
-	public void setUpShapeFilesForUploadTest(){
+	public void setUpShapeFilesForUpload() {
 		handler.setUpShapeFilesForUpload(dir.getAbsolutePath());
+		assertTrue(handler.parseShapeFileUploadLayersCsvToBean(dir.getAbsolutePath()).size() ==  1);
 	}
 	
 	@Test
-	public void parseUploadLayersCsvToBeanTest() {
-		handler.setUpShapeFilesForUpload(dir.getAbsolutePath());
-		assertTrue(handler.parseUploadLayersCsvToBean(dir.getAbsolutePath()).size() ==  2);
+	public void setUpTiffFilesForUpload(){
+		handler.setUpTiffFilesForUpload(dir.getAbsolutePath());
+		assertTrue(handler.parseTiffFileUploadLayersCsvToBean(dir.getAbsolutePath()).size() == 5);
 	}
+	
+	
 	
 	@AfterClass
 	public static void cleanUp() {

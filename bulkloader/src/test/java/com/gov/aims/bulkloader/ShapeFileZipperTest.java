@@ -16,12 +16,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.gov.aims.utilities.ShapeFileFinder;
+import com.gov.aims.utilities.FileFinder;
 import com.gov.aims.utilities.ShapeFileSorter;
 import com.gov.aims.utilities.ShapeFileZipper;
 
 public class ShapeFileZipperTest {
-	static ShapeFileFinder sff;
+	static FileFinder sff;
 	static ShapeFileZipper sfz;
 	static ShapeFileSorter sfh;
 	static File dir;
@@ -29,7 +29,7 @@ public class ShapeFileZipperTest {
 	
 	@BeforeClass
 	public static void setUp(){
-		sff = new ShapeFileFinder();
+		sff = new FileFinder();
 		sfz = new ShapeFileZipper();
 		sfh = new ShapeFileSorter();
 		

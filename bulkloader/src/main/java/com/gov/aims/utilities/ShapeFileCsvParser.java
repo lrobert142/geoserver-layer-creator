@@ -149,7 +149,7 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 			try {
 				File file = it.next();
 				records.add(new String[] {backslashToForwardslash(file.getAbsolutePath()),
-						file.getName().substring(0, file.getName().length() - 11),
+						file.getName().substring(0, file.getName().length() - 4),
 						"", "", "", "", "Shapefile", "", "something.xml",
 						"e.g. Maritime Boundary", "", "", "FALSE", "TRUE" });
 			

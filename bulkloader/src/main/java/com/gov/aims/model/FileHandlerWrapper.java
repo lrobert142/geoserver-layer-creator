@@ -1,3 +1,8 @@
+/**
+@author Stuart Garrigan
+@version 1.0.0
+@since 8/12/14
+**/
 package com.gov.aims.model;
 
 import java.io.File;
@@ -11,31 +16,34 @@ import org.apache.log4j.Logger;
 import com.gov.aims.utilities.ShapeFileCsvParser;
 import com.gov.aims.utilities.ShapeFileSorter;
 import com.gov.aims.utilities.ShapeFileZipper;
-import com.gov.aims.utilities.ShapeFileFinder;
+import com.gov.aims.utilities.FileFinder;
+import com.gov.aims.utilities.TiffFileCsvParser;
 
 /**
  * Handles all aspects of shape files: finding, sorting, zipping and creating a .csv
  * for uploading in one method.
  *
  */
-public final class ShapeFileHandlerWrapper {
+public final class FileHandlerWrapper {
 	//Attributes
-	private ShapeFileFinder sff;
+	private FileFinder sff;
 	private ShapeFileZipper sfz;
 	private ShapeFileSorter sfs;
 	private List<File> files;
 	private List<List<File>> sortedFiles;
-	private ShapeFileCsvParser parser;
+	private ShapeFileCsvParser shpParser;
+	private TiffFileCsvParser tifParser;
 	private Logger logger;
 	
 	//Constructor
-	public ShapeFileHandlerWrapper(){
-		sff = new ShapeFileFinder();
+	public FileHandlerWrapper(){
+		sff = new FileFinder();
 		sfz = new ShapeFileZipper();
 		sfs = new ShapeFileSorter();
-		parser = new ShapeFileCsvParser();
+		shpParser = new ShapeFileCsvParser();
+		tifParser = new TiffFileCsvParser();
 		BasicConfigurator.configure();
-		logger = Logger.getLogger(ShapeFileHandlerWrapper.class);
+		logger = Logger.getLogger(FileHandlerWrapper.class);
 	}
 
 	/**
@@ -55,17 +63,42 @@ public final class ShapeFileHandlerWrapper {
 		sfz.zipSortedShapeFiles(sortedFiles, targetDirectory);
 		files.addAll(sff.findAllBySingleExtension(targetDirectory, ".zip"));
 		
-		parser.writeFilesToCsv(files, targetDirectory + "\\uploadLayers.csv");
+		shpParser.writeFilesToCsv(files, targetDirectory + "\\uploadLayers.csv");
 		
 	}
 	
-	public List<ShapeFile> parseUploadLayersCsvToBean(String directory){
+	/**
+	 * Used as a wrapper class for carrying out all Tiff file handling activities.
+	 * 
+	 * @param The target directory containing Tiff files.
+	 */
+	public void setUpTiffFilesForUpload(String targetDirectory){
+		files = new ArrayList<File>();
+		
+		files.addAll(sff.findAllBySingleExtension(targetDirectory, ".tif"));
+		tifParser.writeFilesToCsv(files, targetDirectory + "\\uploadLayers.csv");
+		
+	}
+	
+	
+	
+	public List<ShapeFile> parseShapeFileUploadLayersCsvToBean(String directory){
 		List<ShapeFile> shapeFileBean = new ArrayList<ShapeFile>();
 		try {
-			shapeFileBean = parser.parseShapeFileToJavaBean(directory + "\\uploadLayers.csv");
+			shapeFileBean = shpParser.parseShapeFileToJavaBean(directory + "\\uploadLayers.csv");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return shapeFileBean;
+	}
+	
+	public List<TiffFile> parseTiffFileUploadLayersCsvToBean(String directory){
+		List<TiffFile> TiffFileBean = new ArrayList<TiffFile>();
+		try {
+			TiffFileBean = tifParser.parseTiffFileToJavaBean(directory + "\\uploadLayers.csv");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return TiffFileBean;
 	}
 }
