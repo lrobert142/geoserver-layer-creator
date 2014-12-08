@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -35,10 +34,9 @@ public class TiffFileCsvParser implements TiffFileCsvParserInterface {
 
 	// Constructor
 	public TiffFileCsvParser() {
-		BasicConfigurator.configure();
 		logger = Logger.getLogger(TiffFileCsvParser.class);
-
 	}
+	
 	/**
 	 * Takes a list of files and the target directory then writes the files to
 	 * the .csv

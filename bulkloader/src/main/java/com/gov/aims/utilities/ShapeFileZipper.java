@@ -15,7 +15,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import com.gov.aims.interfaces.ShapeFileZipperInterface;
@@ -35,7 +34,6 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 	 * Handles the zipping of sorted shape files
 	 */
 	public ShapeFileZipper(){
-		BasicConfigurator.configure();
 		logger = Logger.getLogger(ShapeFileZipper.class);
 	}
 	

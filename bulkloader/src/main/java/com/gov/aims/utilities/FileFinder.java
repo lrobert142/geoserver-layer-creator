@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import com.gov.aims.interfaces.FileFinderInterface;
@@ -30,7 +29,6 @@ public class FileFinder implements FileFinderInterface {
 	
 	// Constructor
 	public FileFinder() {
-		BasicConfigurator.configure();
 		logger = Logger.getLogger(FileFinder.class);
 	}
 

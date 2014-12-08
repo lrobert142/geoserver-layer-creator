@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import it.geosolutions.geoserver.rest.GeoServerRESTManager;
@@ -66,7 +65,6 @@ public class GeoServerManager {
 		} catch (MalformedURLException e) {
 			logger.debug("Something went wrong with the GeoServerURL. Please check it and try again");
 		}
-		BasicConfigurator.configure();
 		logger = Logger.getLogger(GeoServerManager.class);
 		manager = new GeoServerRESTManager(geoServerURL, userName, password);
 		reader = manager.getReader();

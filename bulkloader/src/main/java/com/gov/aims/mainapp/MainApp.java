@@ -9,6 +9,9 @@ package com.gov.aims.mainapp;
 import java.io.File;
 import java.util.List;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import com.gov.aims.model.GeoServerManager;
 import com.gov.aims.model.ShapeFile;
 import com.gov.aims.model.FileHandlerWrapper;
@@ -20,11 +23,14 @@ import com.gov.aims.model.TiffFile;
 public class MainApp {
 	private FileHandlerWrapper fileHandler;
 	private GeoServerManager geoServerManager;
+	private Logger logger;
 	
 	/**
 	 * Constructor - sets up the directory for use and makes a connection to the GeoServer
 	 */
 	public MainApp() {
+		BasicConfigurator.configure();
+		logger = Logger.getLogger(MainApp.class);
 		fileHandler = new FileHandlerWrapper();
 		geoServerManager = new GeoServerManager("http://localhost:8080/geoserver/", "admin", "geoserver");
 	}

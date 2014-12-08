@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 /**
@@ -28,7 +27,6 @@ public class ShapeFileSorter {
 
 	//Constructor
 	public ShapeFileSorter(){
-		BasicConfigurator.configure();
 		logger = Logger.getLogger(ShapeFileSorter.class);
 	}
 
