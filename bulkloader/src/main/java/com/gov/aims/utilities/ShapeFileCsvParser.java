@@ -148,7 +148,7 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 				records.add(new String[] {backslashToForwardslash(file.getAbsolutePath()),
 						file.getName().substring(0, file.getName().length() - 4),
 						"", "", "", "", "Shapefile", "", "something.xml",
-						"e.g. Maritime Boundary", "", "", "FALSE", "TRUE" });
+						"e.g. Maritime Boundary", "", "", "TRUE", "TRUE" });
 			
 			} catch (IndexOutOfBoundsException e) {
 				logger.debug(e.getStackTrace() + "An error occured when writing object to .csv, likely caused by too many defaults or not enough to match number of columns");

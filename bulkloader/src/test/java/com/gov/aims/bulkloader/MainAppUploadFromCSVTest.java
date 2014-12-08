@@ -16,14 +16,16 @@ public class MainAppUploadFromCSVTest {
 	public static void init() {
 		app = new MainApp();
 	}
-
+	
 	@Test
 	public void uploadShapeFilesFromCSV() {
 		assertTrue(app.uploadShapeFilesToGeoServer(shapeFileDirectory));
+		assertTrue(app.deleteWorkspace("AU_GA"));
 	}
 	
 	@Test
 	public void uploadTifFilesFromCSV() {
 		assertTrue(app.uploadTiffFilesToGeoServer(tifFileDirectory));
+		assertTrue(app.deleteWorkspace("test"));
 	}
 }

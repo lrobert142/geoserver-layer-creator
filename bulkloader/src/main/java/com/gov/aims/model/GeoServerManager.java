@@ -104,6 +104,11 @@ public class GeoServerManager {
 		return publisher.createWorkspace(workspaceName);
 	}
 	
+	public boolean deleteWorkspace(String workspaceName) {
+		publisher.removeWorkspace(workspaceName, true);
+		return !checkForWorkspace(workspaceName);
+	}
+	
 	/**
 	 * Checks to see if a datastore currently exists in a workspace on the GeoServer
 	 * @param workspaceName - the name of the workplace to search in
@@ -386,32 +391,32 @@ public class GeoServerManager {
 	public boolean uploadGeoTIFFFile(String workspaceName, String storeName, File tifFile, String title, String abstractText, String metadataLink, String keywords, String wmsPath) {
 		String layerName = FilenameUtils.getBaseName(tifFile.toString());
 		
-		if(workspaceName.length() == 0 || workspaceName == null) {
+		if (workspaceName.length() == 0 || workspaceName == null) {
 			logger.debug("Workspace name for " + layerName + " cannot be empty") ;
 			return false;
 		}
 		
-		if(storeName.length() == 0 || storeName == null) {
+		if (storeName.length() == 0 || storeName == null) {
 			logger.debug("Store name for " + layerName + " cannot be empty") ;
 			return false;
 		}
 		
-		if(!checkForWorkspace(workspaceName)) {
+		if (!checkForWorkspace(workspaceName)) {
 			createWorkspace(workspaceName);
 			logger.debug("Workspace did not exist before, it has now been created and exists");
 		}
 		
-		if(!FilenameUtils.getExtension(tifFile.toString()).equals("tif")) {
+		if (!FilenameUtils.getExtension(tifFile.toString()).equals("tif")) {
 			logger.debug("File entered is not a .tif file");
 			return false;
 		}
 		
-		if(title.length() == 0 || title == null) {
+		if (title.length() == 0 || title == null) {
 			logger.debug("Title for " + layerName + " cannot be empty") ;
 			return false;
 		}
 		
-		if(wmsPath.length() == 0 || wmsPath == null) {
+		if (wmsPath.length() == 0 || wmsPath == null) {
 			logger.debug("WMS path for " + layerName + " cannot be empty") ;
 			return false;
 		}
@@ -454,42 +459,42 @@ public class GeoServerManager {
 	public boolean uploadShapeFile(String workspaceName, String storeName, File zipFile, File prjFile, String title, String abstractText, String metadataLink, String keywords, String wmsPath) {
 		String layerName = FilenameUtils.getBaseName(zipFile.toString());
 		
-		if(workspaceName.length() == 0 || workspaceName == null) {
+		if (workspaceName.length() == 0 || workspaceName == null) {
 			logger.debug("Workspace name for " + layerName + " cannot be empty") ;
 			return false;
 		}
 		
-		if(!checkForWorkspace(workspaceName)) {
+		if (!checkForWorkspace(workspaceName)) {
 			createWorkspace(workspaceName);
 			logger.debug("Workspace did not exist before, it has now been created and exists");
 		}
 		
-		if(storeName.length() == 0 || storeName == null) {
+		if (storeName.length() == 0 || storeName == null) {
 			logger.debug("Store name for " + layerName + " cannot be empty") ;
 			return false;
 		}
 		
-		if(!checkForDataStore(workspaceName, storeName)) {
+		if (!checkForDataStore(workspaceName, storeName)) {
 			createDataStore(workspaceName, storeName);
 			logger.debug("Datastore did not exist before, it has now been created and exists");
 		}
 		
-		if(!FilenameUtils.getExtension(zipFile.toString()).equals("zip")) {
+		if (!FilenameUtils.getExtension(zipFile.toString()).equals("zip")) {
 			logger.debug("File entered is not a .zip file");
 			return false;
 		}
 		
-		if(!FilenameUtils.getExtension(prjFile.toString()).equals("prj")) {
+		if (!FilenameUtils.getExtension(prjFile.toString()).equals("prj")) {
 			logger.debug("File entered is not a .prj file. This function requires a .prj file to be passed to it in order to work");
 			return false;
 		}
 		
-		if(title.length() == 0 || title == null) {
+		if (title.length() == 0 || title == null) {
 			logger.debug("Title for " + layerName + " cannot be empty") ;
 			return false;
 		}
 		
-		if(wmsPath.length() == 0 || wmsPath == null) {
+		if (wmsPath.length() == 0 || wmsPath == null) {
 			logger.debug("WMS path for " + layerName + " cannot be empty") ;
 			return false;
 		}

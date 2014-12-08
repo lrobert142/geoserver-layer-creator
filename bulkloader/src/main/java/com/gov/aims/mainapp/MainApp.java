@@ -9,6 +9,7 @@ package com.gov.aims.mainapp;
 import java.io.File;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -41,6 +42,7 @@ public class MainApp {
 	 */
 	public void setUpShapeFiles(String csvDirectory) {
 		fileHandler.setUpShapeFilesForUpload(csvDirectory);
+		logger.debug("Shape files ready for upload");
 	}
 	
 	/**
@@ -49,6 +51,7 @@ public class MainApp {
 	 */
 	public void setUpTiffFiles(String targetDirectory) {
 		fileHandler.setUpTiffFilesForUpload(targetDirectory);
+		logger.debug("Tiff files ready for upload");
 	}
 	
 	/**
@@ -61,10 +64,14 @@ public class MainApp {
 		for(ShapeFile shapeFile : shapeFiles) {
 			File zipFile = new File(changeFilePathExtension("zip", shapeFile.getStorePath()));
 			File prjFile = new File(changeFilePathExtension("prj", shapeFile.getStorePath()));
-			if(!geoServerManager.uploadShapeFile(shapeFile.getWorkspace(), shapeFile.getStoreName(), zipFile, prjFile, shapeFile.getTitle(), shapeFile.getLayerAbstract(), shapeFile.getMetadataXmlHref(), shapeFile.getKeywords(), shapeFile.getWmsPath())) {
-				return false;
+			if(Boolean.parseBoolean(shapeFile.getUploadData())) {
+				if(!geoServerManager.uploadShapeFile(shapeFile.getWorkspace(), shapeFile.getStoreName(), zipFile, prjFile, shapeFile.getTitle(), shapeFile.getLayerAbstract(), shapeFile.getMetadataXmlHref(), shapeFile.getKeywords(), shapeFile.getWmsPath())) {
+					logger.debug("Shape file " + FilenameUtils.getBaseName(zipFile.getName()) + " caused an error during uploading. Upload has been stopped");
+					return false;
+				}
 			}
 		}
+		logger.debug("All shape files successfully uploaded");
 		return true;
 	}
 	
@@ -77,9 +84,14 @@ public class MainApp {
 		List<TiffFile> tifFiles = fileHandler.parseTiffFileUploadLayersCsvToBean(targetDirectory);
 		for(TiffFile tifFile : tifFiles) {
 			File file = new File(tifFile.getStorePath());
-			if(!geoServerManager.uploadGeoTIFFFile(tifFile.getWorkspace(), tifFile.getStoreName(), file, tifFile.getTitle(), tifFile.getLayerAbstract(), tifFile.getMetadataXmlHref(), tifFile.getKeywords(), tifFile.getWmsPath()))
-				return false;
+			if(Boolean.parseBoolean(tifFile.getUploadData())) {
+				if (!geoServerManager.uploadGeoTIFFFile(tifFile.getWorkspace(), tifFile.getStoreName(), file, tifFile.getTitle(), tifFile.getLayerAbstract(), tifFile.getMetadataXmlHref(), tifFile.getKeywords(), tifFile.getWmsPath())) {
+					logger.debug("Tiff file " + FilenameUtils.getBaseName(file.getName()) + " caused an error during uploading. Upload has been stopped");
+					return false;
+				}
+			}
 		}
+		logger.debug("All tiff files successfully uploaded");
 		return true;
 	}
 	
@@ -91,5 +103,9 @@ public class MainApp {
 	 */
 	private String changeFilePathExtension(String extension, String path) {
 		return path.substring(0, path.lastIndexOf(".") + 1) + extension;
+	}
+	
+	public boolean deleteWorkspace(String workspaceName) {
+		return geoServerManager.deleteWorkspace(workspaceName);
 	}
 }
