@@ -16,7 +16,7 @@ public class MainAppUploadFromCSVTest {
 	public static void init() {
 		app = new MainApp();
 	}
-	
+
 	@Test
 	public void uploadShapeFilesFromCSV() {
 		assertTrue(app.uploadShapeFilesToGeoServer(shapeFileDirectory));

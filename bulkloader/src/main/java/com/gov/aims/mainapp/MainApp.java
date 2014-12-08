@@ -22,7 +22,7 @@ public class MainApp {
 	private GeoServerManager geoServerManager;
 	
 	/**
-	 * Contstructor - sets up the directory for use and makes a connection to the GeoServer
+	 * Constructor - sets up the directory for use and makes a connection to the GeoServer
 	 */
 	public MainApp() {
 		fileHandler = new FileHandlerWrapper();
@@ -62,6 +62,11 @@ public class MainApp {
 		return true;
 	}
 	
+	/**
+	 * Uploads each TiffFile to the GeoServer, with the settings defined in the CSV
+	 * @param targetDirectory - the directory where the tiff files and CSV are
+	 * @return boolean - true if the upload was successful for all files, false if one or more files failed to upload. If one file fails to upload then the uploader will stop, it will not upload the rest of the files
+	 */
 	public boolean uploadTiffFilesToGeoServer(String targetDirectory) {
 		List<TiffFile> tifFiles = fileHandler.parseTiffFileUploadLayersCsvToBean(targetDirectory);
 		for(TiffFile tifFile : tifFiles) {

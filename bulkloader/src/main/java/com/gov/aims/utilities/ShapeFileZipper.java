@@ -6,8 +6,6 @@
 
 package com.gov.aims.utilities;
 
-import interfaces.ShapeFileZipperInterface;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,6 +17,8 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+
+import com.gov.aims.interfaces.ShapeFileZipperInterface;
 
 /**
  * Handles the zipping of shape files.

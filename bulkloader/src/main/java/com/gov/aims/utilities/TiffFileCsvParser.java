@@ -25,9 +25,8 @@ import au.com.bytecode.opencsv.CSVWriter;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
+import com.gov.aims.interfaces.TiffFileCsvParserInterface;
 import com.gov.aims.model.TiffFile;
-
-import interfaces.TiffFileCsvParserInterface;
 
 public class TiffFileCsvParser implements TiffFileCsvParserInterface {
 

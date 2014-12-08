@@ -5,8 +5,6 @@
 **/
 package com.gov.aims.utilities;
 
-import interfaces.FileFinderInterface;
-
 import java.io.File;
 import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
@@ -19,6 +17,8 @@ import java.util.Set;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+
+import com.gov.aims.interfaces.FileFinderInterface;
 
 public class FileFinder implements FileFinderInterface {
 	// Constants for the shape file extensions.

@@ -386,6 +386,18 @@ public class GeoServerManager {
 	 * @return boolean - true if upload is successful, false if it is not
 	 */
 	public boolean uploadGeoTIFFFile(String workspaceName, String storeName, File tifFile, String title, String abstractText, String metadataLink, String keywords, String wmsPath) {
+		String layerName = FilenameUtils.getBaseName(tifFile.toString());
+		
+		if(workspaceName.length() == 0 || workspaceName == null) {
+			logger.debug("Workspace name for " + layerName + " cannot be empty") ;
+			return false;
+		}
+		
+		if(storeName.length() == 0 || storeName == null) {
+			logger.debug("Store name for " + layerName + " cannot be empty") ;
+			return false;
+		}
+		
 		if(!checkForWorkspace(workspaceName)) {
 			createWorkspace(workspaceName);
 			logger.debug("Workspace did not exist before, it has now been created and exists");
@@ -396,7 +408,15 @@ public class GeoServerManager {
 			return false;
 		}
 		
-		String layerName = FilenameUtils.getBaseName(tifFile.toString());
+		if(title.length() == 0 || title == null) {
+			logger.debug("Title for " + layerName + " cannot be empty") ;
+			return false;
+		}
+		
+		if(wmsPath.length() == 0 || wmsPath == null) {
+			logger.debug("WMS path for " + layerName + " cannot be empty") ;
+			return false;
+		}
 		
 		setUpRasterFileEncoders();
 		setNameOfCoverage(layerName);
@@ -434,9 +454,21 @@ public class GeoServerManager {
 	 * @return boolean - true if upload is successful, false if it is not
 	 */
 	public boolean uploadShapeFile(String workspaceName, String storeName, File zipFile, File prjFile, String title, String abstractText, String metadataLink, String keywords, String wmsPath) {
+		String layerName = FilenameUtils.getBaseName(zipFile.toString());
+		
+		if(workspaceName.length() == 0 || workspaceName == null) {
+			logger.debug("Workspace name for " + layerName + " cannot be empty") ;
+			return false;
+		}
+		
 		if(!checkForWorkspace(workspaceName)) {
 			createWorkspace(workspaceName);
 			logger.debug("Workspace did not exist before, it has now been created and exists");
+		}
+		
+		if(storeName.length() == 0 || storeName == null) {
+			logger.debug("Store name for " + layerName + " cannot be empty") ;
+			return false;
 		}
 		
 		if(!checkForDataStore(workspaceName, storeName)) {
@@ -449,10 +481,18 @@ public class GeoServerManager {
 			return false;
 		}
 		
-		String layerName = FilenameUtils.getBaseName(zipFile.toString());
-		
 		if(!FilenameUtils.getExtension(prjFile.toString()).equals("prj")) {
 			logger.debug("File entered is not a .prj file. This function requires a .prj file to be passed to it in order to work");
+			return false;
+		}
+		
+		if(title.length() == 0 || title == null) {
+			logger.debug("Title for " + layerName + " cannot be empty") ;
+			return false;
+		}
+		
+		if(wmsPath.length() == 0 || wmsPath == null) {
+			logger.debug("WMS path for " + layerName + " cannot be empty") ;
 			return false;
 		}
 		

@@ -6,8 +6,6 @@
 
 package com.gov.aims.utilities;
 
-import interfaces.ShapeFileCsvParserInterface;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -26,6 +24,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
+import com.gov.aims.interfaces.ShapeFileCsvParserInterface;
 import com.gov.aims.model.ShapeFile;
 
 /**
