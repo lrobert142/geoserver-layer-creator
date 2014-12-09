@@ -1,0 +1,121 @@
+package com.gov.aims.view;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
+import com.gov.aims.model.FileHandlerWrapper;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
+
+public class OverviewController {
+
+	//Labels for Overview.fxml
+	@FXML
+	static
+	ListView<String> listView;
+	@FXML
+	public static Label DirectoryLabel;	
+	@FXML
+	public static Label DirectoryTitleLabel;
+	//@FXML
+	//private static Label FileLabel;	
+	@FXML
+	public static Label ZipFileTitleLabel;
+	@FXML
+	private static Label FileTitleLabel;
+	@FXML
+	private static Label ZipFileLabel;	
+	public static  List<String> fileNames;
+
+	// Reference to the main application.
+	@SuppressWarnings("unused")
+	private com.gov.aims.MainApp mainApp;
+
+	public OverviewController() {
+	}
+
+	// Initializes the controller class. This method is automatically called
+	// after the fxml file has been loaded.
+	@FXML
+	private void initialize() throws IOException {
+
+	}
+
+	// Is called by the main application to give a reference back to itself.
+	public void setMainApp(com.gov.aims.MainApp mainApp) {
+		this.mainApp = mainApp;
+	}
+
+	//Method for showing files found in directory and attaching
+	//it to the labels in Overview.fxml
+	public static void showFileInView() {
+		//ObservableList<String> items =FXCollections.observableArrayList ("test");
+		//list.setItems(items);
+		//list = new ListView<String>(items);
+		fileNames = new ArrayList<String>();
+		String fileString = "";
+		String DirString = "";
+		if ( FileHandlerWrapper.sortedFiles!= null) {
+			for (List<File> FilesList : FileHandlerWrapper.sortedFiles) {				
+				System.out.println(FilesList);
+				for (File Files : FilesList){
+					System.out.println("Files Test" + Files);
+					System.out.println("Files Test2" + Files);
+					//System.out.println("Test1");
+				String split[]  = Files.toString().split("\\\\");
+				int e = split.length - 1;
+				fileNames.add(split[e]);
+				System.out.println("Test2");
+				}
+			}
+		}
+		java.util.Collections.sort(fileNames);
+		System.out.println("Test3");
+		for (String Filename : fileNames){
+			System.out.println("Test4");
+
+			//fileString += Filename;
+			//fileString += "\n";
+			//fileString += "\n";
+			System.out.println("Test5");
+			System.out.println(fileString);
+		}
+
+		System.out.println("Test File String" +fileString);
+		//DirString = " " +RootLayoutController.SelectedDirectory;
+		//DirectoryLabel.setText(DirString);
+		//System.out.println("Final test " +fileString);
+		//FileLabel.setText(fileString);
+		System.out.println("Test6");
+		fileNames.clear();
+	}
+	 
+	//Method for showing zip files found in directory and attaching
+	//it to the labels in Overview.fxml
+	public static void showZipFileInView() {
+		String ZipfileString = "";
+		//String DirString = "Directory";
+		if ( FileHandlerWrapper.files!= null) {
+			for (File zipfiles : FileHandlerWrapper.files) {
+				System.out.println(zipfiles);
+				String split[]  = zipfiles.toString().split("\\\\");
+				int e = split.length - 1;
+				ZipfileString += split[e];
+				ZipfileString += "\n";
+			}
+		}
+		//DirString = " " + RootLayoutController.SelectedDirectory;
+		//DirectoryLabel.setText(DirString);
+		ZipFileLabel.setText(ZipfileString.toString());
+	}
+}

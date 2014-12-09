@@ -3,24 +3,24 @@ package com.gov.aims.bulkloader;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.gov.aims.mainapp.MainApp;
+import com.gov.aims.model.UploadManger;
 
 public class MainAppCreateCSVTest {
-	private static MainApp app;
+	private static UploadManger app;
 	private String shapeFileDirectory = "C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\AU_GA_Maritime-boundaries";
 	private String tifFileDirectory = "C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\truecolour-small";
 	
 	@BeforeClass
 	public static void init() {
-		app = new MainApp();
+		app = new UploadManger();
 	}
 	
-	@Test
+	//@Test
 	public void setUpShapeFiles() {
 		app.setUpShapeFiles(shapeFileDirectory);
 	}
 	
-	@Test
+	//@Test
 	public void setUpTiffFiles() {
 		app.setUpTiffFiles(tifFileDirectory);
 	}

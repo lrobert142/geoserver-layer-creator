@@ -26,8 +26,8 @@ public final class FileHandlerWrapper {
 	private FileFinder sff;
 	private ShapeFileZipper sfz;
 	private ShapeFileSorter sfs;
-	private List<File> files;
-	private List<List<File>> sortedFiles;
+	public static List<File> files;
+	public static List<List<File>> sortedFiles;
 	private ShapeFileCsvParser shpParser;
 	private TiffFileCsvParser tifParser;
 	
@@ -45,7 +45,7 @@ public final class FileHandlerWrapper {
 	 * 
 	 * @param The target directory containing shape files.
 	 */
-	public void setUpShapeFilesForUpload(String targetDirectory){
+	public List<File> setUpShapeFilesForUpload(String targetDirectory){
 		files = new ArrayList<File>();
 		sortedFiles = new ArrayList<List<File>>();
 		
@@ -58,6 +58,7 @@ public final class FileHandlerWrapper {
 		files.addAll(sff.findAllBySingleExtension(targetDirectory, ".zip"));
 		
 		shpParser.writeFilesToCsv(files, targetDirectory + "\\uploadLayers.csv");
+		return files;
 	}
 	
 	/**

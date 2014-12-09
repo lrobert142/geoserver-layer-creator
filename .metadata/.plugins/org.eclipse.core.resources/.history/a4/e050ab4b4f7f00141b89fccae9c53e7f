@@ -1,0 +1,21 @@
+package com.gov.aims.view;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
+
+public class ListViewController {
+
+	@FXML
+	static
+	ListView<String> listView;
+	
+	public static void addDatatoListView() {
+        List<String> values = Arrays.asList("one", "two", "three");
+
+        listView.setItems(FXCollections.observableList(values));
+	}
+}

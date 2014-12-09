@@ -1,0 +1,15 @@
+package com.gov.aims.view;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
+
+public class ListViewController {
+
+
+	
+
+}

@@ -58,14 +58,14 @@ public class GeoServerManagerTest {
 		assertTrue(manager.checkForCoverageStore("sf", "sfdem"));
 	}
 	
-	@Test
+	//@Test
 	public void uploadShapeFileTest() {
 		File fileToUpload = new File("C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\AU_GA_Maritime-boundaries\\cs_poly.zip");
 		File prjFile = new File("C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\AU_GA_Maritime-boundaries\\cs_poly.prj");
 		assertTrue(manager.uploadShapeFile(testWorkspaceName, testStoreName, fileToUpload, prjFile, "PNG Fish", "This is the abstract", null, "keyword1,keyword2", "Boundaries/Australian Maritime Boundaries (GA)"));
 	}
 	
-	@Test
+	//@Test
 	public void uploadRasterFileTest() {
 		File fileToUpLoad = new File("C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\truecolour-small\\L5\\96_71\\L5096071_07119890917.tif");
 		assertTrue(manager.uploadGeoTIFFFile(testWorkspaceName, testStoreName, fileToUpLoad, "TiffFile", "Abstract", null, "keyword1,keyword2", "Boundaries/Australian Maritime Boundaries (GA)"));

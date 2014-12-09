@@ -1,0 +1,57 @@
+.background {
+    -fx-background-color: #DDE0EB;
+}
+
+.background-middle {
+    -fx-background-color: #CED8F6;
+    
+}
+
+.scroll-bar:horizontal{
+	-fx-scrollbar-color: #2ECCFA;
+}
+
+.scroll-bar:vertical{
+	-fx-scrollbar-color: #2ECCFA;
+}
+
+.label {
+    -fx-font-size: 20pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: #0B0B3B;
+    -fx-opacity: 0.6;
+
+}
+
+.label-header {
+    -fx-font-size: 28pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: #0B0B3B;
+    -fx-opacity: 1;
+}
+
+.label-title {
+	 -fx-font-size: 22pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: #0B0B3B;
+    -fx-opacity: 0.6;
+}
+
+
+.menu-bar {
+	
+    -fx-background-color: #08298A;
+}
+
+.menu-bar .label {
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: #08298A;
+    -fx-opacity: 0.9;
+    -fx-font-size: 26pt;
+}
+
+.menu-bar .menu-item {
+	-fx-font-family: "Segoe UI Light";
+	-fx-font-size: 26pt;
+	-fx-text-fill: #08298A;
+}
