@@ -15,7 +15,7 @@ import com.gov.aims.model.ShapeFile;
 import com.gov.aims.utilities.ShapeFileCsvParser;
 
 public class GeoserverDataUpdaterTest {
-	private static final String restUrl = "http://localhost/geoserver";
+	private static final String restUrl = "http://localhost:8080/geoserver";
 	private static final String username = "admin";
 	private static final String password = "geoserver";
 	private static final String fileName = "resources/testModifyData.csv";

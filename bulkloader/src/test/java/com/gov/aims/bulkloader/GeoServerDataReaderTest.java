@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.gov.aims.utilities.GeoserverDataReader;
 
 public class GeoServerDataReaderTest {
-	private static final String restUrl = "http://localhost/geoserver";
+	private static final String restUrl = "http://localhost:8080/geoserver";
 	private static final String username = "admin";
 	private static final String password = "geoserver";
 

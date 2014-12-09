@@ -12,7 +12,7 @@ import com.gov.aims.utilities.GeoserverDataReader;
 import com.gov.aims.utilities.GeoserverToCsvWriter;
 
 public class GeoserverToCsvWriterTest {
-	private static final String restUrl = "http://localhost/geoserver";
+	private static final String restUrl = "http://localhost:8080/geoserver";
 	private static final String username = "admin";
 	private static final String password = "geoserver";
 	private static final String fileName = "resources/testModify.csv";
