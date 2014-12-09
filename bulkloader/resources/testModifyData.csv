@@ -1,0 +1,4 @@
+"storePath","BASENAME","storeName","layerName","workspace","storeType","title","abstract","metadataXmlHref","keywords","wmsPath","styles","uploadData","uploadMetadata"
+"http://localhost/geoserver/rest/layers/myWorkspace:cs_poly.xml","cs_poly","cs_update","cs_poly","myWorkspace","dataStore","updated_title","","http://www.google.com","newKeyword, successful_test","/multi/path/update_new","polygon, burg","FALSE","FALSE"
+"http://localhost/geoserver/rest/layers/myWorkspace:cw_limit.xml","cw_limit","cw_limitStore","cw_limit","myWorkspace","dataStore","brandNewTitle","Let's see if this works!","http://www.google.com","newKeyword, hope_it_works, good_job","","line","FALSE","FALSE"
+"http://localhost/geoserver/rest/layers/myWorkspace:first_geotiff.xml","first_geotiff","first_geotiff","first_geotiff","myWorkspace","coverageStore","first_geotiff","New abstract","","WCS, GeoTIFF, first_geotiff","","","FALSE","FALSE"
