@@ -1,0 +1,26 @@
+package au.gov.aims.bulkloader;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class GeoServerDataUpdaterTest {
+	private static final String restUrl = "http://localhost:8080/geoserver";
+	private static final String username = "admin";
+	private static final String password = "geoserver";
+	private static final String fileName = "resources/testModifyData.csv";
+
+	@Test
+	public void testUpdateAllData() {
+		GeoserverDataUpdater updater = new GeoserverDataUpdater();
+		ShapeFileCsvParser parser = new ShapeFileCsvParser();
+		try {
+			GeoServerRESTReader reader = new GeoServerRESTReader(restUrl, username, password);
+			GeoServerRESTPublisher publisher = new GeoServerRESTPublisher(restUrl, username, password);
+			List<ShapeFile> dataSets = parser.parseShapeFileToJavaBean(fileName);
+			assertTrue(updater.updateAllData(reader, publisher, dataSets, fileName));
+		} catch (IOException e) {
+			fail("An exception occurred!");
+		}
+	}
+}

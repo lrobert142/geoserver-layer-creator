@@ -1,0 +1,28 @@
+package au.gov.aims.bulkloader;
+
+import static org.junit.Assert.*;
+
+import java.net.MalformedURLException;
+
+import org.junit.Test;
+
+import au.gov.aims.utilities.GeoServerDataReader;
+
+public class GeoServerDataReaderTest {
+	private static final String restUrl = "http://localhost:8080/geoserver";
+	private static final String username = "admin";
+	private static final String password = "geoserver";
+
+	@Test
+	public void testGetAllLayersFromGeoserver() {
+		try {
+			GeoServerDataReader reader = new GeoServerDataReader(restUrl, username,
+					password);
+			assertTrue(reader.getAllLayersFromGeoserver() != null);
+		} catch (MalformedURLException e) {
+			fail("An exception occurred!");
+			e.printStackTrace();
+		}
+	}
+
+}

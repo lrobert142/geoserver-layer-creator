@@ -1,0 +1,14 @@
+package au.gov.aims.bulkloader;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class GeoServerToCSVWriterTest {
+
+	@Test
+	public void test() {
+		fail("Not yet implemented");
+	}
+
+}

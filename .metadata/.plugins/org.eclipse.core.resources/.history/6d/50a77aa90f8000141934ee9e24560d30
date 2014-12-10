@@ -1,0 +1,235 @@
+package com.gov.aims.utilities;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import au.gov.aims.model.ShapeFile;;
+
+import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
+import it.geosolutions.geoserver.rest.GeoServerRESTReader;
+import it.geosolutions.geoserver.rest.decoder.RESTFeatureType;
+import it.geosolutions.geoserver.rest.decoder.RESTLayer;
+import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
+import it.geosolutions.geoserver.rest.encoder.GSResourceEncoder.ProjectionPolicy;
+import it.geosolutions.geoserver.rest.encoder.coverage.GSCoverageEncoder;
+import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
+
+/**
+ * Handles updating of layers for Features and Coverages on a GeoServer
+ * instance.
+ * 
+ * @version 1.0.0
+ * @since 9/12/14
+ * @author Lachlan Robertson
+ *
+ */
+public class GeoServerDataUpdater {
+	private Logger logger;
+	private long numOfUpdatedLayers;
+
+	/**
+	 * Default constructor. Exists to initialize attributes.
+	 */
+	public GeoServerDataUpdater() {
+		logger = Logger.getLogger(GeoServerDataUpdater.class);
+		numOfUpdatedLayers = 0;
+	}
+
+	/**
+	 * Updates all layers on a GeoServer instance, regardless of type, if the
+	 * layer has been flagged for update in the <code>dataSets</code> list. <br>
+	 * Note that only layers with the <code>uploadData</code> attribute set to
+	 * "TRUE" will be updated. All others will be left unchanged.
+	 * 
+	 * @param reader
+	 *            A reader to read data from the GeoServer instance.
+	 * @param publisher
+	 *            A publisher to publish data to the GeoServer instance.
+	 * @param dataSets
+	 *            A list of <code>ShapeFile</code>s to iterate through and
+	 *            update.
+	 * @param csvFileName
+	 *            The name of the .csv file to save changed data to.
+	 * @return <code>true</code> if all data could be updated or
+	 *         <code>false</code> otherwise.
+	 */
+	public boolean updateAllData(GeoServerRESTReader reader,
+			GeoServerRESTPublisher publisher, List<ShapeFile> dataSets,
+			String csvFileName) {
+		GeoServerDataUpdater updater = new GeoServerDataUpdater();
+		RESTFeatureType feature = null;
+		RESTLayer layer = null;
+		boolean successful = true;
+
+		for (ShapeFile dataSet : dataSets) {
+			if (dataSet.getUploadData().toUpperCase().equals("FALSE"))
+				continue;
+			layer = reader.getLayer(dataSet.getWorkspace(),
+					dataSet.getLayerName());
+
+			if (layer.getType() == RESTLayer.Type.VECTOR) {
+				feature = reader.getFeatureType(reader.getLayer(
+						dataSet.getWorkspace(), dataSet.getLayerName()));
+				successful = updater.updateFeature(publisher, dataSet,
+						feature.getNativeCRS());
+			} else {
+				successful = updater.updateCoverage(publisher, dataSet);
+			}
+
+			if (!successful) {
+				logger.warn("Layer " + dataSet.getLayerName()
+						+ " could not be modified! Exiting...");
+				break;
+			} else {
+				dataSet.setUploadData("FALSE");
+				numOfUpdatedLayers++;
+			}
+		}
+		new GeoserverToCsvWriter()
+				.writeDataSetsToCsvFile(dataSets, csvFileName);
+		return successful;
+	}
+
+	/**
+	 * Updates a feature on the GeoServer instance by removing the old layer and
+	 * uploading a new one.
+	 * 
+	 * @param publisher
+	 *            The publisher for the GeoServer instance to write data.
+	 * @param dataSet
+	 *            The current <code>ShapeFile</code> object containing data
+	 *            about the new layer.
+	 * @param nativeCRS
+	 *            The nativeCRS string for the layer. Cannot be null or empty.
+	 * @return <code>true</code> if the feature could be updated or
+	 *         <code>false</code> on failure.
+	 * @throws IllegalArgumentException
+	 *             If a null or empty <code>nativeCRS</code> is given.
+	 */
+	protected boolean updateFeature(GeoServerRESTPublisher publisher,
+			ShapeFile dataSet, String nativeCRS)
+			throws IllegalArgumentException {
+		if (nativeCRS == null || nativeCRS.isEmpty())
+			throw new IllegalArgumentException(
+					"nativeCRS cannot be null or empty.");
+		boolean successful = true;
+
+		GSLayerEncoder featureLayerEnc = new GSLayerEncoder();
+		GSFeatureTypeEncoder featureEnc = new GSFeatureTypeEncoder();
+		String workspace = dataSet.getWorkspace();
+		String dataStoreName = dataSet.getStoreName();
+		String layerName = dataSet.getLayerName();
+
+		String title = dataSet.getTitle() == null
+				|| dataSet.getTitle().isEmpty() ? "No_title_provided" : dataSet
+				.getTitle();
+		String layerAbstract = dataSet.getLayerAbstract() == null
+				|| dataSet.getLayerAbstract().isEmpty() ? "No abstract provided"
+				: dataSet.getLayerAbstract();
+
+		featureEnc.setName(layerName);
+		featureEnc.setEnabled(true);
+		featureLayerEnc.setEnabled(true);
+		featureEnc.delAttribute("srs");
+		featureEnc.setProjectionPolicy(ProjectionPolicy.REPROJECT_TO_DECLARED);
+		featureEnc.setTitle(title);
+		featureEnc.setAbstract(layerAbstract);
+		if (dataSet.getWmsPath() != null && !dataSet.getWmsPath().isEmpty())
+			featureLayerEnc.setWmsPath(dataSet.getWmsPath());
+		featureEnc.setNativeCRS(nativeCRS);
+		featureEnc.delAttribute("crs");
+
+		for (String metaDataLink : dataSet.getMetadataXmlHref().split(",")) {
+			featureEnc.addMetadataLinkInfo("text/xml", "TC211",
+					metaDataLink.trim());
+		}
+
+		for (String keyword : dataSet.getKeywords().split(",")) {
+			featureEnc.addKeyword(keyword.trim());
+		}
+
+		for (String style : dataSet.getStyles().split(",")) {
+			featureLayerEnc.addStyle(style.trim());
+		}
+
+		if (publisher.unpublishFeatureType(workspace, dataStoreName, layerName)) {
+			if (!publisher.publishDBLayer(workspace, dataStoreName, featureEnc,
+					featureLayerEnc)) {
+				logger.error("Feature " + layerName
+						+ " was unpublished but could not be modified!");
+				successful = false;
+			} else {
+				logger.info("Feature " + layerName
+						+ " was successfully updated.");
+			}
+		} else {
+			logger.warn("Layer " + layerName + " could not be unpublished.");
+			successful = false;
+		}
+		return successful;
+	}
+
+	/**
+	 * Updates a coverage on the GeoServer instance by removing the old layer
+	 * and uploading a new one.
+	 * 
+	 * @param publisher
+	 *            The publisher for the GeoServer instance to write data.
+	 * @param dataSet
+	 *            The current <code>ShapeFile</code> object containing data
+	 *            about the new layer.
+	 * @return <code>true</code> if the feature could be updated or
+	 *         <code>false</code> on failure.
+	 */
+	protected boolean updateCoverage(GeoServerRESTPublisher publisher,
+			ShapeFile dataSet) {
+		boolean successful = true;
+
+		GSLayerEncoder coverageLayerEnc = new GSLayerEncoder();
+		GSCoverageEncoder coverageEnc = new GSCoverageEncoder();
+		String workspace = dataSet.getWorkspace();
+		String dataStore = dataSet.getStoreName();
+		String coverageName = dataSet.getLayerName();
+
+		String title = dataSet.getTitle() == null
+				|| dataSet.getTitle().isEmpty() ? "No_title_provided" : dataSet
+				.getTitle();
+		String layerAbstract = dataSet.getLayerAbstract() == null
+				|| dataSet.getLayerAbstract().isEmpty() ? "No abstract provided"
+				: dataSet.getLayerAbstract();
+
+		coverageEnc.setName(coverageName);
+		coverageEnc.setEnabled(true);
+		coverageLayerEnc.setEnabled(true);
+		coverageEnc.setTitle(title);
+		coverageEnc.setAbstract(layerAbstract);
+		if (dataSet.getWmsPath() != null && !dataSet.getWmsPath().isEmpty())
+			coverageLayerEnc.setWmsPath(dataSet.getWmsPath());
+
+		for (String metaDataLink : dataSet.getMetadataXmlHref().split(",")) {
+			coverageEnc.addMetadataLinkInfo("text/xml", "TC211",
+					metaDataLink.trim());
+		}
+
+		for (String keyword : dataSet.getKeywords().split(",")) {
+			coverageEnc.addKeyword(keyword.trim());
+		}
+
+		if (publisher.configureCoverage(coverageEnc, workspace, dataStore)
+				&& publisher.configureLayer(workspace, coverageName,
+						coverageLayerEnc)) {
+			logger.info("Coverage " + coverageName
+					+ " was successfully updated!");
+		} else {
+			logger.error("Coverage " + coverageName
+					+ " was unpublished but could not be modified!");
+			successful = false;
+		}
+		return successful;
+	}
+
+	public long getNumOfUpdatedLayers() {
+		return numOfUpdatedLayers;
+	}
+}

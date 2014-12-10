@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="au.gov.aims.view.RootLayoutController">
+      <stylesheets>
+  <URL value="@BlueStyle.css" />
+</stylesheets>
+   <top>
+      <MenuBar styleClass="menu-bar" BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" styleClass="menu-bar .label" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#ChangeDefaultDirectory" text="Default Directory Path" />
+              <MenuItem mnemonicParsing="false" onAction="#close" styleClass=".menu-bar .menu-item" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" styleClass="menu-bar .label" text="Open File Type">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#OpenTiffFiles" styleClass=".menu-bar .menu-item" text="Open Tiff Files" />
+                  <MenuItem mnemonicParsing="false" onAction="#OpenShapeFiles" styleClass=".menu-bar .menu-item" text="Open Shape Files" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" styleClass="menu-bar .label" text="Open CSV">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#OpenCSV" styleClass=".menu-bar .menu-item" text="CSV File" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" styleClass="menu-bar .label" text="Upload">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#UploadShape" styleClass=".menu-bar .menu-item" text="Shape Files" />
+                  <MenuItem mnemonicParsing="false" onAction="#UploadTiff" styleClass=".menu-bar .menu-item" text="Tiff Files" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" styleClass="menu-bar .label" text="Help / About">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#ViewHelp" styleClass=".menu-bar .menu-item" text="Help Doc." />
+                  <MenuItem mnemonicParsing="false" onAction="#ViewAbout" styleClass=".menu-bar .menu-item" text="About Doc." />
+               </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+
+</BorderPane>

@@ -2,3 +2,40 @@
 1418084668763	Move compilation unit
 1418084671797	Delete element
 1418093932326	Delete element
+1418170611285	Delete element
+1418170698706	Move files
+1418171930974	Rename package 'com.gov.aims.model'
+1418171956953	Rename package 'model'
+1418171973341	Rename package 'com.gov.aims'
+1418171986167	Rename package 'com.gov.aims.interfaces'
+1418171992672	Rename package 'com.gov.aims.view'
+1418171999351	Rename package 'com.gov.aims.utilities'
+1418172058844	Rename package 'au.gov.aims.model'
+1418172081283	Rename package 'blueturtle.model'
+1418172169497	Rename package 'au.gov.aims.interfaces'
+1418172177876	Rename package 'au.gov.aims.model'
+1418172189440	Rename package 'au.gov.aims.utilities'
+1418172214564	Rename package 'interfaces'
+1418172226360	Rename package 'model'
+1418172269425	Rename package 'com.gov.aims.bulkloader'
+1418172278897	Rename package 'utilities'
+1418172825217	Rename package 'au.gov.aims.model'
+1418172916028	Rename package 'au.gov.aims.utilities'
+1418172923142	Rename package 'au.gov.aims.view'
+1418172930902	Rename package 'au.gov.aims.interfaces'
+1418172940028	Rename package 'au.gov.aims'
+1418173445719	Move files
+1418173450287	Delete element
+1418173872532	Rename package 'au.gov'
+1418173878967	Rename package 'au.gov.interfaces'
+1418173884194	Rename package 'au.gov.model'
+1418173890213	Rename package 'au.gov.utilities'
+1418173894305	Rename package 'au.gov.view'
+1418174224253	Move files
+1418174503863	Rename local variable 'Overview'
+1418174653326	Rename local variable 'Overview'
+1418174660505	Rename local variable 'Overview'
+1418174829510	Rename local variable 'Overview'
+1418176669761	Rename type 'GeoserverDataReader'
+1418176911061	Move compilation units
+1418176929070	Delete element
