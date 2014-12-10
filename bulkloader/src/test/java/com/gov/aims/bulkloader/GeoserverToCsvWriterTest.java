@@ -15,7 +15,7 @@ public class GeoserverToCsvWriterTest {
 	private static final String restUrl = "http://localhost:8080/geoserver";
 	private static final String username = "admin";
 	private static final String password = "geoserver";
-	private static final String fileName = "resources/testModify.csv";
+	private static final String fileName = "src/test/resources/testModify.csv";
 	
 	@Test
 	public void testStoreLayerDataInCsv() {

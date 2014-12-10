@@ -34,6 +34,27 @@ public class GeoserverDataReader {
 	private String password;
 	private GeoServerRESTReader reader;
 
+	public enum FilterType {
+		STARTSWITH("startsWith"), CONTAINS("contains"), ENDSWITH("endsWith"), REGEX(
+				"regex"), NOFILTER("none"), UNKNOWN(null);
+
+		private final String filterName;
+
+		private FilterType(String filterName) {
+			this.filterName = filterName;
+		}
+
+		public static FilterType get(String filterName) {
+			for (FilterType filter : values()) {
+				if (filter == UNKNOWN)
+					continue;
+				if (filter.filterName.equals(filterName))
+					return filter;
+			}
+			return UNKNOWN;
+		}
+	};
+
 	/**
 	 * Creates a reader for the specified GeoServer instance using the url,
 	 * username and password for the server.
@@ -60,17 +81,48 @@ public class GeoserverDataReader {
 		reader = new GeoServerRESTReader(restUrl, username, password);
 	}
 
-	// List in format Workspace, LayerName, Type (VECTOR / OTHER)
 	/**
 	 * Gets all layers from all workspaces from the GeoServer instance.
 	 * 
-	 * @return A list of <code>List&ltString&gt</code> objects containing all
-	 *         layer data including what type of data it is (VECTOR or OTHER).<br>
+	 * @return A list of <code>List&ltString&gt</code> objects containing layer
+	 *         data or an empty <code>List&ltList&ltString&gt&gt</code> if no
+	 *         layers were found. If an invalid filter is specified,
+	 *         <code>null</code> is returned.<br>
 	 *         Each inner list is in the form
 	 *         <code>[workspace, layerName, layerType]</code>
 	 */
 	public List<List<String>> getAllLayersFromGeoserver() {
+		return getLayersFromGeoserver("", "", FilterType.NOFILTER);
+	}
+
+	// TODO This has not been tested!
+	public List<List<String>> getAllLayersInWorkspace(String workspaceName) {
+		return getLayersFromGeoserver(workspaceName, "", FilterType.NOFILTER);
+	}
+	
+	/**
+	 * Gets layers from workspaces based on the filter parameters and filter
+	 * type. If an invalid filter type is given, <code>null</code> will be
+	 * returned and no further checks will be done.
+	 * 
+	 * @param workspaceFilterText
+	 *            The workspace text to be searched for.
+	 * @param layerFilterText
+	 *            The layer text to be searched for.
+	 * @param filterType
+	 *            The type of filtering to do.
+	 * @return A list of <code>List&ltString&gt</code> objects containing layer
+	 *         data or an empty <code>List&ltList&ltString&gt&gt</code> if no
+	 *         layers were found. If an invalid filter is specified,
+	 *         <code>null</code> is returned.<br>
+	 *         Each inner list is in the form
+	 *         <code>[workspace, layerName, layerType]</code>
+	 */
+	public List<List<String>> getLayersFromGeoserver(
+			String workspaceFilterText, String layerFilterText,
+			FilterType filterType) {
 		List<List<String>> allLayerDetails = new ArrayList<List<String>>();
+		List<String> currentLayerDetails = new ArrayList<String>();
 		String currentLayerName = "";
 		String currentWorkspaceName = "";
 
@@ -84,13 +136,41 @@ public class GeoserverDataReader {
 				RESTLayer currentLayer = reader.getLayer(currentWorkspaceName,
 						currentLayerName);
 				if (currentLayer != null) {
-					List<String> currentLayerDetails = new ArrayList<String>();
-					currentLayerDetails.add(currentWorkspaceName);
-					currentLayerDetails.add(currentLayerName);
-					if (currentLayer.getType().toString() == "VECTOR") {
-						currentLayerDetails.add("VECTOR");
+					if (filterType.equals(FilterType.NOFILTER)) {
+						currentLayerDetails = addDetails(currentWorkspaceName,
+								currentLayerName, currentLayer);
+					} else if (filterType.equals(FilterType.STARTSWITH)) {
+						if (currentWorkspaceName
+								.startsWith(workspaceFilterText)
+								&& currentLayerName.startsWith(layerFilterText)) {
+							currentLayerDetails = addDetails(
+									currentWorkspaceName, currentLayerName,
+									currentLayer);
+						}
+					} else if (filterType.equals(FilterType.CONTAINS)) {
+						if (currentWorkspaceName.contains(workspaceFilterText)
+								&& currentLayerName.contains(layerFilterText)) {
+							currentLayerDetails = addDetails(
+									currentWorkspaceName, currentLayerName,
+									currentLayer);
+						}
+					} else if (filterType.equals(FilterType.ENDSWITH)) {
+						if (currentWorkspaceName.endsWith(workspaceFilterText)
+								&& currentLayerName.endsWith(layerFilterText)) {
+							currentLayerDetails = addDetails(
+									currentWorkspaceName, currentLayerName,
+									currentLayer);
+						}
+					} else if (filterType.equals(FilterType.REGEX)) {
+						if (currentWorkspaceName.matches(workspaceFilterText)
+								&& currentLayerName.matches(layerFilterText)) {
+							currentLayerDetails = addDetails(
+									currentWorkspaceName, currentLayerName,
+									currentLayer);
+						}
 					} else {
-						currentLayerDetails.add("OTHER");
+						logger.warn("Invalid filter! No layers will be returned!");
+						return null;
 					}
 					allLayerDetails.add(currentLayerDetails);
 				}
@@ -98,6 +178,33 @@ public class GeoserverDataReader {
 		}
 		logger.info("All layers successfully retrieved!");
 		return allLayerDetails;
+	}
+
+	/**
+	 * Creates and returns a <code>List&ltString&gt</code> containing the
+	 * workspace name, layer name and layer type.<br>
+	 * Layer type is "VECTOR" or "OTHER".
+	 * 
+	 * @param workspaceName
+	 *            The name of the workspace on the GeoServer instance.
+	 * @param layerName
+	 *            The name of the layer on the GeoServer instance.
+	 * @param layer
+	 *            The layer on the GeoServer instance.
+	 * @return A <code>List&ltString&gt</code> in the for
+	 *         <code>[workspaceName, layerName, layerType]</code>.
+	 */
+	private List<String> addDetails(String workspaceName, String layerName,
+			RESTLayer layer) {
+		List<String> layerDetails = new ArrayList<String>();
+		layerDetails.add(workspaceName);
+		layerDetails.add(layerName);
+		if (layer.getType().toString() == "VECTOR") {
+			layerDetails.add("VECTOR");
+		} else {
+			layerDetails.add("OTHER");
+		}
+		return layerDetails;
 	}
 
 	/**

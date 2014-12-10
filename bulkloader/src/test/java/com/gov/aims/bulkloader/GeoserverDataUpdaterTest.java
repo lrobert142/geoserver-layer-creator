@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.gov.aims.utilities.GeoserverDataUpdater;
-
 import com.gov.aims.model.ShapeFile;
 import com.gov.aims.utilities.ShapeFileCsvParser;
 
@@ -18,7 +17,7 @@ public class GeoserverDataUpdaterTest {
 	private static final String restUrl = "http://localhost:8080/geoserver";
 	private static final String username = "admin";
 	private static final String password = "geoserver";
-	private static final String fileName = "resources/testModifyData.csv";
+	private static final String fileName = "src/test/resources/testModifyData.csv";
 
 	@Test
 	public void testUpdateAllData() {
@@ -31,6 +30,7 @@ public class GeoserverDataUpdaterTest {
 			assertTrue(updater.updateAllData(reader, publisher, dataSets, fileName));
 		} catch (IOException e) {
 			fail("An exception occurred!");
+			e.printStackTrace();
 		}
 	}
 
