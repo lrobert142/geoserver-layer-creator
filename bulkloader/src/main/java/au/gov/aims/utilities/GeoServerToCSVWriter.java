@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import au.com.bytecode.opencsv.CSVWriter;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
-import au.gov.aims.model.ShapeFile;
+import au.gov.aims.model.GeoServerFile;
 
 /**
  * Handles writing of data from the GeoServer instance to a .csv file.
@@ -55,7 +55,7 @@ public class GeoServerToCSVWriter {
 		String workspace;
 		String layerName;
 		String layerType;
-		List<ShapeFile> layerDataSets = new ArrayList<ShapeFile>();
+		List<GeoServerFile> layerDataSets = new ArrayList<GeoServerFile>();
 
 		for (List<String> layerData : dataSets) {
 			workspace = layerData.get(0);
@@ -81,7 +81,7 @@ public class GeoServerToCSVWriter {
 	 * @return <code>true</code> if all data could be successfully written or
 	 *         <code>false</code> otherwise.
 	 */
-	protected boolean writeDataSetsToCsvFile(List<ShapeFile> dataSets, String targetFileName) {
+	protected boolean writeDataSetsToCsvFile(List<GeoServerFile> dataSets, String targetFileName) {
 		FileWriter fWriter = null;
 		CSVWriter csvWriter = null;
 		boolean successful = true;
@@ -89,8 +89,8 @@ public class GeoServerToCSVWriter {
 			fWriter = new FileWriter(new File(targetFileName));
 			csvWriter = new CSVWriter(fWriter, ',');
 			List<String[]> dataToWrite = new ArrayList<String[]>();
-			HeaderColumnNameTranslateMappingStrategy<ShapeFile> beanStrategy = new HeaderColumnNameTranslateMappingStrategy<ShapeFile>();
-			beanStrategy.setType(ShapeFile.class);
+			HeaderColumnNameTranslateMappingStrategy<GeoServerFile> beanStrategy = new HeaderColumnNameTranslateMappingStrategy<GeoServerFile>();
+			beanStrategy.setType(GeoServerFile.class);
 
 			Map<String, String> columnMapping = new HashMap<String, String>();
 			columnMapping.put("storePath", "storePath");
@@ -113,7 +113,7 @@ public class GeoServerToCSVWriter {
 			dataToWrite.add(new String[] { "storePath", "BASENAME", "storeName", "layerName", "workspace", "storeType",
 					"title", "abstract", "metadataXmlHref", "keywords", "wmsPath", "styles", "uploadData", "uploadMetadata" });
 
-			for (ShapeFile dataSet : dataSets) {
+			for (GeoServerFile dataSet : dataSets) {
 				dataToWrite.add(new String[] { dataSet.getStorePath(),
 						dataSet.getBaseName(), dataSet.getStoreName(),
 						dataSet.getLayerName(), dataSet.getWorkspace(),

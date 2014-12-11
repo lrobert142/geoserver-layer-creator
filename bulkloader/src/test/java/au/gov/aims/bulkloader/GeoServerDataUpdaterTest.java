@@ -10,9 +10,9 @@ import it.geosolutions.geoserver.rest.GeoServerRESTReader;
 
 import org.junit.Test;
 
-import au.gov.aims.model.ShapeFile;
+import au.gov.aims.model.GeoServerFile;
 import au.gov.aims.utilities.GeoServerDataUpdater;
-import au.gov.aims.utilities.ShapeFileCsvParser;
+import au.gov.aims.utilities.GeoServerFileCsvParser;
 
 public class GeoServerDataUpdaterTest {
 	private static final String restUrl = "http://localhost:8080/geoserver";
@@ -23,11 +23,11 @@ public class GeoServerDataUpdaterTest {
 	@Test
 	public void testUpdateAllData() {
 		GeoServerDataUpdater updater = new GeoServerDataUpdater();
-		ShapeFileCsvParser parser = new ShapeFileCsvParser();
+		GeoServerFileCsvParser parser = new GeoServerFileCsvParser();
 		try {
 			GeoServerRESTReader reader = new GeoServerRESTReader(restUrl, username, password);
 			GeoServerRESTPublisher publisher = new GeoServerRESTPublisher(restUrl, username, password);
-			List<ShapeFile> dataSets = parser.parseShapeFileToJavaBean(fileName);
+			List<GeoServerFile> dataSets = parser.parseGeoServerFileToJavaBean(fileName);
 			assertTrue(updater.updateAllData(reader, publisher, dataSets, fileName));
 		} catch (IOException e) {
 			fail("An exception occurred!");

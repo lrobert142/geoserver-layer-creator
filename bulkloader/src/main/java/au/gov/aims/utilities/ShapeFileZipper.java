@@ -28,7 +28,7 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 	//Attributes
 	public List<String> fileToZip;
 	public Logger logger;
-	private final static String outputZipExtension = ".zip";
+	private final static String outputZipExtension = ".gs.zip";
 
 	/**
 	 * Handles the zipping of sorted shape files
@@ -44,23 +44,18 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 	 * @param The absolute path to the desired output location for the zips.
 	 */
 	public void zipSortedShapeFiles(List<List<File>> sortedShapeFiles, String outputFileLocation) {
-
 		byte[] buffer = new byte[1024];
 		String currentFilenameForZip;
 
 		try {
 			for (int i = 0; i < sortedShapeFiles.size(); i++) {
-				String parentDirectory;
 				currentFilenameForZip = FilenameUtils.removeExtension(sortedShapeFiles.get(i).get(0).getName());
 				
-				outputFileLocation = sortedShapeFiles.get(i).get(0).getParent();
 				
 				FileOutputStream fos = new FileOutputStream(outputFileLocation + "\\" + currentFilenameForZip + outputZipExtension);
 				ZipOutputStream zos = new ZipOutputStream(fos);
 				
 				for (File file : sortedShapeFiles.get(i)) {
-					parentDirectory = file.getParent();
-					outputFileLocation = parentDirectory;
 
 					ZipEntry ze = new ZipEntry(file.getName());
 					zos.putNextEntry(ze);

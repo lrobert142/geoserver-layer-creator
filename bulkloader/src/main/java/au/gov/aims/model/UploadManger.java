@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  * Runs program to create CSV, then upload files with settings from the CSV to the GeoSever
  */
 public class UploadManger {
-	private FileHandlerWrapper fileHandler;
+	private GeoServerFileHandlerWrapper fileHandler;
 	private GeoServerManager geoServerManager;
 	private Logger logger;
 	
@@ -27,7 +27,7 @@ public class UploadManger {
 	public UploadManger() {
 		BasicConfigurator.configure();
 		logger = Logger.getLogger(UploadManger.class);
-		fileHandler = new FileHandlerWrapper();
+		fileHandler = new GeoServerFileHandlerWrapper();
 		geoServerManager = new GeoServerManager("http://localhost:8080/geoserver/", "admin", "geoserver");
 	}
 	
@@ -55,8 +55,8 @@ public class UploadManger {
 	 * @return boolean - true if the upload was successful for all files, false if one or more files failed to upload. If one file fails to upload then the uploader will stop, it will not upload the rest of the files
 	 */
 	public boolean uploadShapeFilesToGeoServer(String csvDirectory) {
-		List<ShapeFile> shapeFiles = fileHandler.parseShapeFileUploadLayersCsvToBean(csvDirectory);
-		for(ShapeFile shapeFile : shapeFiles) {
+		List<GeoServerFile> shapeFiles = fileHandler.parseShapeFileUploadLayersCsvToBean(csvDirectory);
+		for(GeoServerFile shapeFile : shapeFiles) {
 			File zipFile = new File(changeFilePathExtension("zip", shapeFile.getStorePath()));
 			File prjFile = new File(changeFilePathExtension("prj", shapeFile.getStorePath()));
 			if(Boolean.parseBoolean(shapeFile.getUploadData())) {

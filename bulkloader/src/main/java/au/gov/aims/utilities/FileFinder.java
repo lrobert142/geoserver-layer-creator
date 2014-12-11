@@ -22,6 +22,7 @@ import au.gov.aims.interfaces.FileFinderInterface;
 public class FileFinder implements FileFinderInterface {
 	// Constants for the shape file extensions.
 	public final ArrayList<String> SHAPEFILE_EXTENSIONS = new ArrayList<String>(Arrays.asList(".dbf", ".prj", ".shp", ".shx"));
+	public final ArrayList<String> FILE_EXTENSIONS_FOR_CSV = new ArrayList<String>(Arrays.asList(".shp", ".tif"));
 
 	// Attributes
 	private ArrayList<File> allFiles;

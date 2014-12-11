@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import au.gov.aims.model.FileHandlerWrapper;
+import au.gov.aims.model.GeoServerFileHandlerWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -59,8 +59,8 @@ public class OverviewController {
 	//Method for showing files found in directory and attaching
 	//it to the labels in Overview.fxml
 	public static void showFileInView() { 
-		if (FileHandlerWrapper.sortedFiles!= null) {
-			for (List<File> FilesList : FileHandlerWrapper.sortedFiles) {				
+		if (GeoServerFileHandlerWrapper.sortedFiles!= null) {
+			for (List<File> FilesList : GeoServerFileHandlerWrapper.sortedFiles) {				
 				for (File Files : FilesList){
 				String split[]  = Files.toString().split("\\\\");
 				int e = split.length - 1;
@@ -78,8 +78,8 @@ public class OverviewController {
 	 
 	//Method for showing zip files found in directory 
 	public static void showZipFileInView() {
-		if ( FileHandlerWrapper.files!= null) {
-			for (File zipfiles : FileHandlerWrapper.files) {
+		if ( GeoServerFileHandlerWrapper.files!= null) {
+			for (File zipfiles : GeoServerFileHandlerWrapper.files) {
 				String split[]  = zipfiles.toString().split("\\\\");
 				int e = split.length - 1;
 				ZipfileNames.add(split[e]);				

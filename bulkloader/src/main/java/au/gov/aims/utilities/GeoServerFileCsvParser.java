@@ -1,7 +1,7 @@
 /*
 @author	Stuart Garrigan
-@version 1.0
-@since 27-11-2014
+@version 1.0.1
+@since 11/12/2014
  */
 
 package au.gov.aims.utilities;
@@ -22,21 +22,21 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
-import au.gov.aims.interfaces.ShapeFileCsvParserInterface;
-import au.gov.aims.model.ShapeFile;
+import au.gov.aims.interfaces.GeoServerFileCsvParserInterface;
+import au.gov.aims.model.GeoServerFile;
 
 /**
  * Handles the writing and parsing of shape files to and from .csv.
  *
  */
 
-public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
+public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 	// Attributes
 	public Logger logger;
 
 	// Constructor
-	public ShapeFileCsvParser() {
-		logger = Logger.getLogger(ShapeFileCsvParser.class);
+	public GeoServerFileCsvParser() {
+		logger = Logger.getLogger(GeoServerFileCsvParser.class);
 	}
 
 	/**
@@ -48,13 +48,12 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 	 * @return Returns a a list of files parsed to a java bean.
 	 */
 	@Override
-	public List<ShapeFile> parseShapeFileToJavaBean(String fileNameToParse) throws IOException {
-		HeaderColumnNameTranslateMappingStrategy<ShapeFile> beanStrategy = new HeaderColumnNameTranslateMappingStrategy<ShapeFile>();
-		beanStrategy.setType(ShapeFile.class);
+	public List<GeoServerFile> parseGeoServerFileToJavaBean(String fileNameToParse) throws IOException {
+		HeaderColumnNameTranslateMappingStrategy<GeoServerFile> beanStrategy = new HeaderColumnNameTranslateMappingStrategy<GeoServerFile>();
+		beanStrategy.setType(GeoServerFile.class);
 
 		Map<String, String> columnMapping = new HashMap<String, String>();
 		columnMapping.put("storePath", "storePath");
-		columnMapping.put("BASENAME", "baseName");
 		columnMapping.put("storeName", "storeName");
 		columnMapping.put("layerName", "layerName");
 		columnMapping.put("workspace", "workspace");
@@ -70,10 +69,10 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 
 		beanStrategy.setColumnMapping(columnMapping);
 
-		CsvToBean<ShapeFile> csvToBean = new CsvToBean<ShapeFile>();
+		CsvToBean<GeoServerFile> csvToBean = new CsvToBean<GeoServerFile>();
 		CSVReader reader = new CSVReader(new FileReader(fileNameToParse));
 
-		List<ShapeFile> shapeFile = csvToBean.parse(beanStrategy, reader);
+		List<GeoServerFile> shapeFile = csvToBean.parse(beanStrategy, reader);
 		reader.close();
 		return shapeFile;
 	}
@@ -134,7 +133,7 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 	public List<String[]> toStringArray(List<File> fileList) {
 		List<String[]> records = new ArrayList<String[]>();
 		// add header record to the csv.
-		records.add(new String[] { "storePath", "BASENAME", "storeName",
+		records.add(new String[] { "storePath", "storeName",
 				"layerName", "workspace", "storeType", "title", "abstract",
 				"metadataXmlHref", "keywords", "wmsPath", "styles",
 				"uploadData", "uploadMetadata" });
@@ -144,10 +143,26 @@ public class ShapeFileCsvParser implements ShapeFileCsvParserInterface {
 		while (it.hasNext()) {
 			try {
 				File file = it.next();
+				
+				if(file.toString().endsWith(".shp")){
+				String shortName = file.getName().substring(0, file.getName().length() - 4);
+				
 				records.add(new String[] {backslashToForwardslash(file.getAbsolutePath()),
-						file.getName().substring(0, file.getName().length() - 4),
-						"", "", "", "Shapefile", "", "", "something.xml",
+						
+						shortName, shortName, "", "Shapefile", "", "", "something.xml",
 						"e.g. Maritime Boundary", "", "", "TRUE", "TRUE" });
+				}
+				
+				else if(file.toString().endsWith(".tif")){
+					String shortName = file.getName().substring(0, file.getName().length() - 4);
+					
+					records.add(new String[] {backslashToForwardslash(file.getAbsolutePath()),
+							
+							shortName, shortName, "", "GeoTiff", "", "", "something.xml",
+							"e.g. Maritime Boundary", "", "", "TRUE", "TRUE" });
+					}
+				
+		
 			
 			} catch (IndexOutOfBoundsException e) {
 				logger.debug(e.getStackTrace() + "An error occured when writing object to .csv, likely caused by too many defaults or not enough to match number of columns");

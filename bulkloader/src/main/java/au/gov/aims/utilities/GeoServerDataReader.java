@@ -17,7 +17,7 @@ import it.geosolutions.geoserver.rest.encoder.metadatalink.GSMetadataLinkInfoEnc
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 
-import au.gov.aims.model.ShapeFile;
+import au.gov.aims.model.GeoServerFile;
 
 /**
  * Handles reading data from a GeoServer instance into more programmer friendly
@@ -202,14 +202,14 @@ public class GeoServerDataReader {
 	 *             If the URL is incorrectly formatted, has invalid protocol or
 	 *             cannot be properly parsed.
 	 */
-	protected ShapeFile getLayerDataFromGeoserver(String workspaceName,
+	protected GeoServerFile getLayerDataFromGeoserver(String workspaceName,
 			String layerName) throws MalformedURLException {
 		RESTLayer layer = reader.getLayer(workspaceName, layerName);
 		String url = restUrl + "/rest/layers/" + workspaceName + ":"
 				+ layerName + ".xml";
 		Element baseLayerElement = getLayerElement(url);
 		RESTFeatureType feature = reader.getFeatureType(layer);
-		ShapeFile shpFile = new ShapeFile();
+		GeoServerFile shpFile = new GeoServerFile();
 
 		String baseName = feature.getNativeName();
 		String storeName = feature.getStoreName();
@@ -261,14 +261,14 @@ public class GeoServerDataReader {
 	 *             If the URL is incorrectly formatted, has invalid protocol or
 	 *             cannot be properly parsed.
 	 */
-	protected ShapeFile getCoverageDataFromGeoserver(String workspaceName,
+	protected GeoServerFile getCoverageDataFromGeoserver(String workspaceName,
 			String layerName) throws MalformedURLException {
 		RESTCoverage coverage = reader.getCoverage(reader.getLayer(
 				workspaceName, layerName));
 		String url = restUrl + "/rest/layers/" + workspaceName + ":"
 				+ layerName + ".xml";
 		Element baseLayerElement = getLayerElement(url);
-		ShapeFile shpFile = new ShapeFile();
+		GeoServerFile shpFile = new GeoServerFile();
 
 		String baseName = coverage.getNativeName();
 		String storeName = coverage.getStoreName();

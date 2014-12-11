@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import au.gov.aims.model.ShapeFile;
+import au.gov.aims.model.GeoServerFile;
 
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
 import it.geosolutions.geoserver.rest.GeoServerRESTReader;
@@ -55,13 +55,13 @@ public class GeoServerDataUpdater {
 	 *         <code>false</code> otherwise.
 	 */
 	public boolean updateAllData(GeoServerRESTReader reader,
-			GeoServerRESTPublisher publisher, List<ShapeFile> dataSets, String csvFileName) {
+			GeoServerRESTPublisher publisher, List<GeoServerFile> dataSets, String csvFileName) {
 		GeoServerDataUpdater updater = new GeoServerDataUpdater();
 		RESTFeatureType feature = null;
 		RESTLayer layer = null;
 		boolean successful = true;
 
-		for (ShapeFile dataSet : dataSets) {
+		for (GeoServerFile dataSet : dataSets) {
 			if (dataSet.getUploadData().toUpperCase().equals("FALSE"))
 				continue;
 			layer = reader.getLayer(dataSet.getWorkspace(),
@@ -104,7 +104,7 @@ public class GeoServerDataUpdater {
 	 *             If a null or empty <code>nativeCRS</code> is given.
 	 */
 	protected boolean updateFeature(GeoServerRESTPublisher publisher,
-			ShapeFile dataSet, String nativeCRS) throws IllegalArgumentException {
+			GeoServerFile dataSet, String nativeCRS) throws IllegalArgumentException {
 		if (nativeCRS == null || nativeCRS.isEmpty())
 			throw new IllegalArgumentException("nativeCRS cannot be null or empty.");
 		boolean successful = true;
@@ -171,7 +171,7 @@ public class GeoServerDataUpdater {
 	 *         <code>false</code> on failure.
 	 */
 	protected boolean updateCoverage(GeoServerRESTPublisher publisher,
-			ShapeFile dataSet) {
+			GeoServerFile dataSet) {
 		boolean successful = true;
 
 		GSLayerEncoder coverageLayerEnc = new GSLayerEncoder();

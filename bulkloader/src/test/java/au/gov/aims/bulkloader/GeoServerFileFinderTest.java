@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import au.gov.aims.utilities.FileFinder;
 
-public class ShapeFileFinderTest {
+public class GeoServerFileFinderTest {
 	static FileFinder sff;
 	static Logger logger;
 	static File dir;
@@ -28,7 +28,7 @@ public class ShapeFileFinderTest {
 
 	@BeforeClass
 	public static void setUp() {
-		logger = Logger.getLogger(ShapeFileFinderTest.class);
+		logger = Logger.getLogger(GeoServerFileFinderTest.class);
 		BasicConfigurator.configure();
 		sff = new FileFinder();
 
@@ -40,11 +40,23 @@ public class ShapeFileFinderTest {
 				try{
 				writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
 						+ sff.SHAPEFILE_EXTENSIONS.get(i));
+				
 				} finally {
 					writer.flush();
 					writer.close();
 				}
 			}
+			for (int i = 0; i < 5; i++) {
+				try{
+				writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + i + ".tif");
+						
+				
+				} finally {
+					writer.flush();
+					writer.close();
+				}
+			}
+			
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -53,14 +65,21 @@ public class ShapeFileFinderTest {
 
 	@Test
 	public void findAllFilesInDirTest() {
-		assertTrue(sff.findAll(dir.getAbsolutePath()).size() == sff.SHAPEFILE_EXTENSIONS.size());
+		assertTrue(sff.findAll(dir.getAbsolutePath()).size() == 9);
 	}
 
 	@Test
 	public void findFilesByExtensionListTest() {
 		assertTrue(sff.findAllByExtensionList(dir.getAbsolutePath(),
 				sff.SHAPEFILE_EXTENSIONS).size() == sff.SHAPEFILE_EXTENSIONS.size());
+		
 	}
+	
+	@Test
+	public void findCsvFilesByExtensionList(){
+		assertTrue(sff.findAllByExtensionList(dir.getAbsolutePath(), sff.FILE_EXTENSIONS_FOR_CSV).size() == 6);
+	}
+	
 
 	@Test
 	public void findByExtensionSingleStrTest() {
@@ -69,11 +88,11 @@ public class ShapeFileFinderTest {
 	}
 	
 
-	@AfterClass
-	public static void cleanUp() {
-		for (File file : dir.listFiles()) {
-			file.delete();
-		}
-		dir.delete();
-	}
+//	@AfterClass
+//	public static void cleanUp() {
+//		for (File file : dir.listFiles()) {
+//			file.delete();
+//		}
+//		dir.delete();
+//	}
 }

@@ -1,25 +1,22 @@
-/**
-@author Stuart Garrigan
-@version 1.0.0
-@since 8/12/14
-**/
+/*
+@author	Stuart Garrigan
+@version 1.0
+@since 27-11-2014
+ */
 package au.gov.aims.model;
 
-public class TiffFile {
-//Attributes
+/**
+ * The GeoServerFile object, attributes relate to what needs to be stored in the
+ * .csv for uploading to the geoserver.
+ *
+ */
+public class GeoServerFile {
+	// Attributes
 	private String storePath;
-	private String ORIG_STORE;
-	private String REGION;
-	private String SUBREGION;
-	private String YEAR;
-	private String MONTH;
-	private String SCENE1;
-	private String SCENE2;
 	private String storeName;
 	private String layerName;
 	private String workspace;
 	private String storeType;
-	private String date;
 	private String title;
 	private String layerAbstract;
 	private String metadataXmlHref;
@@ -28,64 +25,8 @@ public class TiffFile {
 	private String styles;
 	private String uploadData;
 	private String uploadMetadata;
-	
-//Getters and setters.		
-	public String getStorePath() {
-		return storePath;
-	}
 
-	public void setStorePath(String storePath) {
-		this.storePath = storePath;
-	}
-
-	public String getORIG_STORE() {
-		return ORIG_STORE;
-	}
-
-	public void setORIG_STORE(String oRIG_STORE) {
-		ORIG_STORE = oRIG_STORE;
-	}
-
-	public String getREGION() {
-		return REGION;
-	}
-
-	public void setREGION(String rEGION) {
-		REGION = rEGION;
-	}
-
-	public String getYEAR() {
-		return YEAR;
-	}
-
-	public void setYEAR(String yEAR) {
-		YEAR = yEAR;
-	}
-
-	public String getMONTH() {
-		return MONTH;
-	}
-
-	public void setMONTH(String mONTH) {
-		MONTH = mONTH;
-	}
-
-	public String getSCENE1() {
-		return SCENE1;
-	}
-
-	public void setSCENE1(String sCENE1) {
-		SCENE1 = sCENE1;
-	}
-
-	public String getSCENE2() {
-		return SCENE2;
-	}
-
-	public void setSCENE2(String sCENE2) {
-		SCENE2 = sCENE2;
-	}
-
+	// Getters + Setters.
 	public String getStoreName() {
 		return storeName;
 	}
@@ -116,14 +57,6 @@ public class TiffFile {
 
 	public void setStoreType(String storeType) {
 		this.storeType = storeType;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
 	}
 
 	public String getTitle() {
@@ -190,25 +123,22 @@ public class TiffFile {
 		this.uploadMetadata = uploadMetadata;
 	}
 
+	public String getStorePath() {
+		return storePath;
+	}
+
+	public void setStorePath(String storePath) {
+		this.storePath = storePath;
+	}
+
 	@Override
 	public String toString() {
-		return "TiffFile [storePath=" + storePath + ", ORIG_STORE="
-				+ ORIG_STORE + ", REGION=" + REGION + ", YEAR=" + YEAR
-				+ ", MONTH=" + MONTH + ", SCENE1=" + SCENE1 + ", SCENE2="
-				+ SCENE2 + ", storeName=" + storeName + ", layerName="
-				+ layerName + ", workspace=" + workspace + ", storeType="
-				+ storeType + ", Date=" + date + ", title=" + title
+		return "ShapeFile [storePath=" + storePath + ", storeName=" + storeName
+				+ ", layerName=" + layerName + ", workspace=" + workspace
+				+ ", storeType=" + storeType + ", title=" + title
 				+ ", layerAbstract=" + layerAbstract + ", metadataXmlHref="
 				+ metadataXmlHref + ", keywords=" + keywords + ", wmsPath="
 				+ wmsPath + ", styles=" + styles + ", uploadData=" + uploadData
 				+ ", uploadMetadata=" + uploadMetadata + "]";
-	}
-
-	public String getSUBREGION() {
-		return SUBREGION;
-	}
-
-	public void setSUBREGION(String sUBREGION) {
-		SUBREGION = sUBREGION;
 	}
 }

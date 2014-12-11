@@ -10,8 +10,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ ShapeFileCSVParserTest.class, ShapeFileFinderTest.class,
-		FileHandlerWrapperTest.class, ShapeFileSorterTest.class,
+@SuiteClasses({ GeoServerFileCSVParserTest.class, GeoServerFileFinderTest.class,
+		GeoServerFileHandlerWrapperTest.class, ShapeFileSorterTest.class,
 		ShapeFileZipperTest.class})
 public class BulkloaderShapeFileHandlingAllTests {
 
