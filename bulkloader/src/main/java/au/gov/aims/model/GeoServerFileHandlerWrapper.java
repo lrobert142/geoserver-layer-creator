@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 
 import au.gov.aims.utilities.FileFinder;
 import au.gov.aims.utilities.GeoServerFileCsvParser;
@@ -31,6 +32,7 @@ public final class GeoServerFileHandlerWrapper {
 	public static List<List<File>> sortedFiles;
 	private GeoServerFileCsvParser parser;
 	private File tempDirectory;
+	public Logger logger;
 	
 	//Constructor
 	public GeoServerFileHandlerWrapper(){
@@ -38,6 +40,7 @@ public final class GeoServerFileHandlerWrapper {
 		sfz = new ShapeFileZipper();
 		sfs = new ShapeFileSorter();
 		parser = new GeoServerFileCsvParser();
+		Logger.getLogger(GeoServerFileHandlerWrapper.class);
 	}
 	
 	public boolean initialWriteGeoServerFilesToCsv(List<File> file, String targetFileName){

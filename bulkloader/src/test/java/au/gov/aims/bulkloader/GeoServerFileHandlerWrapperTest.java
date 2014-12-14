@@ -32,16 +32,6 @@ public class GeoServerFileHandlerWrapperTest {
 	public static void setUp() {
 		handler = new GeoServerFileHandlerWrapper();
 		ff = new FileFinder();
-		
-//	}
-//	@Test
-//	public void test(){
-//		System.out.println(ff.findAllByExtensionList("H:\\truecolour-geotiff-selected", ff.FILE_EXTENSIONS_FOR_CSV).size());
-//		
-//		handler.initialWriteGeoServerFilesToCsv(ff.findAllByExtensionList("H:\\truecolour-geotiff-selected", ff.FILE_EXTENSIONS_FOR_CSV), "H:\\truecolour-geotiff-selected\\uploadLayers.csv");
-//		handler.setUpFilesForUpload("H:\\truecolour-geotiff-selected");
-//		System.out.println(handler.parseGeoServerFileUploadLayersCsvToBean("H:\\truecolour-geotiff-selected"));
-//	}
 		dir = new File("TestResources");
 		writeFile = dir.getAbsolutePath() +  "\\upLoadLayers.csv";
 		dir.mkdir();
@@ -82,6 +72,17 @@ public class GeoServerFileHandlerWrapperTest {
 		assertTrue(handler.parseGeoServerFileUploadLayersCsvToBean(
 				dir.getAbsolutePath()).size() == 6);
 	}
+	
+//	@Test
+//	public void setUpGeoServerFilesForUploadFullScale() {
+//		fileList = ff.findAllByExtensionList("H:\\", ff.FILE_EXTENSIONS_FOR_CSV);
+//		
+//		assertTrue(handler.initialWriteGeoServerFilesToCsv(fileList, "H:\\uploadLayers.csv") == true);
+//		
+//		handler.setUpFilesForUpload("H:\\");
+//		System.out.println(handler.parseGeoServerFileUploadLayersCsvToBean(
+//				"H:\\"));
+//	}
 
 
 	@AfterClass

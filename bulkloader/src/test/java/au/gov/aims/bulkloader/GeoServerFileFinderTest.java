@@ -88,11 +88,11 @@ public class GeoServerFileFinderTest {
 	}
 	
 
-//	@AfterClass
-//	public static void cleanUp() {
-//		for (File file : dir.listFiles()) {
-//			file.delete();
-//		}
-//		dir.delete();
-//	}
+	@AfterClass
+	public static void cleanUp() {
+		for (File file : dir.listFiles()) {
+			file.delete();
+		}
+		dir.delete();
+	}
 }

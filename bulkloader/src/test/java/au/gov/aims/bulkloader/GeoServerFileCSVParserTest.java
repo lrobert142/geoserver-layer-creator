@@ -18,6 +18,7 @@ import org.junit.Test;
 
 import au.gov.aims.utilities.FileFinder;
 import au.gov.aims.utilities.GeoServerFileCsvParser;
+import au.gov.aims.utilities.RelativePathConvertor;
 import au.gov.aims.utilities.ShapeFileSorter;
 
 public class GeoServerFileCSVParserTest {
@@ -64,6 +65,16 @@ public class GeoServerFileCSVParserTest {
 		}
 			
 	}
+	
+	//Testing absolute file path conversion.
+//	@Test
+//	public void test(){
+//		fileList = ff.findAllByExtensionList("H:\\", ff.FILE_EXTENSIONS_FOR_CSV);
+//		for(File f : fileList){
+//			
+//		System.out.println(RelativePathConvertor.convertToRelativePath(f.getAbsolutePath(), f.getParent()) + "/" + f.getName());
+//		}
+//	}
 
 	@Test
 	public void writeToCSVTest() throws IOException {
@@ -76,6 +87,7 @@ public class GeoServerFileCSVParserTest {
 		fileList = ff.findAllByExtensionList(dir.getAbsolutePath(), ff.FILE_EXTENSIONS_FOR_CSV);
 
 		parser.writeFilesToCsv(fileList, writeFile);
+		
 		assertTrue(parser.parseGeoServerFileToJavaBean(writeFile).size() ==  6);
 	}
 	
