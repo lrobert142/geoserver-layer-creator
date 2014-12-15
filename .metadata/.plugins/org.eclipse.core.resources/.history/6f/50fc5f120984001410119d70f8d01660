@@ -84,7 +84,7 @@ public final class GeoServerFileHandlerWrapper {
 	
 	
 	public List<GeoServerFile> parseGeoServerFileUploadLayersCsvToBean(String csvFileName){
-		csvFileName = backslashToForwardslash(csvFileName);
+		System.out.println(csvFileName);
 		List<GeoServerFile> geoServerFileBean = new ArrayList<GeoServerFile>();
 		try {
 			geoServerFileBean = parser.parseGeoServerFileToJavaBean(csvFileName);

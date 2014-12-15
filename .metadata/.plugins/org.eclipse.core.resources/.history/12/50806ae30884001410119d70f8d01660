@@ -84,7 +84,7 @@ public final class GeoServerFileHandlerWrapper {
 	
 	
 	public List<GeoServerFile> parseGeoServerFileUploadLayersCsvToBean(String csvFileName){
-		csvFileName = backslashToForwardslash(csvFileName);
+		System.out.println(csv);
 		List<GeoServerFile> geoServerFileBean = new ArrayList<GeoServerFile>();
 		try {
 			geoServerFileBean = parser.parseGeoServerFileToJavaBean(csvFileName);
@@ -111,23 +111,6 @@ public final class GeoServerFileHandlerWrapper {
 
 	private String getRelativePath(String targetPath) {
 		return targetPath.substring(0, targetPath.lastIndexOf("/"));
-	}
-	
-	/**
-	 * Converts absolute file paths containing '\' characters and converts them to '/' characters
-	 * @param Absoulte path for a file to be converted.
-	 * @return The converted string.
-	 */
-	public String backslashToForwardslash(String path) {
-		StringBuilder builder = new StringBuilder();
-		char[] pathArray = path.toCharArray();
-		
-		for (int j = 0; j < pathArray.length; j++) {
-			if(pathArray[j] == '\\')
-				pathArray[j] = '/';
-			builder.append(pathArray[j]);
-		}
-		return builder.toString();
 	}
 	
 }
