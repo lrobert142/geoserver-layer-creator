@@ -43,12 +43,30 @@ public final class GeoServerFileHandlerWrapper {
 		Logger.getLogger(GeoServerFileHandlerWrapper.class);
 	}
 	
+	/**
+	 * Creates a .csv file and writes the contents of a list of files to it. This is a wrapper class 
+	 * for the GeoServerFileCsvParser().
+	 * 
+	 * @param files -  The list of file objects to be written to csv.
+	 * @param targetFileName - The directory and csv name. e.g. C:/../../uploadLayers.csv
+	 * 
+	 * @return On successful write returns true.
+	 */
 	public boolean initialWriteGeoServerFilesToCsv(List<File> files, String targetFileName) {
 		parser.writeFilesToCsv(files, targetFileName);
 		
 		return true;
 	}
 	
+	/**
+	 * Creates a .csv file and writes the contents of a list of GeoServerFile objects to it. This is a wrapper class 
+	 * for the GeoServerFileCsvParser(). 
+	 * 
+	 * @param files -  The list of GeoServerFile objects to be written to csv.
+	 * @param targetFileName - The directory and csv name. e.g. C:/../../uploadLayers.csv
+	 * 
+	 * @return On successful write returns true.
+	 */
 	public boolean rewriteFailedUploadsToCSV(List<GeoServerFile> files, String targetFileName) {
 		parser.writeFailedFilesToCsv(files, targetFileName);
 		return true;
@@ -59,9 +77,12 @@ public final class GeoServerFileHandlerWrapper {
 	}
 
 	/**
-	 * Used as a wrapper class for carrying out all file handling activities.
+	 * Used as a wrapper class for carrying out all file handling activities for setting up files
+	 * for upload to a geoserver. Includes finding, sorting and zipping.
 	 * 
-	 * @param The target directory containing GeoServerFiles.
+	 * @param targetDirectory - The target directory containing .shp and .tif file types.
+	 * 
+	 * @return A list of file objects.
 	 */
 	public List<File> setUpFilesForUpload(String targetDirectory){
 		
@@ -86,7 +107,15 @@ public final class GeoServerFileHandlerWrapper {
 		return files;
 	}
 	
-	
+	/**
+	 * A wrapper for GeoServerFileCsvParser(), takes a given csvFilePath and converts it into a usable format
+	 * for geoserver e.g.'\' -> '/'. The csv is then parsed and mapped to a GeoServerFile object. For any files in the csv
+	 * found with a .shp extension. They are converted to .zip for upload. 
+	 * 
+	 * @param csvFileName - The file path to the .csv file being parsed.
+	 * 
+	 * @return A list of GeoServerFile objects.
+	 */
 	public List<GeoServerFile> parseGeoServerFileUploadLayersCsvToBean(String csvFileName){
 		csvFileName = backslashToForwardslash(csvFileName);
 		List<GeoServerFile> geoServerFileBean = new ArrayList<GeoServerFile>();
@@ -102,24 +131,40 @@ public final class GeoServerFileHandlerWrapper {
 				
 				String basePath = getRelativePath(csvFileName);
 				
-				geoServerFileBean.get(i).setStorePath(relativePathToAbstractPath(basePath, geoServerFileBean.get(i).getStorePath()));
+				geoServerFileBean.get(i).setStorePath(relativePathToAbsolutePath(basePath, geoServerFileBean.get(i).getStorePath()));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.debug("An error has occured whilst attempting to parse the specified .csv, most likely the file was not found or the content does not match the requirements of a GeoServerFile Object." + e);
 		}
 		return geoServerFileBean;
 	}
-	private String relativePathToAbstractPath(String basePath, String relativePath) {
+	
+	/**
+	 * Gets the absolute path of a GeoServerFile by concatenating the files base path and relative path.
+	 * 
+	 * @param basePath - The base path of the file.
+	 * @param relativePath - The relative path of the file.
+	 * 
+	 * @return The constructed string.
+	 */
+	private String relativePathToAbsolutePath(String basePath, String relativePath) {
 		return basePath + relativePath;
 	}
 
+	/**
+	 * Gets the relative path of a file by taking a substring of the given absolute path.
+	 * 
+	 * @param targetPath - The absolute path of the file.
+	 * 
+	 * @return The constructed string.
+	 */
 	private String getRelativePath(String targetPath) {
 		return targetPath.substring(0, targetPath.lastIndexOf("/"));
 	}
 	
 	/**
 	 * Converts absolute file paths containing '\' characters and converts them to '/' characters
-	 * @param Absoulte path for a file to be converted.
+	 * @param path - Absolute path for a file to be converted.
 	 * @return The converted string.
 	 */
 	public String backslashToForwardslash(String path) {

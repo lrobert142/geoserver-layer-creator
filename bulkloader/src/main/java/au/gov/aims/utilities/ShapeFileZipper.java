@@ -31,7 +31,7 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 	private final static String outputZipExtension = ".zip";
 
 	/**
-	 * Handles the zipping of sorted shape files
+	 * Handles the zipping of sorted shape files.
 	 */
 	public ShapeFileZipper(){
 		logger = Logger.getLogger(ShapeFileZipper.class);
@@ -40,8 +40,8 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 	/**
 	 * Takes a List of File object lists and zips each list to a desired output location. 
 	 *
-	 * @param The sorted List of File object Lists to be zipped.
-	 * @param The absolute path to the desired output location for the zips.
+	 * @param  sortedShapeFiles - The sorted List of File object Lists to be zipped.
+	 * @param  outPutFileLocation - The absolute path to the desired output location for the zips.
 	 */
 	public void zipSortedShapeFiles(List<List<File>> sortedShapeFiles, String outputFileLocation) {
 		byte[] buffer = new byte[1024];
@@ -55,6 +55,7 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 				FileOutputStream fos = new FileOutputStream(outputFileLocation + "\\" + currentFilenameForZip + outputZipExtension);
 				ZipOutputStream zos = new ZipOutputStream(fos);
 				
+				//Creating each zip file.
 				for (File file : sortedShapeFiles.get(i)) {
 
 					ZipEntry ze = new ZipEntry(file.getName());
@@ -73,14 +74,20 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 			}
 
 		} catch (IOException e){
-			logger.debug(e.getStackTrace() + "An error has occured whilst attempting to open a directory.");
+			logger.debug("ERROR - An error has occured whilst attempting to open a directory.");
 		} catch (IndexOutOfBoundsException e){
-			logger.debug(e.getStackTrace() + "An error has occured whilst attempting to iterate through a list of files, most likely referenced an index that does not exist.");
+			logger.debug("ERROR - An error has occured whilst attempting to iterate through a list of files, most likely referenced an index that does not exist.");
 		} catch (Exception e){
-			logger.debug(e.getStackTrace() + "ERROR - Some other unspecified error has occured whilst iterating through a list of files.");
+			logger.debug("ERROR - Some other unspecified error has occured whilst iterating through a list of files.");
 		}
 	}
 
+	/**
+	 * Takes a List of File objects and zips all to a desired output location. 
+	 *
+	 * @param files - The List of File objects to be zipped.
+	 * @param  outPutFileLocation - The absolute path to the desired output location for the zips.
+	 */
 	@Override
 	public void zipAll(List<File> files, String outputFileLocation) {
 		byte[] buffer = new byte[1024];
@@ -89,6 +96,7 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 				FileOutputStream fos = new FileOutputStream(outputFileLocation + outputZipExtension);
 				ZipOutputStream zos = new ZipOutputStream(fos);
 				
+				//Creating the zip
 				for (File file : files) {
 					ZipEntry ze = new ZipEntry(file.getName());
 					zos.putNextEntry(ze);
@@ -105,11 +113,11 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 				zos.close();
 
 		} catch (IOException e){
-			logger.debug(e.getStackTrace() + "An error has occured whilst attempting to open a directory.");
+			logger.debug("ERROR - An error has occured whilst attempting to open a directory.");
 		} catch (IndexOutOfBoundsException e){
-			logger.debug(e.getStackTrace() + "An error has occured whilst attempting to iterate through a list of files, most likely referenced an index that does not exist.");
+			logger.debug("ERROR - An error has occured whilst attempting to iterate through a list of files, most likely referenced an index that does not exist.");
 		} catch (Exception e){
-			logger.debug(e.getStackTrace() + "ERROR - Some other unspecified error has occured whilst iterating through a list of files.");
+			logger.debug("ERROR - Some other unspecified error has occured whilst iterating through a list of files.");
 		}
 	}
 }

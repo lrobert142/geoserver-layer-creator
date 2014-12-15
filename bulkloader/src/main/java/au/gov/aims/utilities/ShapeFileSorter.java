@@ -34,8 +34,9 @@ public class ShapeFileSorter {
 	 * Handles the sorting of a list of shape files into groups using the files
 	 * short name less extensions.
 	 *
-	 * @param A list of File objects to be sorted.
-	 * @return Returns an ArrayList of Lists of File objects that have been sorted.
+	 * @param shapeFiles - A list of File objects to be sorted.
+	 * 
+	 * @return Returns an ArrayList of Lists of File objects that have been sorted into like groups.
 	 */
 	public ArrayList<List<File>> sortShapeFiles(List<File> shapeFiles){
 		String targetFilename="";
@@ -74,9 +75,9 @@ public class ShapeFileSorter {
 		sortedShapeFiles.add(new ArrayList<File>(sameShapeFiles));
 		
 		} catch (IndexOutOfBoundsException e) {
-			logger.debug(e.getStackTrace() + "An error has occured whilst sorting shape files 'i' has referenced something unknown");
+			logger.debug("ERROR - An error has occured whilst sorting shape files 'i' has referenced something unknown");
 		} catch (Exception e){
-			logger.debug(e.getStackTrace() + "An error has occured whilst sorting shape files, most likely a file does not exist.");
+			logger.debug("ERROR - An error has occured whilst sorting shape files, most likely a file does not exist.");
 		}
 		return sortedShapeFiles;
 	}

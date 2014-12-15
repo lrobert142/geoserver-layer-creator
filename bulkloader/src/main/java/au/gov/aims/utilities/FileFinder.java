@@ -33,6 +33,14 @@ public class FileFinder implements FileFinderInterface {
 		logger = Logger.getLogger(FileFinder.class);
 	}
 
+	
+	/**
+	 * Finds all files in a given directory.
+	 * 
+	 * @param targetDirectory - The absolute path to the directory.
+	 * 
+	 * @return A list of file objects.
+	 */
 	@Override
 	public List<File> findAll(String targetDirectory) {
 		allFiles = new ArrayList<File>();
@@ -43,12 +51,20 @@ public class FileFinder implements FileFinderInterface {
 				
 			allFiles.addAll(listFileTree(directory));
 		} catch (Exception e) {
-			logger.debug(e + "error");
+			logger.debug("An error has occured whilst seraching: " + targetDirectory);
 		}
 		Collections.sort(allFiles);
 		return allFiles;
 	}
 
+	/**
+	 * Finds all files in a given directory with the extension specified in a list.
+	 * 
+	 * @param targetDirectory - The absolute path to the directory.
+	 * @param extensions - A list of String extensions e.g. .shp, .dbf...
+	 * 
+	 * @return A list of file objects.
+	 */
 	@Override
 	public List<File> findAllByExtensionList(String targetDirectory, List<String> extensions) {
 		try {
@@ -57,16 +73,24 @@ public class FileFinder implements FileFinderInterface {
 				
 			allFiles.addAll(listFileTree(directory, extensions));
 		} catch (NullPointerException e) {
-			logger.debug(e.getStackTrace() + "An error has occurred whilst iterating through a list of file objects.");
+			logger.debug("ERROR - An error has occurred whilst iterating through a list of file objects.");
 		} catch (FileSystemNotFoundException e){
-			logger.debug(e.getStackTrace() + "An error has occured when attempting to open a directory.");
+			logger.debug("ERROR - An error has occured when attempting to open a directory.");
 		} catch (Exception e){
-			logger.debug(e.getStackTrace() + "ERROR - Some unspecified error has occured whilst attempting to open a directory.");
+			logger.debug("ERROR - Some unspecified error has occured whilst attempting to open a directory.");
 		}
 		Collections.sort(allFiles);
 		return allFiles;
 	}
 
+	/**
+	 * Finds all files in a given directory with the extension specified.
+	 * 
+	 * @param targetDirectory - The absolute path to the directory.
+	 * @param extension - A String extension e.g. .shp
+	 * 
+	 * @return A list of file objects.
+	 */
 	@Override
 	public List<File> findAllBySingleExtension(String targetDirectory, String extension) {
 		try {
@@ -75,17 +99,18 @@ public class FileFinder implements FileFinderInterface {
 				
 			allFiles.addAll(listFileTree(directory, extension));
 		} catch (NullPointerException e) {
-			logger.debug(e.getStackTrace() + "An error has occurred whilst iterating through a list of file objects.");
+			logger.debug("ERROR - An error has occurred whilst iterating through a list of file objects.");
 		} catch (FileSystemNotFoundException e){
-			logger.debug(e.getStackTrace() + "An error has occured when attempting to open a directory.");
+			logger.debug("ERROR - An error has occured when attempting to open a directory.");
 		} catch (Exception e){
-			logger.debug(e.getStackTrace() + "ERROR - Some unspecified error has occured whilst attempting to open a directory.");
+			logger.debug("ERROR - Some unspecified error has occured whilst attempting to open a directory.");
 		}
 		Collections.sort(allFiles);
 		return allFiles;
 	}
 		
-	//These methods handle finding all files in a directory/sub directories based on the input parameters.
+	//These helper methods handle finding all files in a directory/sub directories based on the input parameters
+	//using recursion.
 		
 	//List all from list of file extensions 
 	final  Collection<File> listFileTree(File dir, List<String> EXTENSIONS) {

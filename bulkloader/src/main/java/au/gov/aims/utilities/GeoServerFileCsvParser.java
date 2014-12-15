@@ -43,9 +43,9 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 	 * Access a .csv and parse each row into a java bean. Using
 	 * HeadingColumnNameTranslateMappingStrategy.
 	 *
-	 * @param The
-	 *            absolute path of the desired shapeFile .csv to parse.
-	 * @return Returns a a list of files parsed to a java bean.
+	 * @param fileNameToParse - The absolute path of the desired shapeFile .csv to parse.
+	 * 
+	 * @return Returns a list of GeoServerFile objects parsed to a java bean.
 	 */
 	@Override
 	public List<GeoServerFile> parseGeoServerFileToJavaBean(String fileNameToParse) throws IOException {
@@ -92,11 +92,8 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 	 * Write a list of files to a specified .csv. Takes a list of files which
 	 * are converted to a List of String Arrays before being written the .csv.
 	 *
-	 * @param The
-	 *            list of files to be written to a .csv
-	 * @param The
-	 *            absolute path of the desired output location of the written
-	 *            .csv.
+	 * @param files - The list of files to be written to a .csv
+	 * @param targetFileName - The absolute path of the desired output location of the written .csv.
 	 */
 	@Override
 	public void writeFilesToCsv(List<File> files, String targetFileName) {
@@ -110,10 +107,17 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 			csvWriter.close();
 			fileWriter.close();
 		} catch (Exception e) {
-			logger.debug(e.getStackTrace() + "An error has occured when writing to a .csv");
+			logger.debug("ERROR - An error has occured when writing to a .csv");
 		}
 	}
 	
+	/**
+	 * Write a list of GeoServerFiles to a specified .csv. Takes a list of files which
+	 * are converted to a List of String Arrays before being written the .csv.
+	 *
+	 * @param files - The list of GeoServerFiles to be written to a .csv
+	 * @param targetFileName - The absolute path of the desired output location of the written .csv.
+	 */
 	public void writeFailedFilesToCsv(List<GeoServerFile> files, String targetFileName) {
 		try {
 			FileWriter fileWriter = new FileWriter(targetFileName);
@@ -126,13 +130,13 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 			fileWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug("An error has occured when writing to a .csv");
+			logger.debug("ERROR - An error has occured when writing to a .csv");
 		}
 	}
 	
 	/**
 	 * Converts absolute file paths containing '\' characters and converts them to '/' characters
-	 * @param Absoulte path for a file to be converted.
+	 * @param path - Absolute path for a file to be converted.
 	 * @return The converted string.
 	 */
 	public String backslashToForwardslash(String path) {
@@ -150,8 +154,8 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 	/**
 	 * Convert a list of File objects to a List of String Arrays.
 	 *
-	 * @param The
-	 *            list of files to be written to be converted.
+	 * @param fileList - The list of files to be converted.
+	 * @param homeDirectory - Base directory of the .csv.
 	 * 
 	 * @return a List of String Arrays.
 	 */
@@ -191,9 +195,9 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 							"e.g. Maritime Boundary", relativePath, "", "TRUE", "TRUE" });
 					}
 			} catch (IndexOutOfBoundsException e) {
-				logger.debug(e.getStackTrace() + "An error occured when writing object to .csv, likely caused by too many defaults or not enough to match number of columns");
+				logger.debug("ERROR - An error occured when writing object to .csv, likely caused by too many defaults or not enough to match number of columns");
 			} catch (Exception e) {
-				logger.debug(e.getStackTrace() + "Some other error has occured whilst trying to write an object to a .csv");
+				logger.debug("ERROR - Some other error has occured whilst trying to write an object to a .csv");
 			}
 		}
 		return records;
@@ -202,8 +206,8 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 	/**
 	 * Convert a list of GeoServerFile objects to a List of String Arrays.
 	 *
-	 * @param The
-	 *            list of GeoServer files to be written to be converted.
+	 * @param fileList - The list of GeoServer files to be converted.
+	 * @param homeDirectory - Base directory of the .csv.
 	 * 
 	 * @return a List of String Arrays.
 	 */
