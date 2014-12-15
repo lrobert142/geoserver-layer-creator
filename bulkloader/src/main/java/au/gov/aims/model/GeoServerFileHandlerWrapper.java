@@ -43,11 +43,15 @@ public final class GeoServerFileHandlerWrapper {
 		Logger.getLogger(GeoServerFileHandlerWrapper.class);
 	}
 	
-	public boolean initialWriteGeoServerFilesToCsv(List<File> file, String targetFileName){
-		parser.writeFilesToCsv(file, targetFileName);
+	public boolean initialWriteGeoServerFilesToCsv(List<File> files, String targetFileName) {
+		parser.writeFilesToCsv(files, targetFileName);
 		
 		return true;
-		
+	}
+	
+	public boolean rewriteFailedUploadsToCSV(List<GeoServerFile> files, String targetFileName) {
+		parser.writeFailedFilesToCsv(files, targetFileName);
+		return true;
 	}
 	
 	public List<File> findFilesForUpload(String targetDirectory) {

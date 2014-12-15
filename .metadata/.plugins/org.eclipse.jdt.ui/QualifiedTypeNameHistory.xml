@@ -23,14 +23,12 @@
 <fullyQualifiedTypeName name="au.gov.aims.utilities.GeoServerDataUpdater"/>
 <fullyQualifiedTypeName name="it.geosolutions.geoserver.rest.GeoServerRESTReader"/>
 <fullyQualifiedTypeName name="au.gov.aims.model.ShapeFile"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="au.gov.aims.utilities.FilterType"/>
 <fullyQualifiedTypeName name="it.geosolutions.geoserver.rest.GeoServerRESTPublisher"/>
 <fullyQualifiedTypeName name="java.io.FileNotFoundException"/>
 <fullyQualifiedTypeName name="java.lang.NullPointerException"/>
 <fullyQualifiedTypeName name="java.nio.file.InvalidPathException"/>
 <fullyQualifiedTypeName name="org.junit.After"/>
-<fullyQualifiedTypeName name="au.gov.aims.model.GeoServerFile"/>
 <fullyQualifiedTypeName name="org.junit.BeforeClass"/>
 <fullyQualifiedTypeName name="au.gov.aims.model.UploadManger"/>
 <fullyQualifiedTypeName name="java.util.Enumeration"/>
@@ -45,10 +43,14 @@
 <fullyQualifiedTypeName name="java.nio.file.Paths"/>
 <fullyQualifiedTypeName name="java.nio.file.Path"/>
 <fullyQualifiedTypeName name="java.nio.file.Files"/>
-<fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="au.gov.aims.bulkloader.UploadManagerUploadFromCSVTest"/>
 <fullyQualifiedTypeName name="java.lang.Exception"/>
 <fullyQualifiedTypeName name="java.io.IOException"/>
 <fullyQualifiedTypeName name="java.util.zip.ZipEntry"/>
 <fullyQualifiedTypeName name="java.util.zip.ZipFile"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="au.gov.aims.model.GeoServerFile"/>
+<fullyQualifiedTypeName name="org.junit.Test"/>
+<fullyQualifiedTypeName name="java.io.File"/>
 </qualifiedTypeNameHistroy>

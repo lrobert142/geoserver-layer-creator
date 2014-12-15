@@ -104,13 +104,29 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 			FileWriter fileWriter = new FileWriter(targetFileName);
 			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
 			
-			List<String[]> data = toStringArray(files, getRelativePath(targetFileName));
+			List<String[]> data = fileListToStringArray(files, getRelativePath(targetFileName));
 			csvWriter.writeAll(data);
 
 			csvWriter.close();
 			fileWriter.close();
 		} catch (Exception e) {
 			logger.debug(e.getStackTrace() + "An error has occured when writing to a .csv");
+		}
+	}
+	
+	public void writeFailedFilesToCsv(List<GeoServerFile> files, String targetFileName) {
+		try {
+			FileWriter fileWriter = new FileWriter(targetFileName);
+			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
+			
+			List<String[]> data = geoserverFilesToStringArray(files, getRelativePath(targetFileName));
+			csvWriter.writeAll(data);
+
+			csvWriter.close();
+			fileWriter.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("An error has occured when writing to a .csv");
 		}
 	}
 	
@@ -139,7 +155,7 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 	 * 
 	 * @return a List of String Arrays.
 	 */
-	public List<String[]> toStringArray(List<File> fileList, String homeDirectory) {
+	public List<String[]> fileListToStringArray(List<File> fileList, String homeDirectory) {
 		List<String[]> records = new ArrayList<String[]>();
 		// add header record to the csv.
 		records.add(new String[] { "storePath", "storeName",
@@ -183,11 +199,54 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 		return records;
 	}
 	
+	/**
+	 * Convert a list of GeoServerFile objects to a List of String Arrays.
+	 *
+	 * @param The
+	 *            list of GeoServer files to be written to be converted.
+	 * 
+	 * @return a List of String Arrays.
+	 */
+	public List<String[]> geoserverFilesToStringArray(List<GeoServerFile> fileList, String homeDirectory) {
+		List<String[]> records = new ArrayList<String[]>();
+		// add header record to the csv.
+		records.add(new String[] { "storePath", "storeName",
+				"layerName", "workspace", "storeType", "title", "abstract",
+				"metadataXmlHref", "keywords", "wmsPath", "styles",
+				"uploadData", "uploadMetadata" });
+		
+		// Add 2 rows for example and description information. When parsed the program 
+		// will look for the flags "EXAMPLE_ONLY" and "DESCRIPTION_ONLY"
+		// these rows will be ignored when the csv is parsed to a bean.
+		records.add(new String[]{"EXAMPLE_ONLY", "This will be an example"});
+		records.add(new String[]{"DESCRIPTION_ONLY", "This is another example"});
+
+
+		// Add new record per object in list with defaults entries to the csv.
+		Iterator<GeoServerFile> it = fileList.iterator();
+		while (it.hasNext()) {
+			try {
+				GeoServerFile file = it.next();
+				records.add(new String[] {absoluteToRelativePath(file.getStorePath(), homeDirectory),
+						file.getStoreName(), file.getLayerName(), file.getWorkspace(), 
+						file.getStoreType(), file.getTitle(), file.getLayerAbstract(),
+						file.getMetadataXmlHref(), file.getKeywords(), file.getWmsPath(),
+						file.getStyles(), file.getUploadData(), file.getUploadMetadata()});
+			} catch (IndexOutOfBoundsException e) {
+				logger.debug(e.getStackTrace() + "An error occured when writing object to .csv, likely caused by too many defaults or not enough to match number of columns");
+			} catch (Exception e) {
+				logger.debug(e.getStackTrace() + "Some other error has occured whilst trying to write an object to a .csv");
+			}
+		}
+		return records;
+	}
+	
 	private String absoluteToRelativePath(String absolutePath, String relativeDirectory) {
 		return absolutePath.substring(relativeDirectory.length() + 1, absolutePath.length());
 	}
 	
 	private String getRelativePath(String targetPath) {
-		return targetPath.substring(0, targetPath.lastIndexOf("\\"));
+		int lastIndex = targetPath.lastIndexOf("\\") == -1 ? targetPath.lastIndexOf("/") : targetPath.lastIndexOf("\\");
+		return targetPath.substring(0, lastIndex);
 	}
 }

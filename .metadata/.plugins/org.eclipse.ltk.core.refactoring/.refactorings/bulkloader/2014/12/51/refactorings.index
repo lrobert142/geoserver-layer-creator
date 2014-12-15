@@ -11,3 +11,6 @@
 1418603349984	Rename local variable 'p'
 1418609736303	Delete element
 1418613596248	Rename type 'AllTests'
+1418614974428	Rename local variable 'file'
+1418616101226	Rename method 'toStringArray'
+1418616165146	Rename method 'toStringArray'

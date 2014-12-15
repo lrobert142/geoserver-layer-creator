@@ -25,19 +25,13 @@ public class UploadManagerUploadFromCSVTest {
 	@Test
 	public void uploadGeoServerFilesFromCSV() {
 		uploadManager.setUpFiles(filesDirectory);
-		zipDirectory = new File(filesDirectory + "/GS_LAYER_UPLOADER_ZIPS");
+		zipDirectory = new File(filesDirectory + "\\GS_LAYER_UPLOADER_ZIPS");
 		assertTrue(zipDirectory.exists());
-		assertTrue(uploadManager.uploadGeoServerFilesToGeoServer(filesDirectory + "/uploadLayersFILLEDIN.csv"));
+		assertTrue(uploadManager.uploadGeoServerFilesToGeoServer(filesDirectory + "\\uploadLayersFILLEDIN.csv"));
 	}
 	
 	@AfterClass
 	public static void close() {
 		uploadManager.deleteWorkspace("workspace");
-		for(String fileName : zipDirectory.list()) {
-			File file = new File(UploadManagerUploadFromCSVTest.class.getResource(geoServerFileDirectory + "/GS_LAYER_UPLOADER_ZIPS/" + fileName).toString().substring(6));
-			file.delete();
-		}
-		zipDirectory.delete();
-		assertFalse(zipDirectory.exists());
 	}
 }

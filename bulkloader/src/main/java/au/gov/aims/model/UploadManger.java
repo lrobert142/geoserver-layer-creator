@@ -7,6 +7,7 @@
 package au.gov.aims.model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -41,7 +42,7 @@ public class UploadManger {
 	
 	/**
 	 * Creates .zip files in a temporary directory
-	 * @param filesDirectory - the directory where the shapefiles are. This is also where the CSV file will be created
+	 * @param filesDirectory - the directory where the GeoServer files are. This is also where the CSV file will be created
 	 */
 	public void setUpFiles(String filesDirectory) {
 		fileHandler.setUpFilesForUpload(filesDirectory);
@@ -60,21 +61,22 @@ public class UploadManger {
 	 */
 	public boolean uploadGeoServerFilesToGeoServer(String csvFileName) {
 		List<GeoServerFile> geoServerFiles = fileHandler.parseGeoServerFileUploadLayersCsvToBean(csvFileName);
+		List<GeoServerFile> failedUploads = new ArrayList<GeoServerFile>();
 		for(GeoServerFile geoServerFile : geoServerFiles) {
 			if(Boolean.parseBoolean(geoServerFile.getUploadData())) {
 				switch (geoServerFile.getStoreType()) {
 				case "Shapefile":
 					File zipFile = new File(geoServerFile.getStorePath());
 					if(!geoServerManager.uploadShapeFile(geoServerFile.getWorkspace(), geoServerFile.getStoreName(), zipFile, geoServerFile.getTitle(), geoServerFile.getLayerAbstract(), geoServerFile.getMetadataXmlHref(), geoServerFile.getKeywords(), geoServerFile.getWmsPath())) {
+						failedUploads.add(geoServerFile);
 						logger.debug("File " + FilenameUtils.getBaseName(zipFile.getName()) + " caused an error during uploading.");
-						return false;
 					}
 					break;
 				case "GeoTiff":
 					File tifFile = new File(geoServerFile.getStorePath());
 					if(!geoServerManager.uploadGeoTIFFFile(geoServerFile.getWorkspace(), geoServerFile.getStoreName(), geoServerFile.getLayerName(), tifFile, geoServerFile.getTitle(), geoServerFile.getLayerAbstract(), geoServerFile.getMetadataXmlHref(), geoServerFile.getKeywords(), geoServerFile.getWmsPath())) {
+						failedUploads.add(geoServerFile);
 						logger.debug("File " + FilenameUtils.getBaseName(tifFile.getName()) + " caused an error during uploading.");
-						return false;
 					}
 					break;
 				default:
@@ -82,8 +84,29 @@ public class UploadManger {
 				}
 			}
 		}
-		logger.debug("All GeoServer files successfully uploaded");
-		return true;
+		
+		if(failedUploads.isEmpty()) {
+			logger.debug("All GeoServer files successfully uploaded");
+			deleteTemporaryFolder(getRelativePath(csvFileName) + "\\GS_LAYER_UPLOADER_ZIPS");
+			return true;
+		} else {
+			fileHandler.rewriteFailedUploadsToCSV(failedUploads, csvFileName);
+			logger.debug("Not all files to upload were successful, the failed uploads have been written back to the csv file, please fix them and try again");
+			return false;
+		}
+	}
+	
+	public void deleteTemporaryFolder(String folderPath) {
+		File temporaryFolder = new File(folderPath);
+		for(File fileName : temporaryFolder.listFiles()) {
+			fileName.delete();
+		}
+		temporaryFolder.delete();
+	}
+	
+	public String getRelativePath(String targetPath) {
+		int lastIndex = targetPath.lastIndexOf("\\") == -1 ? targetPath.lastIndexOf("/") : targetPath.lastIndexOf("\\");
+		return targetPath.substring(0, lastIndex);
 	}
 	
 	public boolean deleteWorkspace(String workspaceName) {
