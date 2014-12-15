@@ -211,7 +211,6 @@ public class GeoServerDataReader {
 		RESTFeatureType feature = reader.getFeatureType(layer);
 		GeoServerFile shpFile = new GeoServerFile();
 
-		String baseName = feature.getNativeName();
 		String storeName = feature.getStoreName();
 		String storeType = feature.getStoreType();
 		String title = feature.getTitle();
@@ -227,7 +226,6 @@ public class GeoServerDataReader {
 				+ layerName);
 
 		shpFile.setStorePath(storePath == null ? "" : storePath);
-		shpFile.setBaseName(baseName == null ? "" : baseName);
 		shpFile.setStoreName(storeName == null ? "" : storeName);
 		shpFile.setLayerName(layerName == null ? "" : layerName);
 		shpFile.setWorkspace(workspaceName == null ? "" : workspaceName);
@@ -270,7 +268,6 @@ public class GeoServerDataReader {
 		Element baseLayerElement = getLayerElement(url);
 		GeoServerFile shpFile = new GeoServerFile();
 
-		String baseName = coverage.getNativeName();
 		String storeName = coverage.getStoreName();
 		String storeType = coverage.getStoreType();
 		String title = coverage.getTitle();
@@ -285,7 +282,6 @@ public class GeoServerDataReader {
 		logger.info("Getting data for coverage " + workspaceName + ":"
 				+ layerName);
 		shpFile.setStorePath(storePath == null ? "" : storePath);
-		shpFile.setBaseName(baseName == null ? "" : baseName);
 		shpFile.setStoreName(storeName == null ? "" : storeName);
 		shpFile.setLayerName(layerName == null ? "" : layerName);
 		shpFile.setWorkspace(workspaceName == null ? "" : workspaceName);

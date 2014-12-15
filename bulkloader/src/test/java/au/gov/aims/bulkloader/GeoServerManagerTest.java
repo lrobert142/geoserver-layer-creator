@@ -52,22 +52,16 @@ public class GeoServerManagerTest {
 	}
 	
 	@Test
-	public void createCoverageStoreTest() {
-		assertTrue(manager.createWorkspace(testWorkspaceName));
-		assertTrue(manager.checkForWorkspace(testWorkspaceName));
-		assertTrue(manager.checkForCoverageStore("sf", "sfdem"));
-	}
-	
-	//@Test
 	public void uploadShapeFileTest() {
-		File fileToUpload = new File("C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\AU_GA_Maritime-boundaries\\cs_poly.zip");
-		File prjFile = new File("C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\AU_GA_Maritime-boundaries\\cs_poly.prj");
-		assertTrue(manager.uploadShapeFile(testWorkspaceName, testStoreName, fileToUpload, prjFile, "PNG Fish", "This is the abstract", null, "keyword1,keyword2", "Boundaries/Australian Maritime Boundaries (GA)"));
+		File fileToUpload = new File(getClass().getResource("/cs_poly.zip").toString().substring(5));
+		assertTrue(manager.uploadShapeFile(testWorkspaceName, testStoreName, fileToUpload, "PNG Fish", "This is the abstract", null, "keyword1,keyword2", "Boundaries/Australian Maritime Boundaries (GA)"));
+		assertTrue(manager.checkForLayer(testWorkspaceName, "cs_poly"));
 	}
 	
-	//@Test
+	@Test
 	public void uploadRasterFileTest() {
-		File fileToUpLoad = new File("C:\\Users\\josbaldi\\Desktop\\Internship\\Project Resources\\test-datasets\\truecolour-small\\L5\\96_71\\L5096071_07119890917.tif");
-		assertTrue(manager.uploadGeoTIFFFile(testWorkspaceName, testStoreName, fileToUpLoad, "TiffFile", "Abstract", null, "keyword1,keyword2", "Boundaries/Australian Maritime Boundaries (GA)"));
+		File fileToUpload = new File(getClass().getResource("/L5097067_06719900709.tif").toString().substring(5));
+		assertTrue(manager.uploadGeoTIFFFile(testWorkspaceName, testStoreName, "testLayer", fileToUpload, "TiffFile", "Abstract", null, "keyword1,keyword2", "Boundaries/Australian Maritime Boundaries (GA)"));
+		assertTrue(manager.checkForLayer(testWorkspaceName, "testLayer"));
 	}
 }

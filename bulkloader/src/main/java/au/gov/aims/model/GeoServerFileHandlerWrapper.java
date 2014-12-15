@@ -49,6 +49,10 @@ public final class GeoServerFileHandlerWrapper {
 		return true;
 		
 	}
+	
+	public List<File> findFilesForUpload(String targetDirectory) {
+		return ff.findAllByExtensionList(targetDirectory, ff.FILE_EXTENSIONS_FOR_CSV);
+	}
 
 	/**
 	 * Used as a wrapper class for carrying out all file handling activities.
@@ -79,23 +83,33 @@ public final class GeoServerFileHandlerWrapper {
 	}
 	
 	
-	public List<GeoServerFile> parseGeoServerFileUploadLayersCsvToBean(String directory){
+	public List<GeoServerFile> parseGeoServerFileUploadLayersCsvToBean(String csvFileName){
 		List<GeoServerFile> geoServerFileBean = new ArrayList<GeoServerFile>();
 		try {
-			geoServerFileBean = parser.parseGeoServerFileToJavaBean(directory + "\\uploadLayers.csv");
+			geoServerFileBean = parser.parseGeoServerFileToJavaBean(csvFileName);
 			for (int i = 0; i < geoServerFileBean.size(); i++) {
 				
-//				int endIndex = geoServerFileBean.get(i).getStorePath().lastIndexOf("/");
 				String baseName = FilenameUtils.getBaseName(geoServerFileBean.get(i).getStorePath());
 				
-				if(geoServerFileBean.get(i).getStorePath().endsWith(".shp")){
-					geoServerFileBean.get(i).setStorePath(parser.backslashToForwardslash(tempDirectory.toString()) +  "/" + baseName + ".gs.zip");
+				if(geoServerFileBean.get(i).getStorePath().endsWith(".shp")) {
+					geoServerFileBean.get(i).setStorePath("/GS_LAYER_UPLOADER_ZIPS/" + baseName + ".zip");
 				}
+				
+				String basePath = getRelativePath(csvFileName);
+				
+				geoServerFileBean.get(i).setStorePath(relativePathToAbstractPath(basePath, geoServerFileBean.get(i).getStorePath()));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return geoServerFileBean;
+	}
+	private String relativePathToAbstractPath(String basePath, String relativePath) {
+		return basePath + relativePath;
+	}
+
+	private String getRelativePath(String targetPath) {
+		return targetPath.substring(0, targetPath.lastIndexOf("/"));
 	}
 	
 }

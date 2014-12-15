@@ -28,7 +28,7 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 	//Attributes
 	public List<String> fileToZip;
 	public Logger logger;
-	private final static String outputZipExtension = ".gs.zip";
+	private final static String outputZipExtension = ".zip";
 
 	/**
 	 * Handles the zipping of sorted shape files

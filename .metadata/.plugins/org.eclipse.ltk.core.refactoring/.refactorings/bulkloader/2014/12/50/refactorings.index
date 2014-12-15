@@ -39,3 +39,20 @@
 1418176669761	Rename type 'GeoserverDataReader'
 1418176911061	Move compilation units
 1418176929070	Delete element
+1418250052297	Rename local variable 'layerName'
+1418250962387	Rename local variable 'layerName'
+1418265237843	Rename local variable 'directory'
+1418265252198	Rename local variable 'csvDirectory'
+1418265365679	Rename local variable 'shapeFiles'
+1418265371419	Rename local variable 'shapeFile'
+1418267581686	Delete elements
+1418268718007	Delete element
+1418268813685	Rename type 'MainAppCreateCSVTest'
+1418268838400	Rename type 'MainAppUploadFromCSVTest'
+1418269046564	Rename local variable 'csvDirectory'
+1418269956839	Rename field 'geoServerFileDirectory'
+1418270013890	Rename field 'csvFileDirectory'
+1418270677065	Rename local variable 'fileName'
+1418274660631	Rename method 'connectionExists'
+1418275413899	Rename field 'app'
+1418275419936	Rename field 'app'

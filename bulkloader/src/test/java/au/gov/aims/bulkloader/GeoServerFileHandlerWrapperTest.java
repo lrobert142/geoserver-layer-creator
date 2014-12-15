@@ -32,6 +32,7 @@ public class GeoServerFileHandlerWrapperTest {
 	public static void setUp() {
 		handler = new GeoServerFileHandlerWrapper();
 		ff = new FileFinder();
+		
 		dir = new File("TestResources");
 		writeFile = dir.getAbsolutePath() +  "\\upLoadLayers.csv";
 		dir.mkdir();
@@ -69,20 +70,8 @@ public class GeoServerFileHandlerWrapperTest {
 		assertTrue(handler.initialWriteGeoServerFilesToCsv(fileList, writeFile) == true);
 		
 		handler.setUpFilesForUpload(dir.getAbsolutePath());
-		assertTrue(handler.parseGeoServerFileUploadLayersCsvToBean(
-				dir.getAbsolutePath()).size() == 6);
+		assertTrue(handler.parseGeoServerFileUploadLayersCsvToBean(writeFile).size() == 6);
 	}
-	
-//	@Test
-//	public void setUpGeoServerFilesForUploadFullScale() {
-//		fileList = ff.findAllByExtensionList("H:\\", ff.FILE_EXTENSIONS_FOR_CSV);
-//		
-//		assertTrue(handler.initialWriteGeoServerFilesToCsv(fileList, "H:\\uploadLayers.csv") == true);
-//		
-//		handler.setUpFilesForUpload("H:\\");
-//		System.out.println(handler.parseGeoServerFileUploadLayersCsvToBean(
-//				"H:\\"));
-//	}
 
 
 	@AfterClass

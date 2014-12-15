@@ -9,13 +9,17 @@ package au.gov.aims.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import it.geosolutions.geoserver.rest.GeoServerRESTManager;
@@ -70,7 +74,7 @@ public class GeoServerManager {
 		reader = manager.getReader();
 		publisher = manager.getPublisher();
 		storeManager = new GeoServerRESTStoreManager(geoServerURL, userName, password);
-		if(!connectionExists())
+		if(!checkConnectionExists())
 			logger.debug("No connection to GeoServer");
 		layerEncoder = new GSLayerEncoder();
 		featureTypeEncoder = new GSFeatureTypeEncoder();
@@ -81,7 +85,7 @@ public class GeoServerManager {
 	 * Checks to see if a connection exists between the system and the GeoServer
 	 * @return boolean - returns true if there is a connection, false if there is not
 	 */
-	private boolean connectionExists() {
+	public boolean checkConnectionExists() {
 		return reader.existGeoserver();
 	}
 	
@@ -116,8 +120,10 @@ public class GeoServerManager {
 	 * @return boolean - returns true if the datastore exists, false if it does not
 	 */
 	public boolean checkForDataStore(String workspaceName, String storeName) {
-		if(!checkForWorkspace(workspaceName))
+		if(!checkForWorkspace(workspaceName)) {
 			logger.debug("That workspace does not exist on the GeoServer - cannot search for a datastore inside a workspace that does not exist");
+			return false;
+		}
 		return reader.getDatastores(workspaceName).getNames().contains(storeName);
 	}
 	
@@ -150,9 +156,19 @@ public class GeoServerManager {
 	 * @return boolean - returns true if the coveragestore exists, false if it does not
 	 */
 	public boolean checkForCoverageStore(String workspaceName, String storeName) {
-		if(!checkForWorkspace(workspaceName))
-			logger.debug("That workspace does not exist on the GeoServer - cannot search for a datastore inside a workspace that does not exist");
+		if(!checkForWorkspace(workspaceName)) {
+			logger.debug("That workspace does not exist on the GeoServer - cannot search for a coveragestore inside a workspace that does not exist");
+			return false;
+		}
 		return reader.getCoverageStores(workspaceName).getNames().contains(storeName);
+	}
+	
+	public boolean checkForLayer(String workspaceName, String layerName) {
+		if(!checkForWorkspace(workspaceName)) {
+			logger.debug("That workspace does not exist on the GeoServer - cannot search for a layer inside a workspace that does not exist");
+			return false;
+		}
+		return reader.getLayers().getNames().contains(layerName);
 	}
 	
 	/**
@@ -323,20 +339,26 @@ public class GeoServerManager {
 	 * @return String - the Native CRS from the .prj file
 	 */
 	private String getNativeCRS(File file) {
-		String lines = "";
-		if(!FilenameUtils.getExtension(file.toString()).equals("prj")) {
-			logger.debug("The file is not a .prj file. This function requires a .prj file to be passed to it in order to work");
-			return lines;
-		}
-		Charset charset = Charset.forName("UTF-8");
+		ZipFile zip;
 		try {
-			for(String line : Files.readAllLines(file.toPath(), charset)) {
-				lines = line.trim();
+			zip = new ZipFile(file);
+			Enumeration<? extends ZipEntry> entries = zip.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+				if(FilenameUtils.getExtension(zipEntry.getName()).equals("prj")) {
+					InputStream zipInput = zip.getInputStream(zipEntry);
+					StringWriter writer = new StringWriter();
+					IOUtils.copy(zipInput, writer);
+					zip.close();
+					return writer.toString();
+				}
 			}
+			zip.close();
+			return "";
 		} catch (IOException e) {
-			logger.debug("The file could not be read from. It might be corrupt or the file name or path might be incorrect");
+			logger.debug("File encountered an error, it may be corrupt");
+			return "";
 		}
-		return lines;
 	}
 	
 	/**
@@ -379,6 +401,7 @@ public class GeoServerManager {
 	 * 						  If the workspace does not exist then it will be created before uploading shapefile
 	 * @param storeName - the Name of the datastore inside the workspace on the GeoServer to upload the shapefile to.
 	 * 					  If the datastore does not exist then it will be created before uploading the shapefile
+	 * @param layerName - the Name to set to the layer (this is different to the title of the layer)
 	 * @param tifFile - the .tif file to upload. <b>NOTE: This must be a .tif file. If it is not then this function will not work</b>
 	 * @param title - the Title of the layer (this is different to the name of the layer) 
 	 * @param abstractText - the Abstract to add to the layer
@@ -388,16 +411,16 @@ public class GeoServerManager {
 	 * @param wmsPath - the WMS Path for the layer
 	 * @return boolean - true if upload is successful, false if it is not
 	 */
-	public boolean uploadGeoTIFFFile(String workspaceName, String storeName, File tifFile, String title, String abstractText, String metadataLink, String keywords, String wmsPath) {
-		String layerName = FilenameUtils.getBaseName(tifFile.toString());
+	public boolean uploadGeoTIFFFile(String workspaceName, String storeName, String layerName, File tifFile, String title, String abstractText, String metadataLink, String keywords, String wmsPath) {
+		String fileName = FilenameUtils.getBaseName(tifFile.toString());
 		
 		if (workspaceName.length() == 0 || workspaceName == null) {
-			logger.debug("Workspace name for " + layerName + " cannot be empty") ;
+			logger.debug("Workspace name for " + fileName + " cannot be empty") ;
 			return false;
 		}
 		
 		if (storeName.length() == 0 || storeName == null) {
-			logger.debug("Store name for " + layerName + " cannot be empty") ;
+			logger.debug("Store name for " + fileName + " cannot be empty") ;
 			return false;
 		}
 		
@@ -411,29 +434,48 @@ public class GeoServerManager {
 			return false;
 		}
 		
+		if (layerName.length() == 0 || layerName == null) {
+			logger.debug("Layer name for " + fileName + " cannot be empty");
+			return false;
+		}
+		
 		if (title.length() == 0 || title == null) {
-			logger.debug("Title for " + layerName + " cannot be empty") ;
+			logger.debug("Title for " + fileName + " cannot be empty") ;
 			return false;
 		}
 		
 		if (wmsPath.length() == 0 || wmsPath == null) {
-			logger.debug("WMS path for " + layerName + " cannot be empty") ;
+			logger.debug("WMS path for " + fileName + " cannot be empty") ;
 			return false;
 		}
 		
 		setUpRasterFileEncoders();
 		setNameOfCoverage(layerName);
 		setTitleToCoverage(title);
-		setAbstractOfCoverage(abstractText);
-		addMetadataLinkToCoverage(metadataLink);
-		addKeywordsToCoverage(keywords);
+		if(abstractText != null) {
+			if(abstractText.length() > 0)
+				setAbstractOfCoverage(abstractText);
+		}
+		if(metadataLink != null) {
+			if(metadataLink.length() > 0)
+				addMetadataLinkToCoverage(metadataLink);
+		}
+		if(keywords != null) {
+			if(keywords.length() > 0)
+				addKeywordsToCoverage(keywords);
+		}
 		setWMSPath(wmsPath);
 		
 		try {
-			publisher.publishGeoTIFF(workspaceName, storeName, layerName, tifFile);
-			publisher.configureCoverage(coverageEncoder, workspaceName, storeName);
-			publisher.configureLayer(workspaceName, layerName, layerEncoder);
-			return true;
+			if(publisher.publishGeoTIFF(workspaceName, storeName, layerName, tifFile)) {
+				if(publisher.configureCoverage(coverageEncoder, workspaceName, storeName)) {
+					if(publisher.configureLayer(workspaceName, layerName, layerEncoder)) {
+						return true;
+					}
+				}
+			}
+			logger.debug("An error occured while trying to upload the tif file: " + fileName);
+			return false;
 		} catch (FileNotFoundException e) {
 			logger.debug("The file entered does not exist or cannot be found at that path.");
 			return false;
@@ -447,7 +489,6 @@ public class GeoServerManager {
 	 * @param storeName - the Name of the datastore inside the workspace on the GeoServer to upload the shapefile to.
 	 * 					  If the datastore does not exist then it will be created before uploading the shapefile
 	 * @param zipFile - the .zip file that contains the shapefile. <b>NOTE: This must be a .zip file. If it is not then this function will not work</b>
-	 * @param prjFile - the .prj file that contains the Native CRS data <b>NOTE: This must be a .prj file. If it is not then this function will not work </b>
 	 * @param title - the Title of the layer (this is different to the name of the layer) 
 	 * @param abstractText - the Abstract to add to the layer
 	 * @param metadataLink - the link to the Metadata xml page for the layer
@@ -456,8 +497,9 @@ public class GeoServerManager {
 	 * @param wmsPath - the WMS Path for the layer
 	 * @return boolean - true if upload is successful, false if it is not
 	 */
-	public boolean uploadShapeFile(String workspaceName, String storeName, File zipFile, File prjFile, String title, String abstractText, String metadataLink, String keywords, String wmsPath) {
+	public boolean uploadShapeFile(String workspaceName, String storeName, File zipFile, String title, String abstractText, String metadataLink, String keywords, String wmsPath) {
 		String layerName = FilenameUtils.getBaseName(zipFile.toString());
+		String nativeCRS = getNativeCRS(zipFile);
 		
 		if (workspaceName.length() == 0 || workspaceName == null) {
 			logger.debug("Workspace name for " + layerName + " cannot be empty") ;
@@ -474,18 +516,8 @@ public class GeoServerManager {
 			return false;
 		}
 		
-		if (!checkForDataStore(workspaceName, storeName)) {
-			createDataStore(workspaceName, storeName);
-			logger.debug("Datastore did not exist before, it has now been created and exists");
-		}
-		
 		if (!FilenameUtils.getExtension(zipFile.toString()).equals("zip")) {
 			logger.debug("File entered is not a .zip file");
-			return false;
-		}
-		
-		if (!FilenameUtils.getExtension(prjFile.toString()).equals("prj")) {
-			logger.debug("File entered is not a .prj file. This function requires a .prj file to be passed to it in order to work");
 			return false;
 		}
 		
@@ -499,20 +531,40 @@ public class GeoServerManager {
 			return false;
 		}
 		
+		if (nativeCRS.length() == 0 || nativeCRS == null) {
+			logger.debug("Native CRS for " + layerName + " cannot be empty") ;
+			return false;
+		}
+		
 		setUpShapeFileEncoders();
 		setNameOfFeatureType(layerName);
 		setTitleToFeatureType(title);
-		setAbstractOfFeatureType(abstractText);
-		addMetadataLinkToFeatureType(metadataLink);
-		addKeywordsToFeatureType(keywords);
+		if(abstractText != null) {
+			if(abstractText.length() > 0)
+				setAbstractOfFeatureType(abstractText);
+		}
+			setAbstractOfFeatureType(abstractText);
+		if(metadataLink != null) {
+			if(metadataLink.length() > 0)
+				addMetadataLinkToFeatureType(metadataLink);
+		}
+		if(keywords != null) {
+			if(keywords.length() > 0)
+				addKeywordsToFeatureType(keywords);
+		}
 		setWMSPath(wmsPath);
-		setNativeCRSToFeatureType(getNativeCRS(prjFile));
-		
+		setNativeCRSToFeatureType(nativeCRS);
+
 		try {
-			publisher.publishShp(workspaceName, storeName, layerName, zipFile);
-			publisher.unpublishFeatureType(workspaceName, storeName, layerName);
-			publisher.publishDBLayer(workspaceName, storeName, featureTypeEncoder, layerEncoder);
-			return true;
+			if (publisher.publishShp(workspaceName, storeName, layerName, zipFile)) {
+				if (publisher.unpublishFeatureType(workspaceName, storeName, layerName)) {
+					if (publisher.publishDBLayer(workspaceName, storeName, featureTypeEncoder, layerEncoder)) {
+						return true;
+					}
+				}
+			}
+			logger.debug("An error occured while trying to upload the shapefile: " + layerName);
+			return false;
 		} catch (FileNotFoundException e) {
 			logger.debug("One or both of the files entered do not exist or cannot be found at that path.");
 			return false;

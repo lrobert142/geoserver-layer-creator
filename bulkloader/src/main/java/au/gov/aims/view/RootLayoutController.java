@@ -29,7 +29,7 @@ public class RootLayoutController {
 	// Is called by the main application to give a reference back to itself.
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
-		uploadManager = new UploadManger();
+		uploadManager = new UploadManger("http://localhost:8080/geoserver/", "admin", "geoserver");
 	}
 
 	// Menu Methods
@@ -49,7 +49,7 @@ public class RootLayoutController {
 			chooser.setInitialDirectory(DefaultDirectory);
 			File selectedDirectory = chooser.showDialog(primaryStage);
 			SelectedDirectory = selectedDirectory.toString();
-			uploadManager.setUpShapeFiles(SelectedDirectory);
+			uploadManager.setUpFiles(SelectedDirectory);
 			try {
 				// overview.
 
@@ -156,7 +156,7 @@ public class RootLayoutController {
 			chooser.setInitialDirectory(DefaultDirectory);
 			File selectedDirectory = chooser.showDialog(primaryStage);
 			SelectedDirectory = selectedDirectory.toString();
-			uploadManager.uploadTiffFilesToGeoServer(SelectedDirectory);
+			uploadManager.uploadGeoServerFilesToGeoServer(SelectedDirectory);
 		} catch (NullPointerException e) {
 		}
 	}
@@ -171,7 +171,7 @@ public class RootLayoutController {
 			chooser.setInitialDirectory(DefaultDirectory);
 			File selectedDirectory = chooser.showDialog(primaryStage);
 			SelectedDirectory = selectedDirectory.toString();
-			uploadManager.uploadShapeFilesToGeoServer(SelectedDirectory);
+			uploadManager.uploadGeoServerFilesToGeoServer(SelectedDirectory);
 		} catch (NullPointerException e) {
 		}
 	}
@@ -185,7 +185,7 @@ public class RootLayoutController {
 			chooser.setInitialDirectory(DefaultDirectory);
 			File selectedDirectory = chooser.showDialog(primaryStage);
 			SelectedDirectory = selectedDirectory.toString();
-			uploadManager.setUpTiffFiles(SelectedDirectory);
+			uploadManager.setUpFiles(SelectedDirectory);
 			OverviewController.showFileInView();
 			OverviewController.showZipFileInView();
 		} catch (NullPointerException e) {

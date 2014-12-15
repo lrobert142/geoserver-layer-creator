@@ -48,8 +48,7 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 	 * @return Returns a a list of files parsed to a java bean.
 	 */
 	@Override
-	public List<GeoServerFile> parseGeoServerFileToJavaBean(
-			String fileNameToParse) throws IOException {
+	public List<GeoServerFile> parseGeoServerFileToJavaBean(String fileNameToParse) throws IOException {
 		HeaderColumnNameTranslateMappingStrategy<GeoServerFile> beanStrategy = new HeaderColumnNameTranslateMappingStrategy<GeoServerFile>();
 		beanStrategy.setType(GeoServerFile.class);
 
@@ -73,19 +72,20 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 		CsvToBean<GeoServerFile> csvToBean = new CsvToBean<GeoServerFile>();
 		CSVReader reader = new CSVReader(new FileReader(fileNameToParse), ',');
 
-		List<GeoServerFile> shapeFile = csvToBean.parse(beanStrategy, reader);
+		List<GeoServerFile> shapeFiles = csvToBean.parse(beanStrategy, reader);
 		
 		//Looks to remove example columns from the bean list no matter where they have ended up.
-		for (int i = 0; i < shapeFile.size(); i++) {
-			if(shapeFile.get(i).getStorePath().contains("EXAMPLE_ONLY")){
-				shapeFile.remove(i);
+		for (int i = 0; i < shapeFiles.size(); i++) {
+			if(shapeFiles.get(i).getStorePath().contains("EXAMPLE_ONLY")){
+				shapeFiles.remove(i);
 			}
-			if(shapeFile.get(i).getStorePath().contains("DESCRIPTION_ONLY")){
-				shapeFile.remove(i);
+			if(shapeFiles.get(i).getStorePath().contains("DESCRIPTION_ONLY")){
+				shapeFiles.remove(i);
 			}
 		}
+				
 		reader.close();
-		return shapeFile;
+		return shapeFiles;
 	}
 
 	/**
@@ -99,43 +99,38 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 	 *            .csv.
 	 */
 	@Override
-	public void writeFilesToCsv(List<File> file, String targetFileName) {
+	public void writeFilesToCsv(List<File> files, String targetFileName) {
 		try {
 			FileWriter fileWriter = new FileWriter(targetFileName);
 			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
-
-			List<String[]> data = toStringArray(file);
+			
+			List<String[]> data = toStringArray(files, getRelativePath(targetFileName));
 			csvWriter.writeAll(data);
 
 			csvWriter.close();
 			fileWriter.close();
 		} catch (Exception e) {
-			logger.debug(e.getStackTrace()
-					+ "An error has occured when writing to a .csv");
+			logger.debug(e.getStackTrace() + "An error has occured when writing to a .csv");
 		}
 	}
-
+	
 	/**
-	 * Converts absolute file paths containing '\' characters and converts them
-	 * to '/' characters
-	 *
-	 * @param Absoulte
-	 *            path for a file to be converted.
-	 * 
+	 * Converts absolute file paths containing '\' characters and converts them to '/' characters
+	 * @param Absoulte path for a file to be converted.
 	 * @return The converted string.
 	 */
 	public String backslashToForwardslash(String path) {
 		StringBuilder builder = new StringBuilder();
 		char[] pathArray = path.toCharArray();
-
+		
 		for (int j = 0; j < pathArray.length; j++) {
-			if (pathArray[j] == '\\')
+			if(pathArray[j] == '\\')
 				pathArray[j] = '/';
 			builder.append(pathArray[j]);
 		}
 		return builder.toString();
 	}
-
+	
 	/**
 	 * Convert a list of File objects to a List of String Arrays.
 	 *
@@ -144,11 +139,11 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 	 * 
 	 * @return a List of String Arrays.
 	 */
-	public List<String[]> toStringArray(List<File> fileList) {
+	public List<String[]> toStringArray(List<File> fileList, String homeDirectory) {
 		List<String[]> records = new ArrayList<String[]>();
 		// add header record to the csv.
-		records.add(new String[] { "storePath", "storeName", "layerName",
-				"workspace", "storeType", "title", "abstract",
+		records.add(new String[] { "storePath", "storeName",
+				"layerName", "workspace", "storeType", "title", "abstract",
 				"metadataXmlHref", "keywords", "wmsPath", "styles",
 				"uploadData", "uploadMetadata" });
 		
@@ -158,46 +153,41 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 		records.add(new String[]{"EXAMPLE_ONLY", "This will be an example"});
 		records.add(new String[]{"DESCRIPTION_ONLY", "This is another example"});
 
+
 		// Add new record per object in list with defaults entries to the csv.
 		Iterator<File> it = fileList.iterator();
 		while (it.hasNext()) {
 			try {
 				File file = it.next();
-
-				String relativePath = RelativePathConvertor.convertToRelativePath(file.getAbsolutePath(),
-								file.getParent()) + "/" + file.getName();
 				
-				String shortName = file.getName().substring(0,
-						file.getName().length() - 4);
-
-				if (file.toString().endsWith(".shp")) {
-
-					records.add(new String[] { relativePath,
-
-					shortName, shortName, "", "Shapefile", "", "",
-							"something.xml", "e.g. Maritime Boundary",
-							relativePath, "", "TRUE", "TRUE" });
+				String relativePath = absoluteToRelativePath(file.getAbsolutePath(), homeDirectory);
+				String shortName = file.getName().substring(0, file.getName().length() - 4);
+				
+				if(file.toString().endsWith(".shp")){
+				records.add(new String[] {"/" + backslashToForwardslash(relativePath),
+						shortName, shortName, "", "Shapefile", "", "", "something.xml",
+						"e.g. Maritime Boundary", relativePath, "", "TRUE", "TRUE" });
 				}
-
-				else if (file.toString().endsWith(".tif")) {
-
-					records.add(new String[] {
-							relativePath,
-
-							shortName, shortName, "", "GeoTiff", "", "",
-							"something.xml", "e.g. Maritime Boundary", relativePath, "",
-							"TRUE", "TRUE" });
-				}
-
+				
+				else if(file.toString().endsWith(".tif")){
+					records.add(new String[] {"/" + backslashToForwardslash(relativePath),
+							shortName, shortName, "", "GeoTiff", "", "", "something.xml",
+							"e.g. Maritime Boundary", relativePath, "", "TRUE", "TRUE" });
+					}
 			} catch (IndexOutOfBoundsException e) {
-				logger.debug(e.getStackTrace()
-						+ "An error occured when writing object to .csv, likely caused by too many defaults or not enough to match number of columns");
+				logger.debug(e.getStackTrace() + "An error occured when writing object to .csv, likely caused by too many defaults or not enough to match number of columns");
 			} catch (Exception e) {
-				logger.debug(e.getStackTrace()
-						+ "Some other error has occured whilst trying to write an object to a .csv");
+				logger.debug(e.getStackTrace() + "Some other error has occured whilst trying to write an object to a .csv");
 			}
 		}
 		return records;
 	}
-
+	
+	private String absoluteToRelativePath(String absolutePath, String relativeDirectory) {
+		return absolutePath.substring(relativeDirectory.length() + 1, absolutePath.length());
+	}
+	
+	private String getRelativePath(String targetPath) {
+		return targetPath.substring(0, targetPath.lastIndexOf("\\"));
+	}
 }

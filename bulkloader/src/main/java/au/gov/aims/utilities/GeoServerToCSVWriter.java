@@ -115,7 +115,7 @@ public class GeoServerToCSVWriter {
 
 			for (GeoServerFile dataSet : dataSets) {
 				dataToWrite.add(new String[] { dataSet.getStorePath(),
-						dataSet.getBaseName(), dataSet.getStoreName(),
+						dataSet.getStoreName(),
 						dataSet.getLayerName(), dataSet.getWorkspace(),
 						dataSet.getStoreType(), dataSet.getTitle(),
 						dataSet.getLayerAbstract(),

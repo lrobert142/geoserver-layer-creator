@@ -11,5 +11,5 @@ import java.util.List;
 public interface FileParserInterface {
 	public void writeFilesToCsv(List<File> file, String targetFileName);
 	
-	public List<String[]> toStringArray(List<File> fileList);
+	public List<String[]> toStringArray(List<File> fileList, String targetDirectory);
 }
