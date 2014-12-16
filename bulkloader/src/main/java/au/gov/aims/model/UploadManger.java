@@ -23,6 +23,9 @@ public class UploadManger {
 	private GeoServerFileHandlerWrapper fileHandler;
 	private GeoServerManager geoServerManager;
 	private Logger logger;
+	private int nextIndex;
+	private List<GeoServerFile> geoServerFiles, failedUploads;
+	private boolean stopUpload = false;
 	
 	/**
 	 * Constructor - sets up the directory for use
@@ -76,39 +79,67 @@ public class UploadManger {
 	 * @return boolean - true if the upload was successful for all files, false if one or more files failed to upload. If one file fails to upload then the uploader will stop, it will not upload the rest of the files
 	 */
 	public boolean uploadGeoServerFilesToGeoServer(String csvFileName) {
-		List<GeoServerFile> geoServerFiles = fileHandler.parseGeoServerFileUploadLayersCsvToBean(csvFileName);
-		List<GeoServerFile> failedUploads = new ArrayList<GeoServerFile>();
+		nextIndex = 1;
+		geoServerFiles = fileHandler.parseGeoServerFileUploadLayersCsvToBean(csvFileName);
+		failedUploads = new ArrayList<GeoServerFile>();
 		for(GeoServerFile geoServerFile : geoServerFiles) {
-			if(Boolean.parseBoolean(geoServerFile.getUploadData())) {
-				switch (geoServerFile.getStoreType()) {
-				case "Shapefile":
-					File zipFile = new File(geoServerFile.getStorePath());
-					if(!geoServerManager.uploadShapeFile(geoServerFile.getWorkspace(), geoServerFile.getStoreName(), zipFile, geoServerFile.getTitle(), geoServerFile.getLayerAbstract(), geoServerFile.getMetadataXmlHref(), geoServerFile.getKeywords(), geoServerFile.getWmsPath())) {
-						failedUploads.add(geoServerFile);
-						logger.debug("File " + FilenameUtils.getBaseName(zipFile.getName()) + " caused an error during uploading.");
+			if(!stopUpload) {
+				if(Boolean.parseBoolean(geoServerFile.getUploadData())) {
+					switch (geoServerFile.getStoreType()) {
+					case "Shapefile":
+						File zipFile = new File(geoServerFile.getStorePath());
+						if(!geoServerManager.uploadShapeFile(geoServerFile.getWorkspace(), geoServerFile.getStoreName(), zipFile, geoServerFile.getTitle(), geoServerFile.getLayerAbstract(), geoServerFile.getMetadataXmlHref(), geoServerFile.getKeywords(), geoServerFile.getWmsPath())) {
+							failedUploads.add(geoServerFile);
+							logger.debug("File " + FilenameUtils.getBaseName(zipFile.getName()) + " caused an error during uploading.");
+						}
+						break;
+					case "GeoTiff":
+						File tifFile = new File(geoServerFile.getStorePath());
+						if(!geoServerManager.uploadGeoTIFFFile(geoServerFile.getWorkspace(), geoServerFile.getStoreName(), geoServerFile.getLayerName(), tifFile, geoServerFile.getTitle(), geoServerFile.getLayerAbstract(), geoServerFile.getMetadataXmlHref(), geoServerFile.getKeywords(), geoServerFile.getWmsPath())) {
+							failedUploads.add(geoServerFile);
+							logger.debug("File " + FilenameUtils.getBaseName(tifFile.getName()) + " caused an error during uploading.");
+						}
+						break;
+					default:
+						logger.debug(geoServerFile.getLayerName() + " is not a valid file type");
 					}
-					break;
-				case "GeoTiff":
-					File tifFile = new File(geoServerFile.getStorePath());
-					if(!geoServerManager.uploadGeoTIFFFile(geoServerFile.getWorkspace(), geoServerFile.getStoreName(), geoServerFile.getLayerName(), tifFile, geoServerFile.getTitle(), geoServerFile.getLayerAbstract(), geoServerFile.getMetadataXmlHref(), geoServerFile.getKeywords(), geoServerFile.getWmsPath())) {
-						failedUploads.add(geoServerFile);
-						logger.debug("File " + FilenameUtils.getBaseName(tifFile.getName()) + " caused an error during uploading.");
-					}
-					break;
-				default:
-					logger.debug(geoServerFile.getLayerName() + " is not a valid file type");
+					
 				}
-			}
+				nextIndex += 1;
+			} else
+				break;
 		}
-		
+		return endUpload(PathsHandler.getRelativePath(csvFileName));
+	}
+	
+	/**
+	 * Processes the end of uploading and dealing with failed uploads
+	 * @param folderPath - the path of the folder to perform end operations in
+	 * @return boolean - returns true if all files uploaded successfully, false if they didn't
+	 */
+	private boolean endUpload(String folderPath) {
 		if(failedUploads.isEmpty()) {
 			logger.debug("All GeoServer files successfully uploaded");
-			deleteFolder(PathsHandler.getRelativePath(csvFileName) + "\\GS_LAYER_UPLOADER_ZIPS");
+			deleteFolder(folderPath + "\\GS_LAYER_UPLOADER_ZIPS");
 			return true;
 		} else {
-			fileHandler.rewriteFailedUploadsToCSV(failedUploads, csvFileName);
+			fileHandler.rewriteFailedUploadsToCSV(failedUploads, folderPath + "\\uploadFails.csv");
 			logger.debug("Not all files to upload were successful, the failed uploads have been written back to the csv file, please fix them and try again");
 			return false;
+		}
+	}
+	
+	/**
+	 * Stops the uploading of files to GeoServer, adds the remaining files to the failed uploads list, and performs end of upload functions
+	 * @param directoryPath - the directory to perform end of upload functions in
+	 */
+	public void stopUpload(String directoryPath) {
+		if(!stopUpload) {
+			stopUpload = true;
+			for(int i = nextIndex; i < geoServerFiles.size(); ++i) {
+				failedUploads.add(geoServerFiles.get(i));
+			}
+			endUpload(directoryPath);
 		}
 	}
 	

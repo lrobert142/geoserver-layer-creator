@@ -167,7 +167,7 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 				
 				if(file.toString().endsWith(".shp")){
 				records.add(new String[] {"/" + PathsHandler.backslashToForwardslash(relativePath),
-						shortName, shortName, "", "Shapefile", "", "", "something.xml",
+						shortName, shortName, "", "Shapefile", shortName + "title", "", "something.xml",
 						"e.g. Maritime Boundary", relativePath, "", "TRUE", "TRUE" });
 				}
 				
