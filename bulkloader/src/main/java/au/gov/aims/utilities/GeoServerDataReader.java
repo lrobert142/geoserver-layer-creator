@@ -172,8 +172,7 @@ public class GeoServerDataReader {
 	 * @return A <code>List&ltString&gt</code> in the for
 	 *         <code>[workspaceName, layerName, layerType]</code>.
 	 */
-	private List<String> addDetails(String workspaceName, String layerName,
-			RESTLayer layer) {
+	private List<String> addDetails(String workspaceName, String layerName, RESTLayer layer) {
 		List<String> layerDetails = new ArrayList<String>();
 		layerDetails.add(workspaceName);
 		layerDetails.add(layerName);
@@ -222,8 +221,7 @@ public class GeoServerDataReader {
 		String styles = getStyles(layer.getDefaultStyle(), baseLayerElement);
 		String storePath = "N/A";
 
-		logger.info("Getting data for feature " + workspaceName + ":"
-				+ layerName);
+		logger.info("Getting data for feature " + workspaceName + ":" + layerName);
 
 		shpFile.setStorePath(storePath == null ? "" : storePath);
 		shpFile.setStoreName(storeName == null ? "" : storeName);
@@ -263,8 +261,7 @@ public class GeoServerDataReader {
 			String layerName) throws MalformedURLException {
 		RESTCoverage coverage = reader.getCoverage(reader.getLayer(
 				workspaceName, layerName));
-		String url = restUrl + "/rest/layers/" + workspaceName + ":"
-				+ layerName + ".xml";
+		String url = restUrl + "/rest/layers/" + workspaceName + ":" + layerName + ".xml";
 		Element baseLayerElement = getLayerElement(url);
 		GeoServerFile shpFile = new GeoServerFile();
 
@@ -279,8 +276,7 @@ public class GeoServerDataReader {
 		String styles = getStyles("", baseLayerElement);
 		String storePath = "N/A";
 
-		logger.info("Getting data for coverage " + workspaceName + ":"
-				+ layerName);
+		logger.info("Getting data for coverage " + workspaceName + ":" + layerName);
 		shpFile.setStorePath(storePath == null ? "" : storePath);
 		shpFile.setStoreName(storeName == null ? "" : storeName);
 		shpFile.setLayerName(layerName == null ? "" : layerName);
@@ -389,8 +385,7 @@ public class GeoServerDataReader {
 	 *             cannot be properly parsed.
 	 */
 	@SuppressWarnings("unchecked")
-	private String getStyles(String defaultStyle, Element layerEl)
-			throws MalformedURLException {
+	private String getStyles(String defaultStyle, Element layerEl) throws MalformedURLException {
 		String stylesString = "";
 		if (defaultStyle != null)
 			stylesString += defaultStyle + ", ";
@@ -402,8 +397,7 @@ public class GeoServerDataReader {
 
 		List<Element> styleElements = stylesEl.getChildren();
 		for (Element styleEl : styleElements) {
-			String styleValue = styleEl.getValue().trim().replace("\n", " ")
-					.replace(" ", "");
+			String styleValue = styleEl.getValue().trim().replace("\n", " ").replace(" ", "");
 			if (!styleValue.isEmpty())
 				stylesString += styleValue + ", ";
 		}

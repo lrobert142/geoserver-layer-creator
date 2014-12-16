@@ -61,6 +61,7 @@ public class MainApp extends Application {
 			});
 			// Test Dropping over surface
 			Overview.setOnDragDropped(new EventHandler<DragEvent>() {
+				@SuppressWarnings("unused")
 				@Override
 				public void handle(DragEvent event) {
 					Dragboard db = event.getDragboard();

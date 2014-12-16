@@ -76,14 +76,14 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 		
 		//Looks to remove example columns from the bean list no matter where they have ended up.
 		for (int i = 0; i < shapeFiles.size(); i++) {
-			if(shapeFiles.get(i).getStorePath().contains("EXAMPLE_ONLY")){
+			if (shapeFiles.get(i).getStorePath().contains("EXAMPLE_ONLY")) {
 				shapeFiles.remove(i);
 			}
-			if(shapeFiles.get(i).getStorePath().contains("DESCRIPTION_ONLY")){
+			
+			if (shapeFiles.get(i).getStorePath().contains("DESCRIPTION_ONLY")) {
 				shapeFiles.remove(i);
 			}
 		}
-				
 		reader.close();
 		return shapeFiles;
 	}
@@ -101,7 +101,7 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 			FileWriter fileWriter = new FileWriter(targetFileName);
 			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
 			
-			List<String[]> data = fileListToStringArray(files, getRelativePath(targetFileName));
+			List<String[]> data = fileListToStringArray(files, PathsHandler.getRelativePath(targetFileName));
 			csvWriter.writeAll(data);
 
 			csvWriter.close();
@@ -123,7 +123,7 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 			FileWriter fileWriter = new FileWriter(targetFileName);
 			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
 			
-			List<String[]> data = geoserverFilesToStringArray(files, getRelativePath(targetFileName));
+			List<String[]> data = geoserverFilesToStringArray(files, PathsHandler.getRelativePath(targetFileName));
 			csvWriter.writeAll(data);
 
 			csvWriter.close();
@@ -132,23 +132,6 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 			e.printStackTrace();
 			logger.debug("ERROR - An error has occured when writing to a .csv");
 		}
-	}
-	
-	/**
-	 * Converts absolute file paths containing '\' characters and converts them to '/' characters
-	 * @param path - Absolute path for a file to be converted.
-	 * @return The converted string.
-	 */
-	public String backslashToForwardslash(String path) {
-		StringBuilder builder = new StringBuilder();
-		char[] pathArray = path.toCharArray();
-		
-		for (int j = 0; j < pathArray.length; j++) {
-			if(pathArray[j] == '\\')
-				pathArray[j] = '/';
-			builder.append(pathArray[j]);
-		}
-		return builder.toString();
 	}
 	
 	/**
@@ -173,24 +156,23 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 		records.add(new String[]{"EXAMPLE_ONLY", "This will be an example"});
 		records.add(new String[]{"DESCRIPTION_ONLY", "This is another example"});
 
-
 		// Add new record per object in list with defaults entries to the csv.
 		Iterator<File> it = fileList.iterator();
 		while (it.hasNext()) {
 			try {
 				File file = it.next();
 				
-				String relativePath = absoluteToRelativePath(file.getAbsolutePath(), homeDirectory);
+				String relativePath = PathsHandler.absoluteToRelativePath(file.getAbsolutePath(), homeDirectory);
 				String shortName = file.getName().substring(0, file.getName().length() - 4);
 				
 				if(file.toString().endsWith(".shp")){
-				records.add(new String[] {"/" + backslashToForwardslash(relativePath),
+				records.add(new String[] {"/" + PathsHandler.backslashToForwardslash(relativePath),
 						shortName, shortName, "", "Shapefile", "", "", "something.xml",
 						"e.g. Maritime Boundary", relativePath, "", "TRUE", "TRUE" });
 				}
 				
 				else if(file.toString().endsWith(".tif")){
-					records.add(new String[] {"/" + backslashToForwardslash(relativePath),
+					records.add(new String[] {"/" + PathsHandler.backslashToForwardslash(relativePath),
 							shortName, shortName, "", "GeoTiff", "", "", "something.xml",
 							"e.g. Maritime Boundary", relativePath, "", "TRUE", "TRUE" });
 					}
@@ -225,13 +207,12 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 		records.add(new String[]{"EXAMPLE_ONLY", "This will be an example"});
 		records.add(new String[]{"DESCRIPTION_ONLY", "This is another example"});
 
-
 		// Add new record per object in list with defaults entries to the csv.
 		Iterator<GeoServerFile> it = fileList.iterator();
 		while (it.hasNext()) {
 			try {
 				GeoServerFile file = it.next();
-				records.add(new String[] {absoluteToRelativePath(file.getStorePath(), homeDirectory),
+				records.add(new String[] {PathsHandler.absoluteToRelativePath(file.getStorePath(), homeDirectory),
 						file.getStoreName(), file.getLayerName(), file.getWorkspace(), 
 						file.getStoreType(), file.getTitle(), file.getLayerAbstract(),
 						file.getMetadataXmlHref(), file.getKeywords(), file.getWmsPath(),
@@ -243,14 +224,5 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 			}
 		}
 		return records;
-	}
-	
-	private String absoluteToRelativePath(String absolutePath, String relativeDirectory) {
-		return absolutePath.substring(relativeDirectory.length() + 1, absolutePath.length());
-	}
-	
-	private String getRelativePath(String targetPath) {
-		int lastIndex = targetPath.lastIndexOf("\\") == -1 ? targetPath.lastIndexOf("/") : targetPath.lastIndexOf("\\");
-		return targetPath.substring(0, lastIndex);
 	}
 }

@@ -1,4 +1,4 @@
-/*
+/**
 @author	Stuart Garrigan
 @version 1.0
 @since 27-11-2014

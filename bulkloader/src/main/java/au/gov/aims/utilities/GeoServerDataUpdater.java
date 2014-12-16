@@ -75,8 +75,7 @@ public class GeoServerDataUpdater {
 			}
 
 			if (!successful) {
-				logger.warn("Layer " + dataSet.getLayerName()
-						+ " could not be modified! Exiting...");
+				logger.warn("Layer " + dataSet.getLayerName() + " could not be modified! Exiting...");
 				break;
 			} else {
 				dataSet.setUploadData("FALSE");

@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import au.gov.aims.utilities.FileFinder;
 import au.gov.aims.utilities.GeoServerFileCsvParser;
+import au.gov.aims.utilities.PathsHandler;
 import au.gov.aims.utilities.ShapeFileSorter;
 import au.gov.aims.utilities.ShapeFileZipper;
 
@@ -54,7 +55,6 @@ public final class GeoServerFileHandlerWrapper {
 	 */
 	public boolean initialWriteGeoServerFilesToCsv(List<File> files, String targetFileName) {
 		parser.writeFilesToCsv(files, targetFileName);
-		
 		return true;
 	}
 	
@@ -72,6 +72,11 @@ public final class GeoServerFileHandlerWrapper {
 		return true;
 	}
 	
+	/**
+	 * A wrapper for FileFinder(), finds all files required to fill a csv prior to upload
+	 * @param targetDirectory - the absolute path to the directory containing shape files.
+	 * @return A list of file objects
+	 */
 	public List<File> findFilesForUpload(String targetDirectory) {
 		return ff.findAllByExtensionList(targetDirectory, ff.FILE_EXTENSIONS_FOR_CSV);
 	}
@@ -85,7 +90,6 @@ public final class GeoServerFileHandlerWrapper {
 	 * @return A list of file objects.
 	 */
 	public List<File> setUpFilesForUpload(String targetDirectory){
-		
 		tempDirectory = new File(targetDirectory + "/GS_LAYER_UPLOADER_ZIPS");
 		tempDirectory.mkdir();
 		
@@ -117,7 +121,7 @@ public final class GeoServerFileHandlerWrapper {
 	 * @return A list of GeoServerFile objects.
 	 */
 	public List<GeoServerFile> parseGeoServerFileUploadLayersCsvToBean(String csvFileName){
-		csvFileName = backslashToForwardslash(csvFileName);
+		csvFileName = PathsHandler.backslashToForwardslash(csvFileName);
 		List<GeoServerFile> geoServerFileBean = new ArrayList<GeoServerFile>();
 		try {
 			geoServerFileBean = parser.parseGeoServerFileToJavaBean(csvFileName);
@@ -129,54 +133,13 @@ public final class GeoServerFileHandlerWrapper {
 					geoServerFileBean.get(i).setStorePath("/GS_LAYER_UPLOADER_ZIPS/" + baseName + ".zip");
 				}
 				
-				String basePath = getRelativePath(csvFileName);
+				String basePath = PathsHandler.getRelativePath(csvFileName);
 				
-				geoServerFileBean.get(i).setStorePath(relativePathToAbsolutePath(basePath, geoServerFileBean.get(i).getStorePath()));
+				geoServerFileBean.get(i).setStorePath(PathsHandler.relativePathToAbsolutePath(basePath, geoServerFileBean.get(i).getStorePath()));
 			}
 		} catch (IOException e) {
 			logger.debug("An error has occured whilst attempting to parse the specified .csv, most likely the file was not found or the content does not match the requirements of a GeoServerFile Object." + e);
 		}
 		return geoServerFileBean;
 	}
-	
-	/**
-	 * Gets the absolute path of a GeoServerFile by concatenating the files base path and relative path.
-	 * 
-	 * @param basePath - The base path of the file.
-	 * @param relativePath - The relative path of the file.
-	 * 
-	 * @return The constructed string.
-	 */
-	private String relativePathToAbsolutePath(String basePath, String relativePath) {
-		return basePath + relativePath;
-	}
-
-	/**
-	 * Gets the relative path of a file by taking a substring of the given absolute path.
-	 * 
-	 * @param targetPath - The absolute path of the file.
-	 * 
-	 * @return The constructed string.
-	 */
-	private String getRelativePath(String targetPath) {
-		return targetPath.substring(0, targetPath.lastIndexOf("/"));
-	}
-	
-	/**
-	 * Converts absolute file paths containing '\' characters and converts them to '/' characters
-	 * @param path - Absolute path for a file to be converted.
-	 * @return The converted string.
-	 */
-	public String backslashToForwardslash(String path) {
-		StringBuilder builder = new StringBuilder();
-		char[] pathArray = path.toCharArray();
-		
-		for (int j = 0; j < pathArray.length; j++) {
-			if(pathArray[j] == '\\')
-				pathArray[j] = '/';
-			builder.append(pathArray[j]);
-		}
-		return builder.toString();
-	}
-	
 }

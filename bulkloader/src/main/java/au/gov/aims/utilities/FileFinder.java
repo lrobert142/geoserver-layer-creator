@@ -33,7 +33,6 @@ public class FileFinder implements FileFinderInterface {
 		logger = Logger.getLogger(FileFinder.class);
 	}
 
-	
 	/**
 	 * Finds all files in a given directory.
 	 * 

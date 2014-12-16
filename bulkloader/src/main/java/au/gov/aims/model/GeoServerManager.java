@@ -2,7 +2,7 @@
 @author Justin Osbaldiston
 @version 1.0.0
 @since 3/12/14
-**/
+*/
 
 package au.gov.aims.model;
 
@@ -108,6 +108,11 @@ public class GeoServerManager {
 		return publisher.createWorkspace(workspaceName);
 	}
 	
+	/**
+	 * Deletes a workspace from the GeoServer
+	 * @param workspaceName - the name of the workspace to delete from the GeoServer
+	 * @return boolean - returns true if the workspace was successfully deleted, false if it was not 
+	 */
 	public boolean deleteWorkspace(String workspaceName) {
 		publisher.removeWorkspace(workspaceName, true);
 		return !checkForWorkspace(workspaceName);
@@ -163,6 +168,12 @@ public class GeoServerManager {
 		return reader.getCoverageStores(workspaceName).getNames().contains(storeName);
 	}
 	
+	/**
+	 * Checks to see if a layer currently exists in a workspace on the GeoServer
+	 * @param workspaceName - the name of the workspace to search in
+	 * @param layerName - the name of the layer to search for
+	 * @return boolean - returns true if the layer was found, false if it was not
+	 */
 	public boolean checkForLayer(String workspaceName, String layerName) {
 		if(!checkForWorkspace(workspaceName)) {
 			logger.debug("That workspace does not exist on the GeoServer - cannot search for a layer inside a workspace that does not exist");
@@ -456,14 +467,17 @@ public class GeoServerManager {
 			if(abstractText.length() > 0)
 				setAbstractOfCoverage(abstractText);
 		}
+		
 		if(metadataLink != null) {
 			if(metadataLink.length() > 0)
 				addMetadataLinkToCoverage(metadataLink);
 		}
+		
 		if(keywords != null) {
 			if(keywords.length() > 0)
 				addKeywordsToCoverage(keywords);
 		}
+		
 		setWMSPath(wmsPath);
 		
 		try {
@@ -543,15 +557,17 @@ public class GeoServerManager {
 			if(abstractText.length() > 0)
 				setAbstractOfFeatureType(abstractText);
 		}
-			setAbstractOfFeatureType(abstractText);
+		
 		if(metadataLink != null) {
 			if(metadataLink.length() > 0)
 				addMetadataLinkToFeatureType(metadataLink);
 		}
+		
 		if(keywords != null) {
 			if(keywords.length() > 0)
 				addKeywordsToFeatureType(keywords);
 		}
+		
 		setWMSPath(wmsPath);
 		setNativeCRSToFeatureType(nativeCRS);
 

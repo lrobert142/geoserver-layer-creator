@@ -14,6 +14,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+import au.gov.aims.utilities.PathsHandler;
+
 /**
  * Runs program to create CSV, then upload files with settings from the CSV to the GeoSever
  */
@@ -49,6 +51,10 @@ public class UploadManger {
 		logger.debug("GeoServer files ready for upload");
 	}
 	
+	/**
+	 * Finds files to upload and creates a CSV based on those files
+	 * @param filesDirectory - the directory to search for files in, the the directory where the CSV will be created
+	 */
 	public void writeCSV(String filesDirectory) {
 		List<File> filesFound = fileHandler.findFilesForUpload(filesDirectory);
 		fileHandler.initialWriteGeoServerFilesToCsv(filesFound, filesDirectory + "\\uploadLayers.csv");
@@ -56,6 +62,7 @@ public class UploadManger {
 	
 	/**
 	 * Uploads each ShapeFile to the GeoServer, with the settings defined in the CSV
+	 * If one or more uploads fail, the CSV will be re-written witf the files that failed for re-upload
 	 * @param csvFileName - the csv file path
 	 * @return boolean - true if the upload was successful for all files, false if one or more files failed to upload. If one file fails to upload then the uploader will stop, it will not upload the rest of the files
 	 */
@@ -87,7 +94,7 @@ public class UploadManger {
 		
 		if(failedUploads.isEmpty()) {
 			logger.debug("All GeoServer files successfully uploaded");
-			deleteTemporaryFolder(getRelativePath(csvFileName) + "\\GS_LAYER_UPLOADER_ZIPS");
+			deleteFolder(PathsHandler.getRelativePath(csvFileName) + "\\GS_LAYER_UPLOADER_ZIPS");
 			return true;
 		} else {
 			fileHandler.rewriteFailedUploadsToCSV(failedUploads, csvFileName);
@@ -96,7 +103,11 @@ public class UploadManger {
 		}
 	}
 	
-	public void deleteTemporaryFolder(String folderPath) {
+	/**
+	 * Deletes the folder specified, along with everything inside it 
+	 * @param folderPath - the path of the folder to be deleted
+	 */
+	public void deleteFolder(String folderPath) {
 		File temporaryFolder = new File(folderPath);
 		for(File fileName : temporaryFolder.listFiles()) {
 			fileName.delete();
@@ -104,11 +115,11 @@ public class UploadManger {
 		temporaryFolder.delete();
 	}
 	
-	public String getRelativePath(String targetPath) {
-		int lastIndex = targetPath.lastIndexOf("\\") == -1 ? targetPath.lastIndexOf("/") : targetPath.lastIndexOf("\\");
-		return targetPath.substring(0, lastIndex);
-	}
-	
+	/**
+	 * Deletes a workspace on the GeoServer
+	 * @param workspaceName - the name of the workspace to be deleted
+	 * @return boolean - true if the workspace was successfully deleted, false if it was not
+	 */
 	public boolean deleteWorkspace(String workspaceName) {
 		return geoServerManager.deleteWorkspace(workspaceName);
 	}

@@ -3,6 +3,7 @@ package au.gov.aims.view;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import au.gov.aims.model.GeoServerFileHandlerWrapper;
@@ -61,14 +62,14 @@ public class OverviewController {
 	public static void showFileInView() { 
 		if (GeoServerFileHandlerWrapper.sortedFiles!= null) {
 			for (List<File> FilesList : GeoServerFileHandlerWrapper.sortedFiles) {				
-				for (File Files : FilesList){
-				String split[]  = Files.toString().split("\\\\");
-				int e = split.length - 1;
-				fileNames.add(split[e]);
+				for (File Files : FilesList) {
+					String split[]  = Files.toString().split("\\\\");
+					int e = split.length - 1;
+					fileNames.add(split[e]);
 				}
 			}
 		}
-		java.util.Collections.sort(fileNames);
+		Collections.sort(fileNames);
 		 for (String file : fileNames){
 			 fileString = file;
 			 fileItems.add(fileString);
@@ -78,14 +79,14 @@ public class OverviewController {
 	 
 	//Method for showing zip files found in directory 
 	public static void showZipFileInView() {
-		if ( GeoServerFileHandlerWrapper.files!= null) {
+		if (GeoServerFileHandlerWrapper.files!= null) {
 			for (File zipfiles : GeoServerFileHandlerWrapper.files) {
 				String split[]  = zipfiles.toString().split("\\\\");
 				int e = split.length - 1;
 				ZipfileNames.add(split[e]);				
 			}
 		}
-		java.util.Collections.sort(ZipfileNames);
+		Collections.sort(ZipfileNames);
 		 for (String file : ZipfileNames){
 			 zipString = file;
 			 ZipfileItems.add(zipString);

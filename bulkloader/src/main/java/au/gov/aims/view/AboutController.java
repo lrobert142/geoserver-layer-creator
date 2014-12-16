@@ -24,7 +24,6 @@ public class AboutController {
 	private void CloseAbout() {
 		try {
 			// overview.
-
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("/view/Overview.fxml"));
 			AnchorPane overview = (AnchorPane) loader.load();

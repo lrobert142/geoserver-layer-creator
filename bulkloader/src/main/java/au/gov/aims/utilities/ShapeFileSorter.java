@@ -1,4 +1,4 @@
-/*
+/**
 @author	Stuart Garrigan
 @version 1.0
 @since 27-11-2014
@@ -23,7 +23,6 @@ public class ShapeFileSorter {
 	public Logger logger;
 	private ArrayList<File> sameShapeFiles;
 	private ArrayList<List<File>> sortedShapeFiles;
-	
 
 	//Constructor
 	public ShapeFileSorter(){
@@ -47,36 +46,37 @@ public class ShapeFileSorter {
 		try {
 			Collections.sort(shapeFiles);
 		
-		//Handles the sorting.
-		for (int i = 0; i < shapeFiles.size(); i++) {
-			
-			currentFilename = FilenameUtils.removeExtension(shapeFiles.get(i).getName());
-			if(i == 0){
-				targetFilename = currentFilename;
-				sameShapeFiles.add(shapeFiles.get(i));
-			}
-			
-			else if (targetFilename.equals(currentFilename)) {
-				sameShapeFiles.add(shapeFiles.get(i));
-			}
-			
-			else if(!targetFilename.equals(currentFilename)){
-				sortedShapeFiles.add(new ArrayList<File>(sameShapeFiles));
-				sameShapeFiles.clear();
-				targetFilename = currentFilename;
-				sameShapeFiles.add(shapeFiles.get(i));
+			//Handles the sorting.
+			for (int i = 0; i < shapeFiles.size(); i++) {
 				
+				currentFilename = FilenameUtils.removeExtension(shapeFiles.get(i).getName());
+				if (i == 0) {
+					targetFilename = currentFilename;
+					sameShapeFiles.add(shapeFiles.get(i));
+				}
+				
+				else if (targetFilename.equals(currentFilename)) {
+					sameShapeFiles.add(shapeFiles.get(i));
+				}
+				
+				else if (!targetFilename.equals(currentFilename)){
+					sortedShapeFiles.add(new ArrayList<File>(sameShapeFiles));
+					sameShapeFiles.clear();
+					targetFilename = currentFilename;
+					sameShapeFiles.add(shapeFiles.get(i));
+				}
+				
+				else {
+					sameShapeFiles.add(shapeFiles.get(i));
+				}
 			}
-			else{
-				sameShapeFiles.add(shapeFiles.get(i));
-			}
-		}
-		//Catches the last list which doesn't trigger the original add to list.
-		sortedShapeFiles.add(new ArrayList<File>(sameShapeFiles));
+			
+			//Catches the last list which doesn't trigger the original add to list.
+			sortedShapeFiles.add(new ArrayList<File>(sameShapeFiles));
 		
 		} catch (IndexOutOfBoundsException e) {
 			logger.debug("ERROR - An error has occured whilst sorting shape files 'i' has referenced something unknown");
-		} catch (Exception e){
+		} catch (Exception e) {
 			logger.debug("ERROR - An error has occured whilst sorting shape files, most likely a file does not exist.");
 		}
 		return sortedShapeFiles;

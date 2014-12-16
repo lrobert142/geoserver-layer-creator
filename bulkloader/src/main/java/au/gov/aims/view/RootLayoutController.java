@@ -52,7 +52,6 @@ public class RootLayoutController {
 			uploadManager.setUpFiles(SelectedDirectory);
 			try {
 				// overview.
-
 				FXMLLoader loader = new FXMLLoader();
 				loader.setLocation(getClass().getResource("/view/Overview.fxml"));
 				AnchorPane overview = (AnchorPane) loader.load();
@@ -61,7 +60,6 @@ public class RootLayoutController {
 				// Give the controller access to the main app.
 				OverviewController controller = loader.getController();
 				controller.setMainApp(mainApp);
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -101,7 +99,6 @@ public class RootLayoutController {
 	private void ViewHelp() {
 		try {
 			// overview.
-
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("/view/HelpDocView.fxml"));
 			AnchorPane Overview = (AnchorPane) loader.load();
@@ -120,7 +117,6 @@ public class RootLayoutController {
 	private void ViewAbout() {
 		try {
 			// overview.
-
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("/view/AboutView.fxml"));
 			AnchorPane overview = (AnchorPane) loader.load();
@@ -165,7 +161,6 @@ public class RootLayoutController {
 	@FXML
 	private void UploadShape() {
 		try {
-
 			DirectoryChooser chooser = new DirectoryChooser();
 			chooser.setTitle("Find Directory");
 			chooser.setInitialDirectory(DefaultDirectory);

@@ -114,11 +114,9 @@ public class GeoServerToCSVWriter {
 					"title", "abstract", "metadataXmlHref", "keywords", "wmsPath", "styles", "uploadData", "uploadMetadata" });
 
 			for (GeoServerFile dataSet : dataSets) {
-				dataToWrite.add(new String[] { dataSet.getStorePath(),
-						dataSet.getStoreName(),
+				dataToWrite.add(new String[] { dataSet.getStorePath(), dataSet.getStoreName(),
 						dataSet.getLayerName(), dataSet.getWorkspace(),
-						dataSet.getStoreType(), dataSet.getTitle(),
-						dataSet.getLayerAbstract(),
+						dataSet.getStoreType(), dataSet.getTitle(), dataSet.getLayerAbstract(),
 						dataSet.getMetadataXmlHref(), dataSet.getKeywords(),
 						dataSet.getWmsPath(), dataSet.getStyles(),
 						dataSet.getUploadData(), dataSet.getUploadMetadata() });

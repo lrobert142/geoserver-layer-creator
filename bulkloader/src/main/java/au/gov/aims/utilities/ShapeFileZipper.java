@@ -1,4 +1,4 @@
-/*
+/**
 @author	Stuart Garrigan
 @version 1.0
 @since 27-11-2014
@@ -50,7 +50,6 @@ public class ShapeFileZipper implements ShapeFileZipperInterface {
 		try {
 			for (int i = 0; i < sortedShapeFiles.size(); i++) {
 				currentFilenameForZip = FilenameUtils.removeExtension(sortedShapeFiles.get(i).get(0).getName());
-				
 				
 				FileOutputStream fos = new FileOutputStream(outputFileLocation + "\\" + currentFilenameForZip + outputZipExtension);
 				ZipOutputStream zos = new ZipOutputStream(fos);
