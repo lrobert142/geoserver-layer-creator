@@ -212,7 +212,7 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 		while (it.hasNext()) {
 			try {
 				GeoServerFile file = it.next();
-				records.add(new String[] {PathsHandler.absoluteToRelativePath(file.getStorePath(), homeDirectory),
+				records.add(new String[] {"/" + PathsHandler.absoluteToRelativePath(file.getStorePath(), homeDirectory),
 						file.getStoreName(), file.getLayerName(), file.getWorkspace(), 
 						file.getStoreType(), file.getTitle(), file.getLayerAbstract(),
 						file.getMetadataXmlHref(), file.getKeywords(), file.getWmsPath(),
