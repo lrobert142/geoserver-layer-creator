@@ -18,7 +18,8 @@ public class UploadManagerCreateCSVTest {
 	
 	@BeforeClass
 	public static void init() {
-		uploadManager = new UploadManger("http://localhost:8080/geoserver/", "admin", "geoserver");
+		uploadManager = new UploadManger();
+		uploadManager.login("http://localhost:8080/geoserver/", "admin", "geoserver");
 		filesDirectory = UploadManagerCreateCSVTest.class.getResource(geoServerFileDirectory).toString().substring(6);
 	}
 	

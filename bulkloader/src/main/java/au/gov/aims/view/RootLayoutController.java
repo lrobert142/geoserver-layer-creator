@@ -29,7 +29,7 @@ public class RootLayoutController {
 	// Is called by the main application to give a reference back to itself.
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
-		uploadManager = new UploadManger("http://localhost:8080/geoserver/", "admin", "geoserver");
+		uploadManager = new UploadManger();
 	}
 
 	// Menu Methods

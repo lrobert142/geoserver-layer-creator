@@ -25,12 +25,21 @@ public class UploadManger {
 	private Logger logger;
 	
 	/**
-	 * Constructor - sets up the directory for use and makes a connection to the GeoServer
+	 * Constructor - sets up the directory for use
 	 */
-	public UploadManger(String geoServerUrl, String geoServerUserName, String geoServerPassword) {
+	public UploadManger() {
 		BasicConfigurator.configure();
 		logger = Logger.getLogger(UploadManger.class);
 		fileHandler = new GeoServerFileHandlerWrapper();
+	}
+	
+	/**
+	 * Makes a connection to the GeoServer
+	 * @param geoServerUrl - The URL of the GeoServer. On a local machine this will be http://localhost:8080/geoserver/
+	 * @param geoServerUserName - the Username used to login to GeoServer
+	 * @param geoServerPassword - the Password used to login to GeoServer
+	 */
+	public void login(String geoServerUrl, String geoServerUserName, String geoServerPassword) {
 		geoServerManager = new GeoServerManager(geoServerUrl, geoServerUserName, geoServerPassword);
 	}
 	
