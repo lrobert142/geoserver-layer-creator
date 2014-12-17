@@ -31,7 +31,6 @@ public class UploadManger {
 	 * Constructor - sets up the directory for use
 	 */
 	public UploadManger() {
-		BasicConfigurator.configure();
 		logger = Logger.getLogger(UploadManger.class);
 		fileHandler = new GeoServerFileHandlerWrapper();
 	}

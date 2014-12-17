@@ -15,6 +15,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 
 import au.gov.aims.MainApp;
 import au.gov.aims.model.BulkloaderDataWrapper;
@@ -50,7 +51,7 @@ public class MainApp extends Application {
 	private ServerDetailsController serverDetailsController;
 	private UploadingController uploadingController;
 	public MainApp() {
-		BasicConfigurator.configure();
+		DOMConfigurator.configure("log4j.xml");
 		logger = Logger.getLogger(MainApp.class);
 	}
 

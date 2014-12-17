@@ -1,0 +1,5 @@
+storePath,storeName,layerName,workspace,storeType,title,abstract,metadataXmlHref,keywords,wmsPath,styles,uploadData,uploadMetadata
+EXAMPLE_ONLY,This will be an example,,,,,,,,,,,
+DESCRIPTION_ONLY,This is another example,,,,,,,,,,,
+/AU_GA_Maritime-boundaries/cs_limit.shp,cs_limit,cs_limit,workspace,Shapefile,title,abstract,something.xml,e.g. Maritime Boundary,AU_GA_Maritime-boundaries\cs_limit.shp,,TRUE,TRUE
+/truecolour-small/L5/96_70/L5096070_07019890917.tif,L5096070_07019890917,L5096070_07019890917,workspace,GeoTiff,title,abstract,something.xml,e.g. Maritime Boundary,AU_GA_Maritime-boundaries\cs_limit.shp,,TRUE,TRUE
