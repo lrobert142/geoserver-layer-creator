@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="640" prefWidth="720.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="au.gov.aims.view.UploadingController">
+   <children>
+      <Label layoutX="45.0" layoutY="23.0" prefHeight="21.0" prefWidth="422.0" text="Uploading Details: " AnchorPane.topAnchor="23.0" />
+      <Button fx:id="stopUploadButton" layoutX="610.0" layoutY="554.0" mnemonicParsing="false" onAction="#closeUploaderView" prefHeight="31.0" prefWidth="138.0" text="Stop Uploading" AnchorPane.bottomAnchor="55.0" AnchorPane.rightAnchor="54.0" />
+      <ListView fx:id="responseListview" layoutX="21.0" layoutY="54.0" prefHeight="484.0" prefWidth="677.0" />
+      <Button fx:id="backButton" layoutX="45.0" layoutY="554.0" onAction="#closeUploaderView" mnemonicParsing="false" text="Back" />
+   </children>
+</AnchorPane>

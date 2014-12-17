@@ -133,7 +133,7 @@ public final class GeoServerFileHandlerWrapper {
 					geoServerFileBean.get(i).setStorePath("/GS_LAYER_UPLOADER_ZIPS/" + baseName + ".zip");
 				}
 				
-				String basePath = PathsHandler.getRelativePath(csvFileName);
+				String basePath = PathsHandler.getBasePath(csvFileName);
 				
 				geoServerFileBean.get(i).setStorePath(PathsHandler.relativePathToAbsolutePath(basePath, geoServerFileBean.get(i).getStorePath()));
 			}

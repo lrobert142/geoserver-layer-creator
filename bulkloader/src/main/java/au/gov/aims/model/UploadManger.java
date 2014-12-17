@@ -25,7 +25,7 @@ public class UploadManger {
 	private Logger logger;
 	private int nextIndex;
 	private List<GeoServerFile> geoServerFiles, failedUploads;
-	private boolean stopUpload = false;
+	private boolean stopUpload, uploadComplete = false;
 	
 	/**
 	 * Constructor - sets up the directory for use
@@ -103,13 +103,12 @@ public class UploadManger {
 					default:
 						logger.debug(geoServerFile.getLayerName() + " is not a valid file type");
 					}
-					
 				}
 				nextIndex += 1;
 			} else
 				break;
 		}
-		return endUpload(PathsHandler.getRelativePath(csvFileName));
+		return endUpload(PathsHandler.getBasePath(csvFileName));
 	}
 	
 	/**
@@ -118,15 +117,34 @@ public class UploadManger {
 	 * @return boolean - returns true if all files uploaded successfully, false if they didn't
 	 */
 	private boolean endUpload(String folderPath) {
-		if(failedUploads.isEmpty()) {
-			logger.debug("All GeoServer files successfully uploaded");
-			deleteFolder(folderPath + "\\GS_LAYER_UPLOADER_ZIPS");
-			return true;
-		} else {
-			fileHandler.rewriteFailedUploadsToCSV(failedUploads, folderPath + "\\uploadFails.csv");
-			logger.debug("Not all files to upload were successful, the failed uploads have been written back to the csv file, please fix them and try again");
+		uploadComplete = true;
+		if(failedUploads != null) {
+			if(failedUploads.isEmpty()) {
+				logger.debug("All GeoServer files successfully uploaded");
+				deleteFolder(folderPath + "\\GS_LAYER_UPLOADER_ZIPS");
+				return true;
+			} else {
+				fileHandler.rewriteFailedUploadsToCSV(failedUploads, folderPath + "\\uploadFails.csv");
+				logger.debug("Not all files to upload were successful, the failed uploads have been written to a csv file named failedUploads.csv, please fix them and try again");
+				return false;
+			}
+		} else
 			return false;
-		}
+	}
+	
+	public int getCurrentIndex() {
+		return nextIndex - 1;
+	}
+	
+	public boolean isUploadComplete() {
+		return uploadComplete;
+	}
+	
+	public String getCurrentUpload(int index) {
+		if(geoServerFiles != null)
+			return geoServerFiles.get(index - 1).getStorePath();
+		else
+			return "null";
 	}
 	
 	/**
@@ -136,8 +154,10 @@ public class UploadManger {
 	public void stopUpload(String directoryPath) {
 		if(!stopUpload) {
 			stopUpload = true;
-			for(int i = nextIndex; i < geoServerFiles.size(); ++i) {
-				failedUploads.add(geoServerFiles.get(i));
+			if(geoServerFiles != null) {
+				for(int i = nextIndex; i < geoServerFiles.size(); ++i) {
+					failedUploads.add(geoServerFiles.get(i));
+				}
 			}
 			endUpload(directoryPath);
 		}
@@ -149,10 +169,12 @@ public class UploadManger {
 	 */
 	public void deleteFolder(String folderPath) {
 		File temporaryFolder = new File(folderPath);
-		for(File fileName : temporaryFolder.listFiles()) {
-			fileName.delete();
+		if(temporaryFolder.exists()) {
+			for(File fileName : temporaryFolder.listFiles()) {
+				fileName.delete();
+			}
+			temporaryFolder.delete();
 		}
-		temporaryFolder.delete();
 	}
 	
 	/**

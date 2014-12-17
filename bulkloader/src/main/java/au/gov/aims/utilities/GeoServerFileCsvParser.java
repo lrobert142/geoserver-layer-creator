@@ -101,7 +101,7 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 			FileWriter fileWriter = new FileWriter(targetFileName);
 			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
 			
-			List<String[]> data = fileListToStringArray(files, PathsHandler.getRelativePath(targetFileName));
+			List<String[]> data = fileListToStringArray(files, PathsHandler.getBasePath(targetFileName));
 			csvWriter.writeAll(data);
 
 			csvWriter.close();
@@ -123,7 +123,7 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 			FileWriter fileWriter = new FileWriter(targetFileName);
 			CSVWriter csvWriter = new CSVWriter(fileWriter, ',');
 			
-			List<String[]> data = geoserverFilesToStringArray(files, PathsHandler.getRelativePath(targetFileName));
+			List<String[]> data = geoserverFilesToStringArray(files, PathsHandler.getBasePath(targetFileName));
 			csvWriter.writeAll(data);
 
 			csvWriter.close();

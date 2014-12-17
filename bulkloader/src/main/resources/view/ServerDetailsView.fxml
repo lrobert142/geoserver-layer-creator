@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="550.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="au.gov.aims.view.ServerDetailsController">
+   <children>
+      <Label layoutX="208.0" layoutY="29.0" prefHeight="31.0" prefWidth="413.0" styleClass="label-header" text="GeoServer Details" />
+      <Button layoutX="428.0" layoutY="328.0" mnemonicParsing="false" onAction="#setupApplicationWithoutServerDetails" text="Set Details Later" />
+      <Button layoutX="89.0" layoutY="328.0" mnemonicParsing="false" onAction="#ValidateGeoServerLogin" text="Confirm" />
+      <PasswordField fx:id="passwordTextField" layoutX="273.0" layoutY="255.0" prefHeight="31.0" prefWidth="309.0" />
+      <Label layoutX="55.0" layoutY="260.0" text="Password" />
+      <Label layoutX="55.0" layoutY="201.0" text="Username" />
+      <Label layoutX="55.0" layoutY="142.0" text="GeoServer URL" />
+      <TextField fx:id="userNameTextField" layoutX="273.0" layoutY="196.0" prefHeight="31.0" prefWidth="309.0" />
+      <TextField fx:id="geoServerURLTextField" layoutX="274.0" layoutY="137.0" prefHeight="31.0" prefWidth="309.0" />
+      <Label layoutX="279.0" layoutY="286.0" text="#Password will not be saved." />
+      <Label fx:id="errorMessage" layoutX="152.0" layoutY="372.0" text=" " />
+   </children>
+</AnchorPane>

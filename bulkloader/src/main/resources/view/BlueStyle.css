@@ -37,6 +37,13 @@
     -fx-opacity: 0.6;
 }
 
+#errorMessage {
+	 -fx-font-size: 22pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: #AC2D2D;
+    -fx-opacity: 0.6;
+}
+
 
 .menu-bar {
 	

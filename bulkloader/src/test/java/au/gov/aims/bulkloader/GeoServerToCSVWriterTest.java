@@ -17,7 +17,7 @@ public class GeoServerToCSVWriterTest {
 	private static final String password = "geoserver";
 	private static final String fileName = "/testModifyData.csv";
 	
-	@Test
+	//@Test
 	public void testStoreLayerDataInCsv() {
 		GeoServerToCSVWriter writer = new GeoServerToCSVWriter();
 		try {
@@ -29,7 +29,7 @@ public class GeoServerToCSVWriterTest {
 		}
 	}
 	
-	@AfterClass
+	//@AfterClass
 	public static void cleanup() {
 		File file = new File(fileName);
 		file.delete();

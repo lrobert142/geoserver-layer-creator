@@ -1,96 +1,269 @@
+/**
+ * Author Zoe McIntosh
+ */
 package au.gov.aims.view;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import au.gov.aims.model.GeoServerFileHandlerWrapper;
+import au.gov.aims.MainApp;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import au.gov.aims.model.GeoServerFile;
+import au.gov.aims.model.GeoServerFileHandlerWrapper;
+import au.gov.aims.model.UploadManger;
+import au.gov.aims.utilities.PathsHandler;
+import au.gov.aims.view.ServerDetailsController;
 
 public class OverviewController {
 
-	//Labels for Overview.fxml
 	@FXML
 	private ListView<String> listViewFiles;
 	@FXML
-	private ListView<String> listViewZipFiles;
+	private Label directoryLabel;
 	@FXML
-	private Label DirectoryLabel;	
+	private Label directoryTitleLabel;
 	@FXML
-	private Label DirectoryTitleLabel;	
+	private Label fileTitleLabel;
 	@FXML
-	private Label ZipFileTitleLabel;
-	@FXML
-	private Label FileTitleLabel;
+	private Label messageLabel;
 	
-	public static List<String> fileNames = new ArrayList<String>();
-	public static ObservableList<String> fileItems;
-	public static List<String> ZipfileNames = new ArrayList<String>();
-	public static ObservableList<String> ZipfileItems;
-	
-	//String variables
-	public static String fileString;
-	public static String zipString;
-	// Reference to the main application.
-	@SuppressWarnings("unused")
-	private au.gov.aims.MainApp mainApp;
+	@FXML
+	private ProgressIndicator progressIndicator;
+	@FXML
+	private Button selectDirectoryButton;
+	@FXML
+	private Button createCSVButton;
+	@FXML
+	private Button openCSVButton;
+	@FXML
+	private Button uploadToGeoServerButton;
+
+	private static List<String> fileNames = new ArrayList<String>();
+	private static ObservableList<String> fileItems;
+	private MainApp mainApp;
+	private ServerDetailsController serverDetailsController;
+	private RootLayoutController rootLayoutController;
+	private UploadingController uploadingController;
+
+
+
+	private GeoServerFileHandlerWrapper geoServerFileHandler = new GeoServerFileHandlerWrapper();
+	private List<File> filesForUpload = new ArrayList<File>();
 
 	public OverviewController() {
 	}
 
-	// Initializes the controller class. This method is automatically called
-	// after the fxml file has been loaded.
-	@FXML
-	private void initialize() throws IOException {
-        fileItems = listViewFiles.getItems();
-        DirectoryLabel.setText(RootLayoutController.SelectedDirectory);
-        ZipfileItems = listViewZipFiles.getItems();
-	}
-
-	// Is called by the main application to give a reference back to itself.
-	public void setMainApp(au.gov.aims.MainApp mainApp) {
+	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 	}
 
-	//Method for showing files found in directory and attaching
-	//it to the labels in Overview.fxml
-	public static void showFileInView() { 
-		if (GeoServerFileHandlerWrapper.sortedFiles!= null) {
-			for (List<File> FilesList : GeoServerFileHandlerWrapper.sortedFiles) {				
-				for (File Files : FilesList) {
-					String split[]  = Files.toString().split("\\\\");
-					int e = split.length - 1;
-					fileNames.add(split[e]);
+	public void setUploadingController(UploadingController uploadingController) {
+		this.uploadingController = uploadingController;
+	}
+
+	// call these methods somewhere in main
+	public void setServerDetailsController(
+			ServerDetailsController serverDetailsController) {
+		this.serverDetailsController = serverDetailsController;
+	}
+
+	// /call these methods somewhere in the main because currently they are null
+	public void setRootLayoutController(
+			RootLayoutController rootLayoutController) {
+		this.rootLayoutController = rootLayoutController;
+	}
+
+	// /
+	public void setGeoServerFileHandlerWrapper(
+			GeoServerFileHandlerWrapper geoServerFileHandler) {
+		this.geoServerFileHandler = geoServerFileHandler;
+	}
+
+	/**
+	 * Initializes the controller class. This is automatically called after the
+	 * fxml file has been loaded
+	 * 
+	 * @throws IOException
+	 */
+	@FXML
+	private void initialize() throws IOException {
+		fileItems = listViewFiles.getItems();
+		// directoryLabel.setText(rootLayoutController.getSelectedDirectory());
+		createCSVButton.setDisable(true);
+		uploadToGeoServerButton.setDisable(true);
+		progressIndicator.setVisible(false);
+	}
+
+	
+	/**
+	 * Function to show the directory and the files in it
+	 */
+	public void findFilesInDirectory() {
+		
+		progressIndicator.setVisible(true);
+		progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+		try {
+			DirectoryChooser chooser = new DirectoryChooser();
+			chooser.setTitle("Find Directory for file");
+			File directory = rootLayoutController.getDefaultDirectory();
+			chooser.setInitialDirectory(directory);
+			File selectedDirectory = chooser.showDialog(mainApp
+					.getPrimaryStage());
+			
+			if (displayFilesAndDirectory(selectedDirectory)) {
+				messageLabel.setText("Found all files in Directory.");
+				uploadToGeoServerButton.setDisable(true);
+				createCSVButton.setDisable(false);
+				
+			}else {
+				fileItems.clear();
+				directoryLabel.setText("");
+				messageLabel.setText("No directory chosen.");
+				createCSVButton.setDisable(true);
+			}
+			progressIndicator.setProgress(1);
+			
+		} catch (NullPointerException e) {
+			messageLabel.setText("Error finding Files in the chosen directory");
+			mainApp.getLogger().error(e.getMessage() + e.getStackTrace());
+		}
+		
+	}
+
+	/**
+	 * Function to create the CSV file
+	 */
+	public void createCSV() {
+		progressIndicator.setVisible(true);
+		progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+		String filePath = rootLayoutController.getDefaultDirectory()
+				+ "\\uploadLayers.csv";
+		UploadManger uploadManager = new UploadManger();
+		uploadManager.writeCSV(rootLayoutController.getDefaultDirectory().toString());
+		progressIndicator.setVisible(true);
+		progressIndicator.setProgress(1);
+		mainApp.setCSVFilePath(new File(filePath));
+		messageLabel.setText("Created CSV in your chosen directory");
+	}
+
+	/**
+	 * function to view the CSV file
+	 */
+	public void viewCSV() {
+		messageLabel.setText("");
+		progressIndicator.setVisible(true);
+		progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+		FileChooser fileChooser = new FileChooser();
+		if (Desktop.isDesktopSupported()) {
+			fileChooser.setTitle("Open CSV File");
+			fileChooser.getExtensionFilters().addAll(
+					new FileChooser.ExtensionFilter("CSV", "*.csv"));
+			String initialDirectory = mainApp.getCSVFilePath().toString().replace(mainApp.getCSVFilePath().getName(), "");
+			if(initialDirectory.isEmpty() || initialDirectory == null)
+				initialDirectory = "C:/";
+			fileChooser.setInitialDirectory(new File (initialDirectory));
+			File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
+			rootLayoutController.setDefaultDirectory(file.getAbsoluteFile());
+			if (file != null) {
+				try {
+					Desktop.getDesktop().open(file);
+					fileItems.clear();
+					List<GeoServerFile> files = geoServerFileHandler.parseGeoServerFileUploadLayersCsvToBean(file.toString());
+					for(GeoServerFile filename : files) {
+						String name = PathsHandler.absoluteToRelativePath(filename.getStorePath(), PathsHandler.backslashToForwardslash(PathsHandler.getBasePath(file.toString())));
+						fileItems.add(name);
+					}
+					directoryLabel.setText(PathsHandler.getBasePath(file.toString()));
+				} catch (IOException e) {
+					mainApp.getLogger().error(
+							e.getMessage() + e.getStackTrace());
 				}
 			}
 		}
-		Collections.sort(fileNames);
-		 for (String file : fileNames){
-			 fileString = file;
-			 fileItems.add(fileString);
-		 }		
-		fileNames.clear();
+		else {
+			messageLabel.setText("File cannot be loaded");
+			uploadToGeoServerButton.setDisable(true);
+			createCSVButton.setDisable(false);
+		}
+		uploadToGeoServerButton.setDisable(false);
+		createCSVButton.setDisable(true);
+		progressIndicator.setProgress(1);
 	}
-	 
-	//Method for showing zip files found in directory 
-	public static void showZipFileInView() {
-		if (GeoServerFileHandlerWrapper.files!= null) {
-			for (File zipfiles : GeoServerFileHandlerWrapper.files) {
-				String split[]  = zipfiles.toString().split("\\\\");
-				int e = split.length - 1;
-				ZipfileNames.add(split[e]);				
+
+	/**
+	 * Function to upload files to the GeoServer
+	 */
+	public void UploadToGeoServer() {
+
+		if (serverDetailsController.getGeoServerURLString() == null
+				|| serverDetailsController.getUserNameString() == null
+				|| serverDetailsController.getPasswordString() == null
+				|| serverDetailsController.getGeoServerURLString().isEmpty()
+				|| serverDetailsController.getUserNameString().isEmpty()
+				|| serverDetailsController.getPasswordString().isEmpty()) {
+			mainApp.showServerDetailsView();
+		} else {
+			openUploaderView();
+			//function from uploading controller			
+			}
+	}
+
+	public static List<String> getFileNames() {
+		return fileNames;
+	}
+	
+	public boolean displayFilesAndDirectory (File selectedDirectory) {
+		if (selectedDirectory != null) {
+			filesForUpload = geoServerFileHandler
+					.findFilesForUpload(selectedDirectory.toString());
+			rootLayoutController.setDefaultDirectory(selectedDirectory);
+			directoryLabel.setText(selectedDirectory.toString());
+			if (filesForUpload != null) {
+				fileItems.clear();
+				for (File file : filesForUpload) {
+					fileItems.add(file.toString().replace(
+							selectedDirectory.toString(), ""));
+				}return true;
 			}
 		}
-		Collections.sort(ZipfileNames);
-		 for (String file : ZipfileNames){
-			 zipString = file;
-			 ZipfileItems.add(zipString);
-		 }	
-		 ZipfileNames.clear();
+		return false; 
+		
+	}
+
+	public static void setFileNames(List<String> fileNames) {
+		OverviewController.fileNames = fileNames;
+	}
+	
+	/**
+	 * About view - for information about the application - 
+	 * used in the About MenuItem
+	 */
+	
+	public void openUploaderView() {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("/view/UploadingView.fxml"));
+			AnchorPane overview = (AnchorPane) loader.load();
+			mainApp.getRootLayout().setCenter(overview);
+			uploadingController = loader.getController();
+			uploadingController.setMainApp(mainApp);
+			uploadingController.setRootLayoutController(rootLayoutController);
+			uploadingController.setServerDetailsController(serverDetailsController);
+			uploadingController.uploadThread();
+		} catch (IOException e) {
+			mainApp.getLogger().error(e.getMessage() + e.getStackTrace());
+		}
 	}
 }

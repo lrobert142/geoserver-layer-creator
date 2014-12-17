@@ -42,7 +42,7 @@ public class PathsHandler {
 	 * @param targetPath - the path to create the relative path from
 	 * @return String - the relative path
 	 */
-	public static String getRelativePath(String targetPath) {
+	public static String getBasePath(String targetPath) {
 		int lastIndex = targetPath.lastIndexOf("\\") == -1 ? targetPath.lastIndexOf("/") : targetPath.lastIndexOf("\\");
 		return targetPath.substring(0, lastIndex);
 	}

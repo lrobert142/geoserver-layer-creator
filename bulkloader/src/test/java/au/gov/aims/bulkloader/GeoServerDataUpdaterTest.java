@@ -20,7 +20,7 @@ public class GeoServerDataUpdaterTest {
 	private static final String password = "geoserver";
 	private static final String fileName = "/testModifyData.csv";
 
-	@Test
+	//@Test
 	public void testUpdateAllData() {
 		GeoServerDataUpdater updater = new GeoServerDataUpdater();
 		GeoServerFileCsvParser parser = new GeoServerFileCsvParser();
