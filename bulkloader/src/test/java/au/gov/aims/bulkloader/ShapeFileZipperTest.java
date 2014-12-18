@@ -1,4 +1,4 @@
-/*
+/**
 @author	Stuart Garrigan
 @version 1.0
 @since 27-11-2014
@@ -38,15 +38,13 @@ public class ShapeFileZipperTest {
 
 		try {
 			for (int i = 0; i < sff.SHAPEFILE_EXTENSIONS.size(); i++) {
-				try{
-				writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
-						+ sff.SHAPEFILE_EXTENSIONS.get(i));
+				try {
+					writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + sff.SHAPEFILE_EXTENSIONS.get(i));
 				} finally {
 					writer.flush();
 					writer.close();
 				}
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

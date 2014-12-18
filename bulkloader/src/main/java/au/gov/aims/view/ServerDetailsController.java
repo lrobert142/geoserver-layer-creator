@@ -1,9 +1,9 @@
 /**
- * Author Zoe McIntosh
+@author Zoe McIntosh
+@version 1.0
+@since 18/12/14
  */
 package au.gov.aims.view;
-
-import java.io.IOException;
 
 import org.apache.commons.validator.routines.UrlValidator;
 
@@ -33,20 +33,19 @@ public class ServerDetailsController {
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 	}
-
 	
+	/**
+	 * function used to setup text fields with pre saved data
+	 * 
+	 */
 	public void setupTextFieldWithData() {
 		if (mainApp.getGeoServerDetailsList().size() > 0) {
 			if (mainApp.getGeoServerDetailsList().get(0) != null) {
-				String httpAddress = mainApp.getGeoServerDetailsList().get(0)
-						.getGeoServerHttpAddress();
-				String username = mainApp.getGeoServerDetailsList().get(0)
-						.getUsername();
+				String httpAddress = mainApp.getGeoServerDetailsList().get(0).getGeoServerHttpAddress();
+				String username = mainApp.getGeoServerDetailsList().get(0).getUsername();
 				setTextFieldAfterLoading(httpAddress, username);
 			}
 		}
-
-		
 	}
 
 	/**
@@ -66,13 +65,16 @@ public class ServerDetailsController {
 			message += "GeoServer URL is not a Valid URL!" + "\n";
 			validatorBoolean = false;
 		}
+		
 		if (userNameString.isEmpty()) {
 			message += "Username is empty!" + "\n";
 		}
+		
 		if (passwordString.isEmpty()) {
 			message += "Password is empty!" + "\n";
 			validatorBoolean = false;
 		}
+		
 		if (!validatorBoolean) {
 			errorMessage.setText(message);
 		} else {
@@ -99,10 +101,6 @@ public class ServerDetailsController {
 		mainApp.getServerDetailsStage().close();
 	}
 
-	/**
-	 * function that setup the text fields in GeoServer Details windows with pre-saved data
-	 * e.g. Http address and User name
-	 */
 	public void setTextFieldAfterLoading(String httpAddress, String Username) {
 		geoServerURLTextField.setText(httpAddress);
 		userNameTextField.setText(Username);

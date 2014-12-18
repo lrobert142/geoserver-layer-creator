@@ -1,5 +1,7 @@
 /**
- * Author Zoe McIntosh
+@author Zoe McIntosh
+@version 1.0
+@since 18/12/14
  */
 package au.gov.aims.view;
 
@@ -22,7 +24,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import au.gov.aims.model.GeoServerFile;
 import au.gov.aims.model.GeoServerFileHandlerWrapper;
-import au.gov.aims.model.UploadManger;
+import au.gov.aims.model.UploadManager;
 import au.gov.aims.utilities.PathsHandler;
 import au.gov.aims.view.ServerDetailsController;
 
@@ -57,8 +59,6 @@ public class OverviewController {
 	private RootLayoutController rootLayoutController;
 	private UploadingController uploadingController;
 
-
-
 	private GeoServerFileHandlerWrapper geoServerFileHandler = new GeoServerFileHandlerWrapper();
 	private List<File> filesForUpload = new ArrayList<File>();
 
@@ -73,21 +73,15 @@ public class OverviewController {
 		this.uploadingController = uploadingController;
 	}
 
-	// call these methods somewhere in main
-	public void setServerDetailsController(
-			ServerDetailsController serverDetailsController) {
+	public void setServerDetailsController(ServerDetailsController serverDetailsController) {
 		this.serverDetailsController = serverDetailsController;
 	}
 
-	// /call these methods somewhere in the main because currently they are null
-	public void setRootLayoutController(
-			RootLayoutController rootLayoutController) {
+	public void setRootLayoutController(RootLayoutController rootLayoutController) {
 		this.rootLayoutController = rootLayoutController;
 	}
 
-	// /
-	public void setGeoServerFileHandlerWrapper(
-			GeoServerFileHandlerWrapper geoServerFileHandler) {
+	public void setGeoServerFileHandlerWrapper(GeoServerFileHandlerWrapper geoServerFileHandler) {
 		this.geoServerFileHandler = geoServerFileHandler;
 	}
 
@@ -100,18 +94,15 @@ public class OverviewController {
 	@FXML
 	private void initialize() throws IOException {
 		fileItems = listViewFiles.getItems();
-		// directoryLabel.setText(rootLayoutController.getSelectedDirectory());
 		createCSVButton.setDisable(true);
 		uploadToGeoServerButton.setDisable(true);
 		progressIndicator.setVisible(false);
 	}
-
 	
 	/**
 	 * Function to show the directory and the files in it
 	 */
 	public void findFilesInDirectory() {
-		
 		progressIndicator.setVisible(true);
 		progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		try {
@@ -119,27 +110,23 @@ public class OverviewController {
 			chooser.setTitle("Find Directory for file");
 			File directory = rootLayoutController.getDefaultDirectory();
 			chooser.setInitialDirectory(directory);
-			File selectedDirectory = chooser.showDialog(mainApp
-					.getPrimaryStage());
-			
+			File selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
 			if (displayFilesAndDirectory(selectedDirectory)) {
 				messageLabel.setText("Found all files in Directory.");
 				uploadToGeoServerButton.setDisable(true);
 				createCSVButton.setDisable(false);
-				
-			}else {
+			} else {
 				fileItems.clear();
 				directoryLabel.setText("");
 				messageLabel.setText("No directory chosen.");
 				createCSVButton.setDisable(true);
 			}
 			progressIndicator.setProgress(1);
-			
 		} catch (NullPointerException e) {
 			messageLabel.setText("Error finding Files in the chosen directory");
 			mainApp.getLogger().error(e.getMessage() + e.getStackTrace());
+			progressIndicator.setProgress(1);
 		}
-		
 	}
 
 	/**
@@ -148,9 +135,8 @@ public class OverviewController {
 	public void createCSV() {
 		progressIndicator.setVisible(true);
 		progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-		String filePath = rootLayoutController.getDefaultDirectory()
-				+ "\\uploadLayers.csv";
-		UploadManger uploadManager = new UploadManger();
+		String filePath = rootLayoutController.getDefaultDirectory() + "\\uploadLayers.csv";
+		UploadManager uploadManager = new UploadManager();
 		uploadManager.writeCSV(rootLayoutController.getDefaultDirectory().toString());
 		progressIndicator.setVisible(true);
 		progressIndicator.setProgress(1);
@@ -165,48 +151,52 @@ public class OverviewController {
 		messageLabel.setText("");
 		progressIndicator.setVisible(true);
 		progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-		FileChooser fileChooser = new FileChooser();
-		if (Desktop.isDesktopSupported()) {
-			fileChooser.setTitle("Open CSV File");
-			fileChooser.getExtensionFilters().addAll(
-					new FileChooser.ExtensionFilter("CSV", "*.csv"));
-			String initialDirectory = mainApp.getCSVFilePath().toString().replace(mainApp.getCSVFilePath().getName(), "");
-			if(initialDirectory.isEmpty() || initialDirectory == null)
-				initialDirectory = "C:/";
-			fileChooser.setInitialDirectory(new File (initialDirectory));
-			File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
-			rootLayoutController.setDefaultDirectory(file.getAbsoluteFile());
-			if (file != null) {
-				try {
-					Desktop.getDesktop().open(file);
-					fileItems.clear();
-					List<GeoServerFile> files = geoServerFileHandler.parseGeoServerFileUploadLayersCsvToBean(file.toString());
-					for(GeoServerFile filename : files) {
-						String name = PathsHandler.absoluteToRelativePath(filename.getStorePath(), PathsHandler.backslashToForwardslash(PathsHandler.getBasePath(file.toString())));
-						fileItems.add(name);
+		try {
+			FileChooser fileChooser = new FileChooser();
+			if (Desktop.isDesktopSupported()) {
+				fileChooser.setTitle("Open CSV File");
+				fileChooser.getExtensionFilters().addAll(
+						new FileChooser.ExtensionFilter("CSV", "*.csv"));
+				String initialDirectory = mainApp.getCSVFilePath().toString().replace(mainApp.getCSVFilePath().getName(), "");
+				if(initialDirectory.isEmpty() || initialDirectory == null)
+					initialDirectory = "C:/";
+				fileChooser.setInitialDirectory(new File (initialDirectory));
+				File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
+				rootLayoutController.setDefaultDirectory(file.getAbsoluteFile());
+				if (file != null) {
+					try {
+						Desktop.getDesktop().open(file);
+						fileItems.clear();
+						List<GeoServerFile> files = geoServerFileHandler.parseGeoServerFileUploadLayersCsvToBean(file.toString());
+						for(GeoServerFile filename : files) {
+							String name = PathsHandler.absoluteToRelativePath(filename.getStorePath(), PathsHandler.backslashToForwardslash(PathsHandler.getBasePath(file.toString())));
+							fileItems.add(name);
+						}
+						directoryLabel.setText(PathsHandler.getBasePath(file.toString()));
+					} catch (IOException e) {
+						mainApp.getLogger().error(
+								e.getMessage() + e.getStackTrace());
 					}
-					directoryLabel.setText(PathsHandler.getBasePath(file.toString()));
-				} catch (IOException e) {
-					mainApp.getLogger().error(
-							e.getMessage() + e.getStackTrace());
 				}
+			} else {
+				messageLabel.setText("File cannot be loaded");
+				uploadToGeoServerButton.setDisable(true);
+				createCSVButton.setDisable(false);
 			}
+			uploadToGeoServerButton.setDisable(false);
+			createCSVButton.setDisable(true);
+			progressIndicator.setProgress(1);
+		} catch (NullPointerException e) {
+			messageLabel.setText("Error finding Files in the chosen directory");
+			mainApp.getLogger().error(e.getMessage() + e.getStackTrace());
+			progressIndicator.setProgress(1);
 		}
-		else {
-			messageLabel.setText("File cannot be loaded");
-			uploadToGeoServerButton.setDisable(true);
-			createCSVButton.setDisable(false);
-		}
-		uploadToGeoServerButton.setDisable(false);
-		createCSVButton.setDisable(true);
-		progressIndicator.setProgress(1);
 	}
 
 	/**
 	 * Function to upload files to the GeoServer
 	 */
 	public void UploadToGeoServer() {
-
 		if (serverDetailsController.getGeoServerURLString() == null
 				|| serverDetailsController.getUserNameString() == null
 				|| serverDetailsController.getPasswordString() == null
@@ -216,30 +206,30 @@ public class OverviewController {
 			mainApp.showServerDetailsView();
 		} else {
 			openUploaderView();
-			//function from uploading controller			
-			}
+		}
 	}
 
 	public static List<String> getFileNames() {
 		return fileNames;
 	}
 	
+	/**
+	 * Function to display the files and Directory in the window
+	 */
 	public boolean displayFilesAndDirectory (File selectedDirectory) {
 		if (selectedDirectory != null) {
-			filesForUpload = geoServerFileHandler
-					.findFilesForUpload(selectedDirectory.toString());
+			filesForUpload = geoServerFileHandler.findFilesForUpload(selectedDirectory.toString());
 			rootLayoutController.setDefaultDirectory(selectedDirectory);
 			directoryLabel.setText(selectedDirectory.toString());
 			if (filesForUpload != null) {
 				fileItems.clear();
 				for (File file : filesForUpload) {
-					fileItems.add(file.toString().replace(
-							selectedDirectory.toString(), ""));
-				}return true;
+					fileItems.add(file.toString().replace(selectedDirectory.toString(), ""));
+				}
+				return true;
 			}
 		}
 		return false; 
-		
 	}
 
 	public static void setFileNames(List<String> fileNames) {
@@ -250,7 +240,6 @@ public class OverviewController {
 	 * About view - for information about the application - 
 	 * used in the About MenuItem
 	 */
-	
 	public void openUploaderView() {
 		try {
 			FXMLLoader loader = new FXMLLoader();

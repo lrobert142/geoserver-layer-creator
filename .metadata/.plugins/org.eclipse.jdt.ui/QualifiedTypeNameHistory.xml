@@ -12,7 +12,6 @@
 <fullyQualifiedTypeName name="com.gov.aims.model.UploadManger"/>
 <fullyQualifiedTypeName name="com.gov.aims.model.FileHandlerWrapper"/>
 <fullyQualifiedTypeName name="au.gov.aims.interfaces.FileParserInterface"/>
-<fullyQualifiedTypeName name="au.gov.aims.MainApp"/>
 <fullyQualifiedTypeName name="java.lang.RuntimeException"/>
 <fullyQualifiedTypeName name="au.gov.aims.view.OverviewController"/>
 <fullyQualifiedTypeName name="com.gov.aims.utilities.GeoServerDataReader"/>
@@ -26,7 +25,6 @@
 <fullyQualifiedTypeName name="au.gov.aims.utilities.FilterType"/>
 <fullyQualifiedTypeName name="it.geosolutions.geoserver.rest.GeoServerRESTPublisher"/>
 <fullyQualifiedTypeName name="java.io.FileNotFoundException"/>
-<fullyQualifiedTypeName name="java.lang.NullPointerException"/>
 <fullyQualifiedTypeName name="java.nio.file.InvalidPathException"/>
 <fullyQualifiedTypeName name="org.junit.After"/>
 <fullyQualifiedTypeName name="org.junit.BeforeClass"/>
@@ -44,13 +42,20 @@
 <fullyQualifiedTypeName name="java.nio.file.Path"/>
 <fullyQualifiedTypeName name="java.nio.file.Files"/>
 <fullyQualifiedTypeName name="au.gov.aims.bulkloader.UploadManagerUploadFromCSVTest"/>
-<fullyQualifiedTypeName name="java.lang.Exception"/>
 <fullyQualifiedTypeName name="java.io.IOException"/>
 <fullyQualifiedTypeName name="java.util.zip.ZipEntry"/>
 <fullyQualifiedTypeName name="java.util.zip.ZipFile"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
-<fullyQualifiedTypeName name="au.gov.aims.model.GeoServerFile"/>
 <fullyQualifiedTypeName name="org.junit.Test"/>
+<fullyQualifiedTypeName name="au.gov.aims.MainApp"/>
+<fullyQualifiedTypeName name="java.util.Collections"/>
+<fullyQualifiedTypeName name="au.gov.aims.model.GeoServerFileHandlerWrapper"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="au.gov.aims.utilities.PathsHandler"/>
+<fullyQualifiedTypeName name="javax.swing.Timer"/>
+<fullyQualifiedTypeName name="java.awt.event.ActionListener"/>
+<fullyQualifiedTypeName name="au.gov.aims.model.GeoServerFile"/>
+<fullyQualifiedTypeName name="java.lang.NullPointerException"/>
+<fullyQualifiedTypeName name="java.lang.Exception"/>
 <fullyQualifiedTypeName name="java.io.File"/>
 </qualifiedTypeNameHistroy>

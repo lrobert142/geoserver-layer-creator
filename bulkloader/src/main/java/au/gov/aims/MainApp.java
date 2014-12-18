@@ -1,5 +1,7 @@
 /**
- * Author Zoe McIntosh
+@author Zoe McIntosh
+@version 1.0
+@since 18/12/14
  */
 package au.gov.aims;
 
@@ -13,14 +15,12 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import au.gov.aims.MainApp;
 import au.gov.aims.model.BulkloaderDataWrapper;
 import au.gov.aims.model.GeoServerDetails;
-import au.gov.aims.model.UploadManger;
 import au.gov.aims.view.OverviewController;
 import au.gov.aims.view.RootLayoutController;
 import au.gov.aims.view.ServerDetailsController;
@@ -39,19 +39,18 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class MainApp extends Application {
-
 	private Stage primaryStage;
 	private BorderPane rootLayout;
 	private Stage serverDetailsStage;
 	private List<GeoServerDetails> geoServerDetailsList = new ArrayList<GeoServerDetails>();
-	public static final File GEOSERVER_DETAILS_FILE = new File("GeoServerLogonDetails.xml");
+	public File GEOSERVER_DETAILS_FILE = new File("GeoServerLogonDetails.xml");
 	private Logger logger;
 	private OverviewController overviewController;
 	private RootLayoutController rootLayoutController;
 	private ServerDetailsController serverDetailsController;
 	private UploadingController uploadingController;
 	public MainApp() {
-		DOMConfigurator.configure("log4j.xml");
+		DOMConfigurator.configure(getClass().getResource("/log4j.xml"));
 		logger = Logger.getLogger(MainApp.class);
 	}
 
@@ -78,7 +77,6 @@ public class MainApp extends Application {
 			initRootLayout();
 			showServerDetailsView();
 			showOverview();
-			//getCSVFilePath();
 			overviewController.setRootLayoutController(rootLayoutController);
 			overviewController.setServerDetailsController(serverDetailsController);
 			overviewController.setUploadingController(uploadingController);
@@ -152,7 +150,6 @@ public class MainApp extends Application {
 	}
 	
 	
-	// 
 	/**
 	 * Shows the ServerDetailsView.
 	 */
@@ -180,12 +177,10 @@ public class MainApp extends Application {
 				overviewController.setServerDetailsController(serverDetailsController);
 			
 			serverDetailsStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
 				@Override
 				public void handle(WindowEvent arg0) {
 					primaryStage.show();
 					serverDetailsStage.hide();
-					
 				}
 			});
 		} catch (IOException e) {

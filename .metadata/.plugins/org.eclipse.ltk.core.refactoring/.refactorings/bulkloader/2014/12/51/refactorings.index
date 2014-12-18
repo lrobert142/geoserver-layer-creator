@@ -14,3 +14,33 @@
 1418614974428	Rename local variable 'file'
 1418616101226	Rename method 'toStringArray'
 1418616165146	Rename method 'toStringArray'
+1418683759189	Rename local variable 'aFile'
+1418683768409	Rename local variable 'aAttrs'
+1418683776116	Rename local variable 'aDir'
+1418683815241	Rename local variable 'aAttrs'
+1418684534884	Rename type 'RelativePathsHandler'
+1418685410712	Rename method 'relativePathToAbstractPath'
+1418687093719	Rename local variable 'ROOT'
+1418687108648	Rename local variable 'aFile'
+1418687115325	Rename local variable 'aDir'
+1418687126682	Rename local variable 'aAttrs'
+1418687132344	Rename local variable 'aAttrs'
+1418687980380	Rename method 'deleteTemporaryFolder'
+1418690316105	Rename type 'UploadManger'
+1418690347508	Rename type 'UploadManager'
+1418704496034	Rename local variable 'folderPath'
+1418705660794	Rename field 'currentIndex'
+1418770542814	Rename type 'UploadManger'
+1418770630174	Delete element
+1418771041011	Rename type 'UploadManger'
+1418855348015	Delete element
+1418855458587	Rename type 'UploadManger'
+1418855625901	Delete elements
+1418855847104	Move compilation unit
+1418855858571	Move compilation unit
+1418855867775	Move compilation unit
+1418856717250	Rename field 'nextIndex'
+1418856845401	Rename method 'getCurrentUpload'
+1418858831178	Move compilation unit
+1418858853283	Delete element
+1418859075461	Delete element

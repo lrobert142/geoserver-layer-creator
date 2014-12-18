@@ -73,9 +73,9 @@ public class FileFinder implements FileFinderInterface {
 			allFiles.addAll(listFileTree(directory, extensions));
 		} catch (NullPointerException e) {
 			logger.debug("ERROR - An error has occurred whilst iterating through a list of file objects.");
-		} catch (FileSystemNotFoundException e){
+		} catch (FileSystemNotFoundException e) {
 			logger.debug("ERROR - An error has occured when attempting to open a directory.");
-		} catch (Exception e){
+		} catch (Exception e) {
 			logger.debug("ERROR - Some unspecified error has occured whilst attempting to open a directory.");
 		}
 		Collections.sort(allFiles);
@@ -99,9 +99,9 @@ public class FileFinder implements FileFinderInterface {
 			allFiles.addAll(listFileTree(directory, extension));
 		} catch (NullPointerException e) {
 			logger.debug("ERROR - An error has occurred whilst iterating through a list of file objects.");
-		} catch (FileSystemNotFoundException e){
+		} catch (FileSystemNotFoundException e) {
 			logger.debug("ERROR - An error has occured when attempting to open a directory.");
-		} catch (Exception e){
+		} catch (Exception e) {
 			logger.debug("ERROR - Some unspecified error has occured whilst attempting to open a directory.");
 		}
 		Collections.sort(allFiles);

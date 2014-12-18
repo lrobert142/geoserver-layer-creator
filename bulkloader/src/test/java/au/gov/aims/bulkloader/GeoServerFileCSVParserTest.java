@@ -3,6 +3,7 @@
 @version 1.0.1
 @since 11-12-2014
  */
+
 package au.gov.aims.bulkloader;
 
 import static org.junit.Assert.*;
@@ -40,20 +41,16 @@ public class GeoServerFileCSVParserTest {
 
 		try {
 			for (int i = 0; i < ff.SHAPEFILE_EXTENSIONS.size(); i++) {
-				try{
-				writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
-						+ ff.SHAPEFILE_EXTENSIONS.get(i));
-				
+				try {
+					writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + ff.SHAPEFILE_EXTENSIONS.get(i));
 				} finally {
 					writer.flush();
 					writer.close();
 				}
 			}
 			for (int i = 0; i < 5; i++) {
-				try{
-				writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + i + ".tif");
-						
-				
+				try {
+					writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + i + ".tif");
 				} finally {
 					writer.flush();
 					writer.close();
@@ -62,7 +59,6 @@ public class GeoServerFileCSVParserTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-			
 	}
 
 	@Test

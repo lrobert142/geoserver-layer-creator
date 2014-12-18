@@ -11,8 +11,8 @@ package au.gov.aims.utilities;
  */
 public class PathsHandler {
 	/**
-	 * Converts absolute file paths containing '\' characters and converts them to '/' characters
-	 * @param path - Absolute path for a file to be converted.
+	 * Converts file paths containing '\' characters and converts them to '/' characters
+	 * @param path - path for a file to be converted.
 	 * @return The converted string.
 	 */
 	public static String backslashToForwardslash(String path) {

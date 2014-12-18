@@ -1,4 +1,4 @@
-/*
+/**
 @author	Stuart Garrigan
 @version 1.0
 @since 27-11-2014
@@ -37,26 +37,21 @@ public class GeoServerFileFinderTest {
 
 		try {
 			for (int i = 0; i < sff.SHAPEFILE_EXTENSIONS.size(); i++) {
-				try{
-				writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
-						+ sff.SHAPEFILE_EXTENSIONS.get(i));
-				
+				try {
+					writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + sff.SHAPEFILE_EXTENSIONS.get(i));
 				} finally {
 					writer.flush();
 					writer.close();
 				}
 			}
 			for (int i = 0; i < 5; i++) {
-				try{
-				writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + i + ".tif");
-						
-				
+				try {
+					writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + i + ".tif");
 				} finally {
 					writer.flush();
 					writer.close();
 				}
 			}
-			
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -72,21 +67,18 @@ public class GeoServerFileFinderTest {
 	public void findFilesByExtensionListTest() {
 		assertTrue(sff.findAllByExtensionList(dir.getAbsolutePath(),
 				sff.SHAPEFILE_EXTENSIONS).size() == sff.SHAPEFILE_EXTENSIONS.size());
-		
 	}
 	
 	@Test
 	public void findCsvFilesByExtensionList(){
 		assertTrue(sff.findAllByExtensionList(dir.getAbsolutePath(), sff.FILE_EXTENSIONS_FOR_CSV).size() == 6);
 	}
-	
 
 	@Test
 	public void findByExtensionSingleStrTest() {
 		assertTrue(sff.findAllBySingleExtension(dir.getAbsolutePath(),
 				sff.SHAPEFILE_EXTENSIONS.get(0)).size() == 1);
 	}
-	
 
 	@AfterClass
 	public static void cleanUp() {

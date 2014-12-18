@@ -3,6 +3,7 @@
 @version 1.0.1
 @since 11/12/14
  **/
+
 package au.gov.aims.bulkloader;
 
 import static org.junit.Assert.*;
@@ -26,7 +27,6 @@ public class GeoServerFileHandlerWrapperTest {
 	static FileFinder ff;
 	static List<File> fileList;
 	static String writeFile;
-	
 
 	@BeforeClass
 	public static void setUp() {
@@ -40,8 +40,7 @@ public class GeoServerFileHandlerWrapperTest {
 		try {
 			for (int i = 0; i < ff.SHAPEFILE_EXTENSIONS.size(); i++) {
 				try {
-					writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
-							+ ff.SHAPEFILE_EXTENSIONS.get(i));
+					writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + ff.SHAPEFILE_EXTENSIONS.get(i));
 				} finally {
 					writer.flush();
 					writer.close();
@@ -49,9 +48,7 @@ public class GeoServerFileHandlerWrapperTest {
 			}
 			for (int i = 0; i < 5; i++) {
 				try {
-					writer = new FileWriter(dir.getAbsolutePath() + "\\Test"
-							+ i + ".tif");
-
+					writer = new FileWriter(dir.getAbsolutePath() + "\\Test" + i + ".tif");
 				} finally {
 					writer.flush();
 					writer.close();
@@ -61,7 +58,6 @@ public class GeoServerFileHandlerWrapperTest {
 			e.printStackTrace();
 		}
 	}
-	
 
 	@Test
 	public void setUpGeoServerFilesForUpload() {
@@ -72,7 +68,6 @@ public class GeoServerFileHandlerWrapperTest {
 		handler.setUpFilesForUpload(dir.getAbsolutePath());
 		assertTrue(handler.parseGeoServerFileUploadLayersCsvToBean(writeFile).size() == 6);
 	}
-
 
 	@AfterClass
 	public static void cleanUp() {

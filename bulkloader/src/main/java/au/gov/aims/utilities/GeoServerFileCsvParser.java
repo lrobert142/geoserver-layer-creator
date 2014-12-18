@@ -1,4 +1,4 @@
-/*
+/**
 @author	Stuart Garrigan
 @version 1.0.1
 @since 11/12/2014
@@ -27,7 +27,6 @@ import au.gov.aims.model.GeoServerFile;
 
 /**
  * Handles the writing and parsing of shape files to and from .csv.
- *
  */
 
 public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
@@ -167,15 +166,15 @@ public class GeoServerFileCsvParser implements GeoServerFileCsvParserInterface {
 				
 				if(file.toString().endsWith(".shp")){
 				records.add(new String[] {"/" + PathsHandler.backslashToForwardslash(relativePath),
-						shortName, shortName, "", "Shapefile", shortName + "title", "", "something.xml",
+						shortName, shortName, "", "Shapefile", shortName + " Title", "", "something.xml",
 						"e.g. Maritime Boundary", relativePath, "", "TRUE", "TRUE" });
 				}
 				
-				else if(file.toString().endsWith(".tif")){
+				else if(file.toString().endsWith(".tif")) {
 					records.add(new String[] {"/" + PathsHandler.backslashToForwardslash(relativePath),
-							shortName, shortName, "", "GeoTiff", "", "", "something.xml",
+							shortName, shortName, "", "GeoTiff", shortName + " Title", "", "something.xml",
 							"e.g. Maritime Boundary", relativePath, "", "TRUE", "TRUE" });
-					}
+				}
 			} catch (IndexOutOfBoundsException e) {
 				logger.debug("ERROR - An error occured when writing object to .csv, likely caused by too many defaults or not enough to match number of columns");
 			} catch (Exception e) {

@@ -1,5 +1,7 @@
 /**
- * Author Zoe McIntosh
+@author Zoe McIntosh
+@version 1.0
+@since 18/12/14
  */
 package au.gov.aims.model;
 
@@ -32,5 +34,4 @@ public class GeoServerDetails {
     public void setUsername(String Username) {
         this.Username = Username;
     }
-
 }
